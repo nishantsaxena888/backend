@@ -1,0 +1,136 @@
+Folder PATH listing for volume New Volume
+Volume serial number is 76C4-F36D
+D:.
+¦   data.json
+¦   db.sqlite3
+¦   manage.py
+¦   README.md
+¦   structure.txt
+¦   
++---data
+¦       nishant_work_file.xlsx
+¦       
++---doc
+¦   +---pioneer_fresh
+¦           12569-comp-image-90x90.png
+¦           20-kg-pumpkin-seeds-1000x1000.jpg
+¦           50-kg-white-sesame-seeds-1000x1000.jpg
+¦           5110KNTvTDL._SY355_.jpg
+¦           51Q7LabYJVL._SX425_.jpg
+¦           51RSe0kinRL._SX425_.jpg
+¦           618dURswQjL._SY355_.jpg
+¦           61s2wOnISLL._SX522_.jpg
+¦           71DioRsTa-L._SX522_.jpg
+¦           71pn31PwxNL._SX425_.jpg
+¦           71TEHH2-abL._SY355_.jpg
+¦           81Gtz3EmL3L._SX522_.jpg
+¦           81kh5XRTz4L._SX425_.jpg
+¦           81MQCnWCKXL._SX425_.jpg
+¦           891c058c-19b2-4666-83b8-538615d95515_20251104_115050.png
+¦           91-0D8PfoHL._SY550_.jpg
+¦           a-90x90.jpeg
+¦           aabb-90x90.png
+¦           adidev-group-of-industries-90x90.png
+¦           atm-billing-roll-1000x1000.jpg
+¦           cinnamon-stick-1000x1000.jpg
+¦           cinnamon-sticks-dalchini-1000x1000.jpg
+¦           data-modelling_20251102_123854.png
+¦           data-model_20251102_123906.png
+¦           e80c5618-cf05-4bd2-8e53-0c3ff93a900b_20251104_115515.png
+¦           ghdtt-90x90.jpeg
+¦           grv-s-plastic-butchery-bags-1000x1000.jpg
+¦           image001-90x90.jpg
+¦           imperial-flexipack-private-limited-90x90.jpg
+¦           logo-90x90.jpeg
+¦           logo-90x90.jpg
+¦           mustard-seeds-1000x1000.jpg
+¦           office-90x90.jpg
+¦           oregano-flakes-spoon-1296x728-1000x1000.jpg
+¦           paper-carry-bags-125x125.jpg
+¦           paper-grocery-bag-1000x1000.jpg
+¦           raag-ghee-04-2--1000x1000.jpg
+¦           ruban-impex-logo-90x90.png
+¦           s-l140.webp
+¦           s-l500.webp
+¦           shree-sai-biotech-90x90.jpeg
+¦           
++---mdm
+¦   ¦   asgi.py
+¦   ¦   settings.py
+¦   ¦   settings.py.bak
+¦   ¦   urls.py
+¦   ¦   wsgi.py
+¦   ¦   __init__.py
+¦   ¦   
+¦   +---__pycache__
+¦           settings.cpython-313.pyc
+¦           urls.cpython-313.pyc
+¦           wsgi.cpython-313.pyc
+¦           __init__.cpython-313.pyc
+¦           
++---scrapper
+¦   ¦   admin.py
+¦   ¦   api.py
+¦   ¦   apps.py
+¦   ¦   models.py
+¦   ¦   serializers.py
+¦   ¦   tests.py
+¦   ¦   urls.py
+¦   ¦   views.py
+¦   ¦   __init__.py
+¦   ¦   
+¦   +---management
+¦   ¦   ¦   __init__.py
+¦   ¦   ¦   
+¦   ¦   +---commands
+¦   ¦   ¦   ¦   common_image_utils.py
+¦   ¦   ¦   ¦   fix_cloudinary_urls.py
+¦   ¦   ¦   ¦   fix_double_urls.py
+¦   ¦   ¦   ¦   normalize_images.py
+¦   ¦   ¦   ¦   scrape_all_sites.py
+¦   ¦   ¦   ¦   scrape_amazon_products.py
+¦   ¦   ¦   ¦   scrape_ebay.py
+¦   ¦   ¦   ¦   scrape_indiamart.py
+¦   ¦   ¦   ¦   upload_to_cloudinary.py
+¦   ¦   ¦   ¦   __init__.py
+¦   ¦   ¦   ¦   
+¦   ¦   ¦   +---__pycache__
+¦   ¦   ¦           common_image_utils.cpython-313.pyc
+¦   ¦   ¦           fix_cloudinary_urls.cpython-313.pyc
+¦   ¦   ¦           fix_double_urls.cpython-313.pyc
+¦   ¦   ¦           normalize_images.cpython-313.pyc
+¦   ¦   ¦           scrape_all_sites.cpython-313.pyc
+¦   ¦   ¦           scrape_amazon_products.cpython-313.pyc
+¦   ¦   ¦           scrape_ebay.cpython-313.pyc
+¦   ¦   ¦           scrape_indiamart.cpython-313.pyc
+¦   ¦   ¦           upload_to_cloudinary.cpython-313.pyc
+¦   ¦   ¦           __init__.cpython-313.pyc
+¦   ¦   ¦           
+¦   ¦   +---__pycache__
+¦   ¦           __init__.cpython-313.pyc
+¦   ¦           
+¦   +---migrations
+¦   ¦   ¦   0001_initial.py
+¦   ¦   ¦   __init__.py
+¦   ¦   ¦   
+¦   ¦   +---__pycache__
+¦   ¦           0001_initial.cpython-313.pyc
+¦   ¦           0002_alter_item_options.cpython-313.pyc
+¦   ¦           __init__.cpython-313.pyc
+¦   ¦           
+¦   +---templates
+¦   ¦   +---products
+¦   ¦           product_list.html
+¦   ¦           
+¦   +---__pycache__
+¦           admin.cpython-313.pyc
+¦           api.cpython-313.pyc
+¦           apps.cpython-313.pyc
+¦           models.cpython-313.pyc
+¦           serializers.cpython-313.pyc
+¦           urls.cpython-313.pyc
+¦           views.cpython-313.pyc
+¦           __init__.cpython-313.pyc
+¦           
++---uploads
+    +---pioneer_fresh

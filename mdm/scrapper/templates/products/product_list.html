@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Amazon Products</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        table, th, td { border: 1px solid #ddd; }
+        th, td { padding: 10px; text-align: left; vertical-align: top; }
+        th { background-color: #f4f4f4; }
+        img { width: 80px; height: auto; }
+        .desc { max-width: 300px; white-space: pre-wrap; word-wrap: break-word; font-size: 14px; }
+        .category { color: #333; font-size: 14px; font-weight: bold; }
+        .brand { color: #007185; font-weight: bold; }
+        .gallery { margin-top: 8px; display: flex; flex-wrap: wrap; }
+        .gallery img { width: 60px; height: auto; margin: 3px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; transition: transform 0.2s; }
+        .gallery img:hover { transform: scale(1.2); border-color: #007185; }
+        .product-row { border-bottom: 3px solid #aaa; }
+
+        /* Lightbox styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            padding-top: 60px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+        }
+        .lightbox-content {
+            display: block;
+            margin: auto;
+            max-width: 80%;
+            max-height: 80%;
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .lightbox-prev, .lightbox-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 10px;
+            user-select: none;
+        }
+        .lightbox-prev { left: 20px; }
+        .lightbox-next { right: 20px; }
+        .lightbox-prev:hover, .lightbox-next:hover, .lightbox-close:hover {
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Scraped Amazon Products</h1>
+    <table>
+        <tr>
+            <th>Image</th>
+            <th>ASIN</th>
+            <th>Title</th>
+            <th>Price</th>
+            <th>Price Text</th>
+            <th>Rating</th>
+            <th>Reviews</th>
+            <th>Availability</th>
+            <th>Brand</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>URL</th>
+            <th>Scraped At</th>
+        </tr>
+        {% for product in products %}
+        <tr class="product-row">
+            <td>
+                {% if product.image %}
+                    <img src="{{ product.image }}" alt="{{ product.title }}" class="lightbox-trigger" data-group="{{ product.id }}">
+                {% else %}
+                    No Image
+                {% endif %}
+                {% if product.gallery.all %}
+    <div class="gallery">
+        {% for img in product.gallery.all %}
+            <img src="{{ img.image_url }}" alt="Gallery image" class="lightbox-trigger" data-group="{{ product.id }}">
+        {% endfor %}
+    </div>
+{% endif %}
+
+            </td>
+            <td>{{ product.asin }}</td>
+            <td>{{ product.title }}</td>
+            <td>
+                {% if product.price %}
+                    ₹{{ product.price }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td>{{ product.price_text }}</td>
+            <td>{{ product.rating }}</td>
+            <td>{{ product.reviews }}</td>
+            <td>{{ product.availability }}</td>
+            <td class="brand">{{ product.brand }}</td>
+            <td class="category">{{ product.category }}</td>
+            <td class="desc">{{ product.description }}</td>
+            <td><a href="{{ product.url }}" target="_blank">View</a></td>
+            <td>{{ product.scraped_at }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+        <!-- Lightbox -->
+    <div id="lightbox" class="lightbox">
+        <span class="lightbox-close">&times;</span>
+        <span class="lightbox-prev">&#10094;</span>
+        <img class="lightbox-content" id="lightbox-img">
+        <div id="lightbox-caption" style="color: #fff; text-align: center; margin-top: 10px; font-size: 18px;"></div>
+        <span class="lightbox-next">&#10095;</span>
+    </div>
+
+    <script>
+    const images = document.querySelectorAll(".lightbox-trigger");
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightbox-img");
+    const caption = document.getElementById("lightbox-caption");
+    const closeBtn = document.querySelector(".lightbox-close");
+    const prevBtn = document.querySelector(".lightbox-prev");
+    const nextBtn = document.querySelector(".lightbox-next");
+
+    let currentIndex = 0;
+    let imageArray = [];
+
+    // Setup click events
+    images.forEach((img) => {
+        img.addEventListener("click", () => {
+            // Get group id (product id)
+            const groupId = img.getAttribute("data-group");
+
+            // Collect only images from the same product group
+            const groupImages = document.querySelectorAll(`.lightbox-trigger[data-group='${groupId}']`);
+            imageArray = Array.from(groupImages).map(i => i.src);
+
+            // Find index of clicked image within group
+            currentIndex = Array.from(groupImages).indexOf(img);
+
+            showImage(currentIndex);
+            lightbox.style.display = "block";
+        });
+    });
+
+    function showImage(index) {
+        if (index < 0) index = imageArray.length - 1;
+        if (index >= imageArray.length) index = 0;
+        currentIndex = index;
+        lightboxImg.src = imageArray[currentIndex];
+        caption.textContent = `Image ${currentIndex + 1} of ${imageArray.length}`;
+    }
+
+    // Navigation
+    prevBtn.onclick = () => showImage(currentIndex - 1);
+    nextBtn.onclick = () => showImage(currentIndex + 1);
+
+    // Close lightbox
+    closeBtn.onclick = () => { lightbox.style.display = "none"; };
+    window.onclick = (event) => {
+        if (event.target === lightbox) {
+            lightbox.style.display = "none";
+        }
+    };
+</script>
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Amazon Products</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        table, th, td { border: 1px solid #ddd; }
+        th, td { padding: 10px; text-align: left; vertical-align: top; }
+        th { background-color: #f4f4f4; }
+        img { width: 80px; height: auto; }
+    </style>
+</head>
+<body>
+    <h1>Scraped Amazon Products</h1>
+    <table>
+        <tr>
+            <th>Image</th>
+            <th>ASIN</th>
+            <th>Title</th>
+            <th>Price</th>
+            <th>Price Text</th>
+            <th>Rating</th>
+            <th>Reviews</th>
+            <th>Availability</th>
+            <th>Brand</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>URL</th>
+            <th>Scraped At</th>
+        </tr>
+        {% for product in products %}
+        <tr>
+            <td>
+                {% if product.image %}
+                    <img src="{{ product.image }}" alt="{{ product.title }}">
+                {% else %}
+                    No Image
+                {% endif %}
+            </td>
+            <td>{{ product.asin }}</td>
+            <td>{{ product.title }}</td>
+            <td>
+                {% if product.price %}
+                    ₹{{ product.price }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td>{{ product.price_text }}</td>
+            <td>{{ product.rating }}</td>
+            <td>{{ product.reviews }}</td>
+            <td>{{ product.availability }}</td>
+            <td>{{ product.brand }}</td>
+            <td>{{ product.category }}</td>
+            <td>{{ product.description }}</td>
+            <td><a href="{{ product.url }}" target="_blank">View</a></td>
+            <td>{{ product.scraped_at }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Amazon Products</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        table, th, td { border: 1px solid #ddd; }
+        th, td { padding: 10px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        img { width: 80px; height: auto; }
+    </style>
+</head>
+<body>
+    <h1>Scraped Amazon Products</h1>
+    <table>
+        <tr>
+            <th>Image</th>
+            <th>ASIN</th>
+            <th>Title</th>
+            <th>Price</th>
+            <th>Price Text</th>
+            <th>Rating</th>
+            <th>Reviews</th>
+            <th>Availability</th>
+            <th>URL</th>
+            <th>Scraped At</th>
+        </tr>
+        {% for product in products %}
+        <tr>
+            <td>
+                {% if product.image %}
+                    <img src="{{ product.image }}" alt="{{ product.title }}">
+                {% else %}
+                    No Image
+                {% endif %}
+            </td>
+            <td>{{ product.asin }}</td>
+            <td>{{ product.title }}</td>
+            <td>
+                {% if product.price %}
+                    ₹{{ product.price }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td>{{ product.price_text }}</td>
+            <td>{{ product.rating }}</td>
+            <td>{{ product.reviews }}</td>
+            <td>{{ product.availability }}</td>
+            <td><a href="{{ product.url }}" target="_blank">View</a></td>
+            <td>{{ product.scraped_at }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html> -->
