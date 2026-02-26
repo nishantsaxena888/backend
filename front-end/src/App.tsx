@@ -23,6 +23,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { LanguageProvider, useLanguage } from "@/components/language-provider"
 
 import {
   ShoppingCart,
@@ -37,14 +38,17 @@ import {
 // ─── APP ROOT ────────────────────────────────────────────────────────────────
 export default function App() {
   return (
-    <ThemeProvider defaultTheme="emerald-grocery">
-      <HomePage />
-    </ThemeProvider>
+    <LanguageProvider>
+      <ThemeProvider defaultTheme="emerald-grocery">
+        <HomePage />
+      </ThemeProvider>
+    </LanguageProvider>
   )
 }
 
 function HomePage() {
-  const { theme } = useTheme()
+  const { theme, setTheme } = useTheme();
+  const { language, setLanguage, t, l } = useLanguage();
   const [config, setConfig] = useState<ClientConfig | null>(null)
   const [allProducts, setAllProducts] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -153,7 +157,7 @@ function HomePage() {
 
   return (
     <TooltipProvider>
-      <div className="min-h-screen bg-background text-foreground">
+      <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
 
         {/* ── REAL ECOM HEADER ─────────────────────────────────── */}
         <Header
@@ -176,21 +180,20 @@ function HomePage() {
                 <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
                   <ShoppingCart className="h-6 w-6" />
                 </div>
-                Your Cart
+                {t('cart.title')}
               </SheetTitle>
               <SheetDescription className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                {cartCount} Items · ${cartTotal.toFixed(2)} Total
+                {cartCount} {t('cart.items')} · ${cartTotal.toFixed(2)} {t('cart.total')}
               </SheetDescription>
             </SheetHeader>
-
             <ScrollArea className="flex-1 mt-8 -mx-4 px-4">
               {cartItems.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-64 text-center space-y-4">
                   <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center">
                     <Package className="w-10 h-10 text-muted-foreground/30" />
                   </div>
-                  <p className="text-sm font-bold text-muted-foreground">Your cart is currently empty</p>
-                  <Button variant="outline" className="rounded-xl font-bold" onClick={() => setCartOpen(false)}>Start Shopping</Button>
+                  <p className="text-sm font-bold text-muted-foreground">{t('cart.empty')}</p>
+                  <Button variant="outline" className="rounded-xl font-bold" onClick={() => setCartOpen(false)}>{t('cart.start_shopping')}</Button>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -205,10 +208,10 @@ function HomePage() {
                           ) : p.image}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-black truncate leading-tight mb-1">{p.name}</p>
+                          <p className="text-sm font-black truncate leading-tight mb-1">{l(p, 'name')}</p>
                           <p className="text-xs font-bold text-primary">${p.price}</p>
                         </div>
-                        <div className="flex items-center gap-2 bg-background rounded-xl p-1 shadow-sm border border-border/50">
+                        <div className="flex items-center gap-1 sm:gap-2 bg-background rounded-xl p-1 shadow-sm border border-border/50">
                           <Button size="icon" variant="ghost" className="h-8 w-8 hover:bg-muted" onClick={() => changeQty(ci.id, -1)}><Minus className="h-3 w-3" /></Button>
                           <span className="w-4 text-center text-xs font-black">{ci.qty}</span>
                           <Button size="icon" variant="ghost" className="h-8 w-8 hover:bg-muted" onClick={() => changeQty(ci.id, 1)}><Plus className="h-3 w-3" /></Button>
@@ -225,9 +228,9 @@ function HomePage() {
               <div className="pt-8 border-t space-y-6">
                 <div className="space-y-2">
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Free Delivery Progress</span>
+                    <span className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">{t('cart.free_delivery')}</span>
                     <span className="text-[10px] font-black uppercase text-primary tracking-widest">
-                      {cartTotal >= config.freeDeliveryThreshold ? "Unlocked!" : `$${(config.freeDeliveryThreshold - cartTotal).toFixed(2)} remaining`}
+                      {cartTotal >= config.freeDeliveryThreshold ? t('cart.unlocked') : `$${(config.freeDeliveryThreshold - cartTotal).toFixed(2)} ${t('cart.remaining')}`}
                     </span>
                   </div>
                   <Progress value={Math.min((cartTotal / config.freeDeliveryThreshold) * 100, 100)} className="h-2 rounded-full" />
@@ -235,7 +238,7 @@ function HomePage() {
 
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm font-bold text-muted-foreground">Order Total</span>
+                    <span className="text-sm font-bold text-muted-foreground">{t('cart.order_total')}</span>
                     <span className="text-2xl font-black tracking-tighter">${cartTotal.toFixed(2)}</span>
                   </div>
                   <Button
@@ -249,7 +252,7 @@ function HomePage() {
                       }
                     }}
                   >
-                    Proceed to Checkout
+                    {t('cart.checkout')}
                   </Button>
                 </div>
               </div>
@@ -277,19 +280,19 @@ function HomePage() {
               onRemovePrice={() => setPriceRange(config.id.includes('luxury') ? [0, 15000] : config.type === 'liquor' ? [0, 200] : [0, 50])}
             />
 
-            <main className="max-w-7xl mx-auto px-4 py-12">
+            <main className="max-w-7xl mx-auto px-4 py-6 md:py-12">
               <div className="flex flex-col md:flex-row gap-12">
-                <aside className="w-full md:w-64 space-y-10">
+                <aside className="hidden md:block w-64 space-y-10 shrink-0">
                   <div className="space-y-6">
                     <h3 className="text-sm font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
-                      <Filter className="w-3 h-3" /> Categories
+                      <Filter className="w-3 h-3" /> {t('header.categories')}
                     </h3>
                     <div className="flex flex-col gap-1">
                       <button
                         onClick={() => setSelectedCategory("All Products")}
                         className={`text-left px-4 py-3 rounded-2xl text-sm font-bold transition-all ${selectedCategory === "All Products" ? "bg-primary text-primary-foreground shadow-xl shadow-primary/20 translate-x-1" : "hover:bg-muted text-muted-foreground hover:text-foreground"}`}
                       >
-                        All Products
+                        {t('product.all_products')}
                       </button>
                       {sidebarCategories.map(cat => (
                         <button
@@ -297,7 +300,7 @@ function HomePage() {
                           onClick={() => setSelectedCategory(cat)}
                           className={`text-left px-4 py-3 rounded-2xl text-sm font-bold transition-all ${selectedCategory === cat ? "bg-primary text-primary-foreground shadow-xl shadow-primary/20 translate-x-1" : "hover:bg-muted text-muted-foreground hover:text-foreground"}`}
                         >
-                          {cat}
+                          {t(cat)}
                         </button>
                       ))}
                     </div>
@@ -305,7 +308,7 @@ function HomePage() {
 
                   <div className="space-y-6">
                     <div className="flex justify-between items-center px-1">
-                      <h3 className="text-sm font-black uppercase tracking-[0.2em] text-muted-foreground">Price</h3>
+                      <h3 className="text-sm font-black uppercase tracking-[0.2em] text-muted-foreground">{t('product.price')}</h3>
                       <span className="text-[10px] font-black text-primary bg-primary/10 px-3 py-1 rounded-full uppercase">USD</span>
                     </div>
                     <div className="px-2">
@@ -317,8 +320,8 @@ function HomePage() {
                         className="py-4"
                       />
                       <div className="flex justify-between mt-2 text-[10px] font-black text-muted-foreground tracking-widest">
-                        <span>MIN ${priceRange[0]}</span>
-                        <span>MAX ${priceRange[1]}</span>
+                        <span>{t('product.min')} ${priceRange[0]}</span>
+                        <span>{t('product.max')} ${priceRange[1]}</span>
                       </div>
                     </div>
                   </div>
@@ -327,14 +330,16 @@ function HomePage() {
                 <div className="flex-1 space-y-12">
                   <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                     <div>
-                      <h2 className="text-5xl font-black tracking-tighter leading-none">{selectedCategory}</h2>
+                      <h2 className="text-3xl sm:text-5xl font-black tracking-tighter leading-none break-words">
+                        {selectedCategory === "All Products" ? t('product.all_products') : selectedCategory}
+                      </h2>
                       <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest mt-3 flex items-center gap-2">
-                        <Package className="w-3 h-3" /> {filtered.length} products curated for {config.name}
+                        <Package className="w-3 h-3" /> {filtered.length} {t('product.curated_for')} {config.name}
                       </p>
                     </div>
-                    <ToggleGroup type="single" defaultValue="grid" className="bg-muted p-1 rounded-xl">
-                      <ToggleGroupItem value="grid" className="rounded-lg h-8 px-3 font-bold text-[10px] uppercase">Grid</ToggleGroupItem>
-                      <ToggleGroupItem value="list" className="rounded-lg h-8 px-3 font-bold text-[10px] uppercase">List</ToggleGroupItem>
+                    <ToggleGroup type="single" defaultValue="grid" className="bg-muted/50 p-1 rounded-xl border border-border/50">
+                      <ToggleGroupItem value="grid" className="rounded-lg h-10 px-4 font-bold text-[10px] uppercase data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">{t('product.view_grid')}</ToggleGroupItem>
+                      <ToggleGroupItem value="list" className="rounded-lg h-10 px-4 font-bold text-[10px] uppercase data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">{t('product.view_list')}</ToggleGroupItem>
                     </ToggleGroup>
                   </div>
 
@@ -352,8 +357,8 @@ function HomePage() {
                     <div className="py-32 text-center space-y-6 bg-muted/20 rounded-[60px] border-4 border-dotted border-border/50">
                       <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mx-auto text-5xl grayscale opacity-50">🔎</div>
                       <div className="space-y-2 max-w-xs mx-auto">
-                        <h4 className="text-2xl font-black tracking-tight">Zero matches found</h4>
-                        <p className="text-sm font-medium text-muted-foreground">Try widening your search filters.</p>
+                        <h4 className="text-2xl font-black tracking-tight">{t('product.no_matches')}</h4>
+                        <p className="text-sm font-medium text-muted-foreground">{t('product.widen_search')}</p>
                       </div>
                     </div>
                   )}
@@ -393,25 +398,25 @@ function HomePage() {
           onClearCart={() => setCartItems([])}
         />
 
-        <footer className="border-t py-24 bg-muted/10">
+        <footer className="border-t py-12 md:py-24 bg-muted/10">
           <div className="max-w-7xl mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
               <div className="col-span-1 md:col-span-2 space-y-6 text-center md:text-left">
-                <div className="flex items-center justify-center md:justify-start gap-4">
+                <div className="flex items-center justify-center md:justify-start gap-2 md:gap-4">
                   <div className="w-14 h-14 bg-primary rounded-[20px] flex items-center justify-center text-3xl shadow-xl">{config.logoIcon}</div>
                   <h2 className="text-3xl font-black tracking-tighter">{config.name}</h2>
                 </div>
                 <p className="text-muted-foreground text-sm font-medium leading-relaxed max-w-sm mx-auto md:mx-0">{config.tagline}</p>
               </div>
               <div className="space-y-6 text-center md:text-left">
-                <h4 className="text-xs font-black uppercase tracking-widest text-foreground">Navigation</h4>
+                <h4 className="text-xs font-black uppercase tracking-widest text-foreground">{t('footer.navigation')}</h4>
                 <div className="flex flex-col gap-3 text-sm font-bold text-muted-foreground">
-                  <button onClick={() => setCurrentView('home')} className="hover:text-primary transition-colors">Shop All</button>
-                  <button onClick={() => setCurrentView('profile')} className="hover:text-primary transition-colors">My Profile</button>
+                  <button onClick={() => setCurrentView('home')} className="hover:text-primary transition-colors">{t('footer.shop_all')}</button>
+                  <button onClick={() => setCurrentView('profile')} className="hover:text-primary transition-colors">{t('footer.my_profile')}</button>
                 </div>
               </div>
               <div className="space-y-6 text-center md:text-left">
-                <h4 className="text-xs font-black uppercase tracking-widest text-foreground">Contact</h4>
+                <h4 className="text-xs font-black uppercase tracking-widest text-foreground">{t('footer.contact')}</h4>
                 <div className="flex flex-col gap-3 text-sm font-bold text-muted-foreground">
                   <span>{config.phone}</span>
                   <span>{config.hours}</span>

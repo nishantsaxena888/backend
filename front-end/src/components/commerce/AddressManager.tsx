@@ -3,6 +3,7 @@ import { MapPin, Plus, Edit2, Trash2, Home, Building2, X, Check } from 'lucide-r
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useLanguage } from '@/components/language-provider';
 import {
     Select,
     SelectContent,
@@ -40,6 +41,7 @@ interface AddressManagerProps {
 }
 
 export function AddressManager({ onSelectAddress, selectedAddressId, mode = 'manage' }: AddressManagerProps) {
+    const { t } = useLanguage();
     const [addresses, setAddresses] = useState<Address[]>([]);
     const [showForm, setShowForm] = useState(false);
     const [editingAddress, setEditingAddress] = useState<Address | null>(null);
@@ -136,15 +138,15 @@ export function AddressManager({ onSelectAddress, selectedAddressId, mode = 'man
                     </div>
                     <div>
                         <h3 className="text-lg font-bold tracking-tight">
-                            {mode === 'select' ? 'Delivery Address' : 'Saved Addresses'}
+                            {mode === 'select' ? t('address.delivery_title') : t('address.saved_title')}
                         </h3>
-                        <p className="text-xs text-muted-foreground">Manage your shipping destinations</p>
+                        <p className="text-xs text-muted-foreground">{t('address.manage_msg')}</p>
                     </div>
                 </div>
                 {!showForm && (
                     <Button onClick={() => setShowForm(true)} size="sm" className="rounded-full gap-2 shadow-lg shadow-primary/20">
                         <Plus className="w-4 h-4" />
-                        Add New
+                        {t('address.add_new')}
                     </Button>
                 )}
             </div>
@@ -153,7 +155,7 @@ export function AddressManager({ onSelectAddress, selectedAddressId, mode = 'man
                 <Card className="border-2 border-primary/20 shadow-xl overflow-hidden bg-muted/30">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
                         <CardTitle className="text-base font-bold">
-                            {editingAddress ? 'Update Details' : 'New Destination'}
+                            {editingAddress ? t('address.update_details') : t('address.new_destination')}
                         </CardTitle>
                         <Button variant="ghost" size="icon" onClick={resetForm} className="h-8 w-8 rounded-full">
                             <X className="w-4 h-4" />
@@ -163,7 +165,7 @@ export function AddressManager({ onSelectAddress, selectedAddressId, mode = 'man
                         <form onSubmit={handleAddAddress} className="space-y-4">
                             <div className="grid md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Full Name</Label>
+                                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('address.full_name')}</Label>
                                     <Input
                                         required
                                         value={formData.fullName}
@@ -172,7 +174,7 @@ export function AddressManager({ onSelectAddress, selectedAddressId, mode = 'man
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Phone</Label>
+                                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('address.phone')}</Label>
                                     <Input
                                         required
                                         type="tel"
@@ -184,7 +186,7 @@ export function AddressManager({ onSelectAddress, selectedAddressId, mode = 'man
                             </div>
 
                             <div className="space-y-2">
-                                <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Street Address</Label>
+                                <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('address.street')}</Label>
                                 <Input
                                     required
                                     value={formData.address}
@@ -195,30 +197,30 @@ export function AddressManager({ onSelectAddress, selectedAddressId, mode = 'man
 
                             <div className="grid md:grid-cols-3 gap-4">
                                 <div className="space-y-2">
-                                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">City</Label>
+                                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('address.city')}</Label>
                                     <Input required value={formData.city} onChange={e => setFormData({ ...formData, city: e.target.value })} className="bg-background rounded-xl h-11" />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">State</Label>
+                                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('address.state')}</Label>
                                     <Input required value={formData.state} onChange={e => setFormData({ ...formData, state: e.target.value })} className="bg-background rounded-xl h-11" />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">ZIP</Label>
+                                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('address.zip')}</Label>
                                     <Input required value={formData.zipCode} onChange={e => setFormData({ ...formData, zipCode: e.target.value })} className="bg-background rounded-xl h-11" />
                                 </div>
                             </div>
 
                             <div className="grid md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Type</Label>
+                                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('address.type')}</Label>
                                     <Select value={formData.type} onValueChange={(val: any) => setFormData({ ...formData, type: val })}>
                                         <SelectTrigger className="bg-background rounded-xl h-11">
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="home">Home</SelectItem>
-                                            <SelectItem value="work">Work</SelectItem>
-                                            <SelectItem value="other">Other</SelectItem>
+                                            <SelectItem value="home">{t('address.type_home')}</SelectItem>
+                                            <SelectItem value="work">{t('address.type_work')}</SelectItem>
+                                            <SelectItem value="other">{t('address.type_other')}</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -228,13 +230,13 @@ export function AddressManager({ onSelectAddress, selectedAddressId, mode = 'man
                                         checked={formData.isDefault}
                                         onCheckedChange={(checked) => setFormData({ ...formData, isDefault: !!checked })}
                                     />
-                                    <Label htmlFor="default" className="text-sm font-medium">Use as default</Label>
+                                    <Label htmlFor="default" className="text-sm font-medium">{t('address.use_default')}</Label>
                                 </div>
                             </div>
 
                             <div className="flex gap-4 pt-4">
-                                <Button type="submit" className="flex-1 h-11 font-bold rounded-xl">{editingAddress ? 'Update' : 'Save Address'}</Button>
-                                <Button type="button" variant="outline" onClick={resetForm} className="h-11 rounded-xl">Cancel</Button>
+                                <Button type="submit" className="flex-1 h-11 font-bold rounded-xl">{editingAddress ? t('address.update') : t('address.save')}</Button>
+                                <Button type="button" variant="outline" onClick={resetForm} className="h-11 rounded-xl">{t('address.cancel')}</Button>
                             </div>
                         </form>
                     </CardContent>
@@ -246,7 +248,7 @@ export function AddressManager({ onSelectAddress, selectedAddressId, mode = 'man
                     {addresses.length === 0 ? (
                         <div className="text-center py-10 border-2 border-dashed rounded-3xl bg-muted/20">
                             <MapPin className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
-                            <p className="text-sm font-medium text-muted-foreground">Your address book is empty</p>
+                            <p className="text-sm font-medium text-muted-foreground">{t('address.empty_msg')}</p>
                         </div>
                     ) : (
                         <RadioGroup
@@ -275,7 +277,7 @@ export function AddressManager({ onSelectAddress, selectedAddressId, mode = 'man
                                             <span className="font-bold tracking-tight text-foreground capitalize">{address.type}</span>
                                             {address.isDefault && (
                                                 <Badge variant="secondary" className="text-[9px] uppercase font-black px-1.5 h-4 bg-primary/20 text-primary border-none">
-                                                    Default
+                                                    {t('address.default_badge')}
                                                 </Badge>
                                             )}
                                         </div>

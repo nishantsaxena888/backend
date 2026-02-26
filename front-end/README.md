@@ -1,39 +1,66 @@
-# Inventure — Multi-Client E-commerce Platform
+# Inventure — Core E-commerce Engine
 
-A high-performance, unified e-commerce platform built with React, TypeScript, and Tailwind CSS. The system features a unique **Multi-Client Architecture** that allows served 8 distinct brands/clients from a single codebase via a dynamic Mock API and CSS variable-based theming.
+A high-performance, multitenant e-commerce platform built for scale. This repository contains the unified front-end engine that serves multiple distinct brand identities (Grocery, Fashion, Liquor, Restaurant) from a single React/TypeScript codebase using a dynamic context-aware architecture.
 
-## 🚀 Recent Feature Updates
+## 🏗️ Architectural Overview
 
-### ✅ Phase 4: Commerce Engine (Completed)
-- **Advanced Cart System**: Sheet-based cart with real-time total calculations and free delivery threshold progress tracking.
-- **Unified Product Detail**: Data-driven modal (`ProductDetail.tsx`) supporting both high-res Unsplash imagery and character/emoji branding.
-- **Multi-Step Checkout**: A streamlined 4-step flow (**Shipping → Payment → Review → Success**) reactive to client-specific business rules (tax rates, shipping costs).
-- **Address Manager**: Localized shipping address management with default logic and form validation.
+### 1. Multitenancy via `ClientConfig`
+The entire application is driven by a `ClientConfig` object. This configuration dictates branding, business logic (e.g., age-gating), and feature availability.
+- **Source**: `src/mock/api.ts` provides the `getClientConfig(id)` function.
+- **Injection**: Config is passed down as a prop or consumed via context to ensure components remain "brand-agnostic" but "context-aware".
 
-### 🚀 Phase 5: Auth & Account (In Progress)
-- **Branded AuthModal**: Implemented a unified login/register flow that matches the active client's visual identity (logo, color palette, tagline).
-- **Session Persistence**: Automated session management using `localStorage` to maintain user state across refreshes.
-- **Protected Checkout**: Intelligent gates that prompt guest users for authentication before allowing them to place orders.
-- **Header Integration**: Dynamic header updates showing user status, profile menus, and sign-out functionality.
+### 2. CSS-in-JS Theme Engine
+Instead of hardcoded colors, the system uses a CSS Variable mapping strategy located in `src/index.css` and `tailwind.config.js`.
+- **Theme Switching**: Managed by `src/components/theme-provider.tsx`.
+- **Atomic Scaling**: Tailwind classes like `text-primary`, `bg-accent`, and `border-border` dynamically map to the active client's hex codes.
+- **Radius & Borders**: Variable border-radii (`--radius`) ensure that a "Grocery" store can feel rounded and friendly, while a "Luxury" store remains sharp and minimal.
 
-### 🏗️ Architectural Core
-- **Data-Driven UI**: Components (Header, NavBar, Hero, Cart, Checkout) are not static; they consume a `ClientConfig` prop served by an internal SRP Mock API.
-- **CSS Theme Injection**: The application uses a global toolbar to switch between 8 pre-configured themes (Emerald Grocery, Fashion Black, Liquor Orange, Restaurant Black, etc.), instantly re-styling the entire site via CSS variables.
-- **Storybook Integration**: Full component library isolation and development environment for rapid UI iteration.
+### 3. Component Hierarchy
+- **`@/components/ui/`**: 47 low-level primitives (shadcn/ui). These are the building blocks.
+- **`@/components/layout/`**: Structural elements (Header, NavBar, HeroSection) that define the page framework.
+- **`@/components/commerce/`**: Complex business modules (Cart, Checkout, AuthModal, AddressManager, ProductGrid). These handle state and cross-component logic.
 
-## 🛠️ Tech Stack
-- **Framework**: React 18 + TypeScript + Vite
-- **Styling**: Tailwind CSS v3 (Custom multi-theme engine)
-- **UI Components**: shadcn/ui (47 primitives migrated and customized)
-- **Icons**: Lucide React
-- **Mock Service**: Custom SRP API delivering 8 client manifests
+## 🛠️ Developer Guide
 
-## ⏳ What's Next?
-- **Account Dashboard**: Profile management and order history tracking.
-- **Specialized Extra Components**:
-  - `RestaurantPage.tsx` for food delivery clients.
-  - `AgeVerification.tsx` barrier for liquor store clients.
-- **Refining Filters**: Advanced product filtering bar for attributes like size, color, and dietary requirements.
+### Directory Structure
+```bash
+src/
+├── components/
+│   ├── commerce/   # High-level business logic & complex UI
+│   ├── layout/     # Page-level structural shells
+│   ├── ui/         # Atomic shadcn/ui primitives (Design System)
+├── mock/           # Data layer, type definitions, and client configs
+├── stories/        # Storybook compositions for isolated development
+└── App.tsx         # Main orchestration layer and routing
+```
+
+### State Management Strategy
+- **Persistence**: `localStorage` is used for Cart, Auth, and Address books to ensure session continuity.
+- **Events**: A `CustomEvent` bus (`addressesUpdated`, etc.) is used to sync state across decoupled components without bloating the global context.
+- **Modals**: Most complex flows (Auth, Checkout, QuickView) are implemented as `Dialog` (Radix UI) compositions for optimal accessibility.
+
+### Storybook-First Development
+We use Storybook not just for documentation, but as our primary development sandbox.
+- **Compositions**: `src/stories/CommerceComponents.stories.tsx` contains full-page state simulations.
+- **Edge Cases**: Stories are used to test components against all 8 client configurations (e.g., testing the Login modal in 'Liquor' vs 'Fashion' themes).
+
+## 🚀 Commands
+```bash
+# Start local development server
+npm run dev
+
+# Launch Storybook environment
+npm run storybook
+
+# Production build
+npm run build
+```
+
+## 📐 Design & Quality Standards
+1. **Zero-Hardcoding**: Never use hex codes in components. Use Tailwind theme variables.
+2. **Type Safety**: Avoid `any`. Use the shared types in `src/mock/types.ts`.
+3. **Responsive-First**: Every component must be verified in Storybook at `360px` (Mobile), `768px` (Tablet), and `1440px` (Desktop).
+4. **Interactive Polish**: Use `active:scale-[0.98]` for buttons and `animate-in` for modals to maintain the premium "Inventure feel".
 
 ---
-*Created by the Inventure Development Team*
+*Technical Documentation for the Inventure Engineering Team*

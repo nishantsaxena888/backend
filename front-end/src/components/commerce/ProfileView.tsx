@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import type { ClientConfig } from '@/mock/types';
+import { useLanguage } from '@/components/language-provider';
 
 interface ProfileViewProps {
     user: { name: string; email: string } | null;
@@ -14,6 +15,7 @@ interface ProfileViewProps {
 }
 
 export function ProfileView({ user, config, onSignOut, onClose }: ProfileViewProps) {
+    const { t } = useLanguage();
     if (!user) return null;
 
     const initials = user.name.split(' ').map(n => n[0]).join('').toUpperCase();
@@ -38,16 +40,16 @@ export function ProfileView({ user, config, onSignOut, onClose }: ProfileViewPro
                                     <Mail className="w-4 h-4" /> {user.email}
                                 </span>
                                 <Badge variant="secondary" className="bg-white/20 text-white border-none py-1 px-4 rounded-full text-[10px] font-black uppercase tracking-widest">
-                                    VIP Member
+                                    {t('profile.vip')}
                                 </Badge>
                             </div>
                         </div>
                         <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
                             <Button variant="outline" className="bg-white/10 border-white/20 hover:bg-white/20 text-white rounded-xl font-bold h-10 px-6">
-                                <Settings className="w-4 h-4 mr-2" /> Edit Profile
+                                <Settings className="w-4 h-4 mr-2" /> {t('profile.edit')}
                             </Button>
                             <Button variant="ghost" className="text-white hover:bg-white/10 rounded-xl font-bold h-10 px-4" onClick={onSignOut}>
-                                <LogOut className="w-4 h-4 mr-2" /> Sign Out
+                                <LogOut className="w-4 h-4 mr-2" /> {t('profile.sign_out')}
                             </Button>
                         </div>
                     </div>
@@ -61,11 +63,11 @@ export function ProfileView({ user, config, onSignOut, onClose }: ProfileViewPro
                     <Card className="rounded-[32px] border-none shadow-xl overflow-hidden">
                         <CardContent className="p-4 space-y-1">
                             {[
-                                { icon: Package, label: 'Order History', color: 'text-blue-500' },
-                                { icon: Heart, label: 'My Wishlist', color: 'text-red-500' },
-                                { icon: MapPin, label: 'Saved Addresses', color: 'text-green-500' },
-                                { icon: CreditCard, label: 'Payment Methods', color: 'text-purple-500' },
-                                { icon: ShieldCheck, label: 'Privacy & Security', color: 'text-orange-500' },
+                                { icon: Package, label: t('profile.orders'), color: 'text-blue-500' },
+                                { icon: Heart, label: t('profile.wishlist'), color: 'text-red-500' },
+                                { icon: MapPin, label: t('profile.addresses'), color: 'text-green-500' },
+                                { icon: CreditCard, label: t('profile.payment'), color: 'text-purple-500' },
+                                { icon: ShieldCheck, label: t('profile.privacy'), color: 'text-orange-500' },
                             ].map((item, i) => (
                                 <button
                                     key={i}
@@ -85,12 +87,12 @@ export function ProfileView({ user, config, onSignOut, onClose }: ProfileViewPro
                                 <Zap className="w-6 h-6 text-primary" />
                             </div>
                             <div className="space-y-2">
-                                <h4 className="font-black text-xl tracking-tight leading-none">Need Help?</h4>
+                                <h4 className="font-black text-xl tracking-tight leading-none">{t('profile.need_help')}</h4>
                                 <p className="text-xs text-muted-foreground font-medium leading-relaxed">
-                                    Our priority support team is available 24/7 for our VIP members.
+                                    {t('profile.priority_support')}
                                 </p>
                             </div>
-                            <Button className="w-full rounded-xl font-black h-12 shadow-lg shadow-primary/20">Contact Support</Button>
+                            <Button className="w-full rounded-xl font-black h-12 shadow-lg shadow-primary/20">{t('profile.contact_support')}</Button>
                         </CardContent>
                     </Card>
                 </div>
@@ -101,10 +103,10 @@ export function ProfileView({ user, config, onSignOut, onClose }: ProfileViewPro
                         <CardHeader className="p-8 pb-4">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <CardTitle className="text-3xl font-black tracking-tight leading-none">Recent Orders</CardTitle>
-                                    <CardDescription className="text-xs font-bold uppercase tracking-widest mt-2">{config.name} • Shopping History</CardDescription>
+                                    <CardTitle className="text-3xl font-black tracking-tight leading-none">{t('profile.recent_orders')}</CardTitle>
+                                    <CardDescription className="text-xs font-bold uppercase tracking-widest mt-2">{config.name} • {t('profile.shopping_history')}</CardDescription>
                                 </div>
-                                <Badge className="rounded-full px-4 font-black">2 Orders</Badge>
+                                <Badge className="rounded-full px-4 font-black">2 {t('profile.orders')}</Badge>
                             </div>
                         </CardHeader>
                         <Separator className="mx-8" />
@@ -114,13 +116,13 @@ export function ProfileView({ user, config, onSignOut, onClose }: ProfileViewPro
                                     <Package className="w-10 h-10 text-muted-foreground" />
                                 </div>
                                 <div className="space-y-2">
-                                    <h4 className="font-bold text-xl">No active orders found</h4>
+                                    <h4 className="font-bold text-xl">{t('profile.no_orders')}</h4>
                                     <p className="text-sm text-muted-foreground max-w-xs mx-auto">
-                                        You haven't placed any orders with {config.name} yet. Start exploring our categories to find amazing deals!
+                                        {t('profile.no_orders_msg')} {config.name} {t('profile.no_orders_cta')}
                                     </p>
                                 </div>
                                 <Button variant="outline" className="rounded-xl font-bold h-12 px-8" onClick={onClose}>
-                                    Return to Shop
+                                    {t('profile.return_to_shop')}
                                 </Button>
                             </div>
                         </CardContent>

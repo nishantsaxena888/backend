@@ -1,4 +1,5 @@
 import type { ClientConfig } from "@/mock/types";
+import { useLanguage } from "@/components/language-provider";
 
 interface NavBarProps {
     config: ClientConfig;
@@ -7,13 +8,14 @@ interface NavBarProps {
 }
 
 export function NavBar({ config, selectedCategory = 'All Products', onCategoryChange }: NavBarProps) {
+    const { t } = useLanguage();
     // Prefix categories with All Products for the UI
     const categories = ['All Products', ...config.categories];
 
     return (
-        <nav className="bg-background border-b border-border sticky top-[113px] z-40">
+        <nav className="bg-background border-b border-border relative sm:sticky sm:top-[113px] z-40 w-full max-w-full">
             <div className="max-w-7xl mx-auto px-4">
-                <div className="flex items-center gap-2 overflow-x-auto py-3"
+                <div className="flex items-center gap-2 overflow-x-auto py-3 w-full"
                     style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                     {categories.map(cat => (
                         <button
@@ -26,7 +28,7 @@ export function NavBar({ config, selectedCategory = 'All Products', onCategoryCh
                                     : 'bg-muted/50 text-foreground hover:bg-accent hover:text-accent-foreground',
                             ].join(' ')}
                         >
-                            <span>{cat}</span>
+                            <span>{cat === 'All Products' ? t('product.all_products') : t(cat)}</span>
                         </button>
                     ))}
                 </div>

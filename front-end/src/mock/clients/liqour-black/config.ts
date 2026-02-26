@@ -17,4 +17,18 @@ export const config: ClientConfig = {
     hours: 'Mon–Sat: 11 AM – 9 PM',
     topBarMessage: '🔞 Must be 21+ to purchase · ID checked at delivery',
     freeDeliveryThreshold: 100,
+    translations: {
+        es: {
+            name: 'La Cava de Barricas',
+            tagline: 'Licores Finos',
+            topBarMessage: '🔞 Debe tener 21+ para comprar · ID verificado al entregar',
+            hero: {
+                headline: 'Añejado a la Perfección.',
+                subheadline: 'Maltas raras, whiskies de lote pequeño y rones añejos — seleccionados para el coleccionista serio.',
+                cta: 'Explorar Licores Oscuros',
+                badge: '🔒 Verificación de edad requerida al entregar',
+            },
+            categories: ['Todo', 'Scotch de Malta Única', 'Bourbon y Rye', 'Ron Oscuro', 'Coñac y Armagnac', 'Whisky Japonés', 'Cerveza Artesanal', 'Cristalería y Accesorios'],
+        }
+    }
 };

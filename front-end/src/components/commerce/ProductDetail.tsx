@@ -5,6 +5,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from '@/components/language-provider';
 
 interface ProductDetailProps {
     product: Product;
@@ -14,6 +15,7 @@ interface ProductDetailProps {
 }
 
 export function ProductDetail({ product, config, onAddToCart, trigger }: ProductDetailProps) {
+    const { t } = useLanguage();
     const renderStars = (rating: number) => {
         return (
             <div className="flex items-center gap-1">
@@ -31,7 +33,7 @@ export function ProductDetail({ product, config, onAddToCart, trigger }: Product
     return (
         <Dialog>
             <DialogTrigger asChild>
-                {trigger || <Button variant="outline" size="sm">Details</Button>}
+                {trigger || <Button variant="outline" size="sm">{t('product.details')}</Button>}
             </DialogTrigger>
             <DialogContent className="max-w-4xl p-0 overflow-hidden sm:rounded-3xl border-none shadow-2xl">
                 <div className="grid md:grid-cols-2">
@@ -89,19 +91,19 @@ export function ProductDetail({ product, config, onAddToCart, trigger }: Product
                         <div className="grid grid-cols-2 gap-4 py-4 border-y">
                             <div className="flex items-center gap-3 text-sm font-medium">
                                 <Truck className="w-5 h-5 text-primary" />
-                                <span>Fast Delivery</span>
+                                <span>{t('product.fast_delivery')}</span>
                             </div>
                             <div className="flex items-center gap-3 text-sm font-medium">
                                 <RotateCcw className="w-5 h-5 text-primary" />
-                                <span>Easy Returns</span>
+                                <span>{t('product.easy_returns')}</span>
                             </div>
                             <div className="flex items-center gap-3 text-sm font-medium">
                                 <Shield className="w-5 h-5 text-primary" />
-                                <span>Certified Quality</span>
+                                <span>{t('product.certified_quality')}</span>
                             </div>
                             <div className="flex items-center gap-3 text-sm font-medium">
                                 <Package className="w-5 h-5 text-primary" />
-                                <span>In Stock</span>
+                                <span>{product.inStock ? t('product.in_stock') : t('product.out_of_stock')}</span>
                             </div>
                         </div>
 
@@ -112,7 +114,7 @@ export function ProductDetail({ product, config, onAddToCart, trigger }: Product
                                 disabled={!product.inStock}
                             >
                                 <ShoppingCart className="w-5 h-5 mr-3" />
-                                Add to Cart
+                                {t('product.add_to_cart')}
                             </Button>
                             <Button variant="outline" className="h-14 w-14 rounded-2xl group">
                                 <Heart className="w-6 h-6 group-hover:text-destructive group-hover:fill-destructive transition-colors" />
@@ -121,7 +123,7 @@ export function ProductDetail({ product, config, onAddToCart, trigger }: Product
 
                         <div className="flex items-center justify-center gap-2 text-[10px] uppercase font-bold tracking-widest text-muted-foreground pt-2">
                             <Clock className="w-3 h-3" />
-                            Ends in: 04:22:15
+                            {t('product.ends_in')}: 04:22:15
                         </div>
                     </div>
                 </div>

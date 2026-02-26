@@ -16,6 +16,9 @@ export interface Product {
     description: string;
     inStock: boolean;
     tags?: string[];
+    translations?: {
+        es?: Partial<Pick<Product, 'name' | 'description' | 'badge' | 'category'>>;
+    };
 }
 
 export interface CartItem extends Product {
@@ -46,4 +49,11 @@ export interface ClientConfig {
     topBarMessage: string;
     /** Cart free-delivery threshold in $ */
     freeDeliveryThreshold: number;
+    /** Localized versions of the above strings */
+    translations?: {
+        es?: Partial<Omit<ClientConfig, 'id' | 'type' | 'categories' | 'freeDeliveryThreshold' | 'translations' | 'hero'>> & {
+            hero?: Partial<HeroConfig>;
+            categories?: string[];
+        };
+    };
 }

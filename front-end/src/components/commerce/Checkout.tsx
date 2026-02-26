@@ -3,6 +3,7 @@ import { X, CreditCard, Truck, CheckCircle, ArrowLeft, Zap, Shield, RotateCcw } 
 import type { CartItem, ClientConfig } from '@/mock/types';
 import { AddressManager, type Address } from './AddressManager';
 import { Button } from "@/components/ui/button";
+import { useLanguage } from '@/components/language-provider';
 import {
     Dialog,
     DialogContent,
@@ -25,6 +26,7 @@ interface CheckoutProps {
 type CheckoutStep = 'shipping' | 'payment' | 'review' | 'success';
 
 export function Checkout({ isOpen, onClose, items, config, onClearCart }: CheckoutProps) {
+    const { t } = useLanguage();
     const [step, setStep] = useState<CheckoutStep>('shipping');
     const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
     const [paymentInfo, setPaymentInfo] = useState({
@@ -72,9 +74,9 @@ export function Checkout({ isOpen, onClose, items, config, onClearCart }: Checko
                                     {config.logoIcon}
                                 </div>
                                 <div>
-                                    <DialogTitle className="text-2xl font-bold tracking-tight">Checkout</DialogTitle>
+                                    <DialogTitle className="text-2xl font-bold tracking-tight">{t('checkout.title')}</DialogTitle>
                                     <DialogDescription className="text-primary-foreground/70 text-xs font-medium uppercase tracking-widest">
-                                        {step === 'success' ? 'Order Confirmed' : `${config.name} • ${step} Step`}
+                                        {step === 'success' ? t('checkout.confirmed') : `${config.name} • ${t(`checkout.step_${step}`)}`}
                                     </DialogDescription>
                                 </div>
                             </div>
@@ -94,11 +96,11 @@ export function Checkout({ isOpen, onClose, items, config, onClearCart }: Checko
                     {/* Stepper */}
                     {step !== 'success' && (
                         <div className="px-8 py-4 border-b flex items-center justify-center gap-4 bg-muted/30">
-                            <Badge variant={step === 'shipping' ? 'default' : 'secondary'} className="rounded-full px-4 py-1">1. Shipping</Badge>
+                            <Badge variant={step === 'shipping' ? 'default' : 'secondary'} className="rounded-full px-4 py-1">1. {t('checkout.shipping')}</Badge>
                             <div className="w-8 h-[1px] bg-muted-foreground/30" />
-                            <Badge variant={step === 'payment' ? 'default' : 'secondary'} className="rounded-full px-4 py-1">2. Payment</Badge>
+                            <Badge variant={step === 'payment' ? 'default' : 'secondary'} className="rounded-full px-4 py-1">2. {t('checkout.payment')}</Badge>
                             <div className="w-8 h-[1px] bg-muted-foreground/30" />
-                            <Badge variant={step === 'review' ? 'default' : 'secondary'} className="rounded-full px-4 py-1">3. Review</Badge>
+                            <Badge variant={step === 'review' ? 'default' : 'secondary'} className="rounded-full px-4 py-1">3. {t('checkout.review')}</Badge>
                         </div>
                     )}
 
@@ -118,7 +120,7 @@ export function Checkout({ isOpen, onClose, items, config, onClearCart }: Checko
                                         onClick={() => setStep('payment')}
                                         className="w-full h-14 text-lg font-bold rounded-2xl shadow-xl shadow-primary/20"
                                     >
-                                        Continue to Payment
+                                        {t('checkout.continue_to_payment')}
                                     </Button>
                                 </div>
                             )}
@@ -129,11 +131,11 @@ export function Checkout({ isOpen, onClose, items, config, onClearCart }: Checko
                                     <div className="bg-primary/5 border border-primary/10 rounded-3xl p-6 space-y-6">
                                         <div className="flex items-center gap-3 mb-2">
                                             <CreditCard className="w-5 h-5 text-primary" />
-                                            <h3 className="font-bold">Card Information</h3>
+                                            <h3 className="font-bold">{t('checkout.card_info')}</h3>
                                         </div>
                                         <div className="space-y-4">
                                             <div className="space-y-2">
-                                                <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Card Number</Label>
+                                                <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{t('checkout.card_number')}</Label>
                                                 <Input
                                                     value={paymentInfo.cardNumber}
                                                     onChange={e => setPaymentInfo({ ...paymentInfo, cardNumber: e.target.value })}
@@ -143,7 +145,7 @@ export function Checkout({ isOpen, onClose, items, config, onClearCart }: Checko
                                             </div>
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div className="space-y-2">
-                                                    <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Expiry</Label>
+                                                    <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{t('checkout.expiry')}</Label>
                                                     <Input
                                                         value={paymentInfo.expiryDate}
                                                         onChange={e => setPaymentInfo({ ...paymentInfo, expiryDate: e.target.value })}
@@ -152,7 +154,7 @@ export function Checkout({ isOpen, onClose, items, config, onClearCart }: Checko
                                                     />
                                                 </div>
                                                 <div className="space-y-2">
-                                                    <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">CVV</Label>
+                                                    <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{t('checkout.cvv')}</Label>
                                                     <Input
                                                         value={paymentInfo.cvv}
                                                         onChange={e => setPaymentInfo({ ...paymentInfo, cvv: e.target.value })}
@@ -167,7 +169,7 @@ export function Checkout({ isOpen, onClose, items, config, onClearCart }: Checko
                                         onClick={() => setStep('review')}
                                         className="w-full h-14 text-lg font-bold rounded-2xl"
                                     >
-                                        Review Order
+                                        {t('checkout.review_order')}
                                     </Button>
                                 </div>
                             )}
@@ -177,21 +179,21 @@ export function Checkout({ isOpen, onClose, items, config, onClearCart }: Checko
                                 <div className="space-y-6">
                                     <div className="grid gap-4 md:grid-cols-2">
                                         <div className="p-5 rounded-3xl bg-muted/50 border space-y-2">
-                                            <Label className="text-[10px] font-black uppercase text-primary tracking-widest">Shipping To</Label>
+                                            <Label className="text-[10px] font-black uppercase text-primary tracking-widest">{t('checkout.shipping_to')}</Label>
                                             <p className="font-bold">{selectedAddress?.fullName}</p>
                                             <p className="text-xs text-muted-foreground leading-relaxed">{selectedAddress?.address}, {selectedAddress?.city}</p>
                                         </div>
                                         <div className="p-5 rounded-3xl bg-muted/50 border space-y-2">
-                                            <Label className="text-[10px] font-black uppercase text-primary tracking-widest">Payment</Label>
-                                            <p className="font-bold">Card ending in {paymentInfo.cardNumber.slice(-4)}</p>
-                                            <p className="text-xs text-muted-foreground">Expires {paymentInfo.expiryDate}</p>
+                                            <Label className="text-[10px] font-black uppercase text-primary tracking-widest">{t('checkout.payment')}</Label>
+                                            <p className="font-bold">{t('checkout.card_ending')} {paymentInfo.cardNumber.slice(-4)}</p>
+                                            <p className="text-xs text-muted-foreground">{t('checkout.expires')} {paymentInfo.expiryDate}</p>
                                         </div>
                                     </div>
 
                                     <div className="space-y-4">
                                         <h3 className="font-bold flex items-center gap-2">
                                             <Zap className="w-4 h-4 text-primary" />
-                                            Order Summary
+                                            {t('checkout.order_summary')}
                                         </h3>
                                         <div className="space-y-3">
                                             {items.map(item => (
@@ -205,7 +207,7 @@ export function Checkout({ isOpen, onClose, items, config, onClearCart }: Checko
                                                     </div>
                                                     <div className="flex-1 min-w-0">
                                                         <p className="font-bold text-sm truncate">{item.name}</p>
-                                                        <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
+                                                        <p className="text-xs text-muted-foreground">{t('checkout.qty')}: {item.quantity}</p>
                                                     </div>
                                                     <span className="font-bold">${(item.price * item.quantity).toFixed(2)}</span>
                                                 </div>
@@ -217,19 +219,19 @@ export function Checkout({ isOpen, onClose, items, config, onClearCart }: Checko
 
                                     <div className="space-y-2 pt-2">
                                         <div className="flex justify-between text-sm">
-                                            <span className="text-muted-foreground">Subtotal</span>
+                                            <span className="text-muted-foreground">{t('cart.subtotal')}</span>
                                             <span className="font-medium">${subtotal.toFixed(2)}</span>
                                         </div>
                                         <div className="flex justify-between text-sm">
-                                            <span className="text-muted-foreground">Shipping</span>
-                                            <span className="font-medium text-primary">{shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}</span>
+                                            <span className="text-muted-foreground">{t('cart.shipping')}</span>
+                                            <span className="font-medium text-primary">{shipping === 0 ? t('checkout.free') : `$${shipping.toFixed(2)}`}</span>
                                         </div>
                                         <div className="flex justify-between text-sm">
-                                            <span className="text-muted-foreground">Tax</span>
+                                            <span className="text-muted-foreground">{t('cart.tax')}</span>
                                             <span className="font-medium">${tax.toFixed(2)}</span>
                                         </div>
                                         <div className="flex justify-between text-xl font-black pt-4 border-t border-dashed">
-                                            <span>Total</span>
+                                            <span>{t('cart.total')}</span>
                                             <span className="text-primary">${total.toFixed(2)}</span>
                                         </div>
                                     </div>
@@ -238,7 +240,7 @@ export function Checkout({ isOpen, onClose, items, config, onClearCart }: Checko
                                         onClick={handlePlaceOrder}
                                         className="w-full h-16 text-xl font-black rounded-2xl shadow-2xl shadow-primary/30 animate-pulse-subtle"
                                     >
-                                        Place Order • ${total.toFixed(2)}
+                                        {t('checkout.place_order')} • ${total.toFixed(2)}
                                     </Button>
                                 </div>
                             )}
@@ -250,11 +252,11 @@ export function Checkout({ isOpen, onClose, items, config, onClearCart }: Checko
                                         <CheckCircle className="w-16 h-16 text-primary" />
                                     </div>
                                     <div className="space-y-2">
-                                        <h2 className="text-4xl font-black tracking-tighter">Success!</h2>
-                                        <p className="text-muted-foreground">Thank you for your order. We've sent a confirmation email to your primary address.</p>
+                                        <h2 className="text-4xl font-black tracking-tighter">{t('checkout.success_title')}</h2>
+                                        <p className="text-muted-foreground">{t('checkout.success_msg')}</p>
                                     </div>
                                     <div className="p-8 bg-primary/5 rounded-[40px] border border-primary/10 max-w-sm mx-auto">
-                                        <p className="text-xs font-bold uppercase tracking-widest text-primary mb-2">Order Amount</p>
+                                        <p className="text-xs font-bold uppercase tracking-widest text-primary mb-2">{t('checkout.order_amount')}</p>
                                         <p className="text-5xl font-black tracking-tighter">${total.toFixed(2)}</p>
                                     </div>
                                     <div className="flex items-center justify-center gap-6 pt-4 grayscale opacity-40">
