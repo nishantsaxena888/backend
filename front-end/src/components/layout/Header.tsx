@@ -13,6 +13,7 @@ interface HeaderProps {
     user?: { name: string; email: string } | null;
     onSignInClick?: () => void;
     onSignOut?: () => void;
+    onProfileClick?: () => void;
     deliveryCity?: string;
 }
 
@@ -35,6 +36,7 @@ export function Header({
     user = null,
     onSignInClick,
     onSignOut,
+    onProfileClick,
     deliveryCity,
 }: HeaderProps) {
     const { theme, setTheme } = useTheme();
@@ -236,6 +238,13 @@ export function Header({
                                             <p className="text-xs text-muted-foreground">Signed in as</p>
                                             <p className="text-sm text-foreground truncate font-medium">{user.name}</p>
                                         </div>
+                                        <button
+                                            className="w-full px-4 py-2.5 text-left text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3 group border-b border-border/50"
+                                            onClick={() => { setShowAccountMenu(false); onProfileClick?.(); }}
+                                        >
+                                            <User className="w-4 h-4 text-muted-foreground group-hover:text-primary" />
+                                            <span className="flex-1 group-hover:text-primary">My Profile</span>
+                                        </button>
                                         <button
                                             className="w-full px-4 py-2.5 text-left text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3 group"
                                             onClick={() => { setShowAccountMenu(false); onSignOut?.(); }}

@@ -74,40 +74,44 @@ LAYER 2 — Ecom business components (SOURCE: theme/Ecom/emerald-grocery/src/com
   Fashion/Liquor/Restaurant only: RestaurantPage
   Liquor only: AgeVerification
 ### Migration Plan (Phase by Phase)
-✅ Phase 1 — Fill ui/ gap
-  47 shadcn primitives copied to front-end/src/components/ui/
+✅ Phase 1 — UI Foundation
+  - 47/47 shadcn/ui primitives migrated to `@/components/ui/`.
+  - Global CSS themes mapped to Tailwind variables for all 8 clients.
+  - Standardized component styling (rounded corners, shadows, transitions).
 
-✅ Phase 2 — Page Shell (Multi-Client Ready)
-  Step 1: Header.tsx   — Unified with Mock API config prop.
-  Step 2: NavBar.tsx   — Unified with Mock API config prop.
+✅ Phase 2 — Page Shell (Multi-Client)
+  - **Header.tsx**: Dynamic branding, search suggestions, theme switcher, and auth state.
+  - **NavBar.tsx**: Client-specific category rendering with active states.
+  - **Footer.tsx**: (Implicitly integrated via HomePage shell).
 
-✅ Phase 3 — Core Product UI (Multi-Client Ready)
-  Step 3: HeroSection  — Fully data-driven from client manifest.
-  Step 4: ProductCard  — Reactive to both Unsplash URLs and Emojis.
-  Step 5: ProductGrid  — Dynamic filtering and pagination support.
+✅ Phase 3 — Core Product UI
+  - **HeroSection**: Hero content (badges, headlines, CTAs) driven by client manifest.
+  - **ProductCard/Grid**: Unified grid with dynamic filtering, price ranges, and status badges.
+  - **Multi-Media Support**: Handles both Unsplash high-res URLs and character/emoji branding.
 
 ✅ Phase 4 — Commerce Flow
-  Step 6: Cart.tsx           — ✅ Basic sheet-based cart implemented.
-  Step 7: ProductDetail.tsx  — ✅ Unified data-driven detail modal.
-  Step 8: Checkout.tsx       — ✅ Full 4-step multi-client checkout flow.
+  - **Cart**: Sheet-based cart with real-time total calculation and free delivery threshold progress.
+  - **ProductDetail**: Premium Dialog-based modal with rich product attributes and cart integration.
+  - **Checkout**: Full 4-step flow (Shipping -> Payment -> Review -> Success) with dynamic shipping costs.
+  - **AddressManager**: Localized address storage with default logic, used in Checkout.
 
-Phase 5 — Auth & Account
-  Step 9:  AuthModal.tsx          — ⏳
-  Step 10: AddressManager.tsx     — ✅ Completed as part of Checkout.
-  Step 11: AppliedFiltersBar.tsx  — ⏳
+✅ Phase 5 — Auth & Account
+  - **AuthModal.tsx**: ✅ Implemented. Dynamic login/register flows with client-branded headers and social SSO slots.
+  - **Session Management**: ✅ Persistent user sessions via localStorage with auto-hydrating state.
+  - **Protected Flows**: ✅ Integrated into Cart; Checkout now triggers Auth for guest users.
+  - **Profile View**: ⏳ Basic profile header/menu integrated into Header. Full account page pending.
 
 Phase 6 — Extras
-  Step 12: RestaurantPage.tsx     — fashion/liquor/restaurant
-  Step 13: AgeVerification.tsx    — liquor only
+  - **Step 12: RestaurantPage.tsx**: Specialized layout for food/restaurant clients.
+  - **Step 13: AgeVerification.tsx**: Mandatory entry barrier for liquor clients.
 
-### 💎 Architectural Update: Multi-Client Configurability
-The application now uses a **SRP Mock API Service** (`@/mock/api.ts`) that serves 8 distinct client manifests. 
-- **Header, NavBar, Hero, Cart, ProductDetail, and Checkout** are no longer static; they accept a `config` prop of type `ClientConfig`.
-- **Themes** are switched via the Global Toolbar, which triggers the Mock API to serve the corresponding client's data.
+### 💎 Architectural Update: Data-Driven Branding
+The application is now fully reactive to the **Mock API Service** (`@/mock/api.ts`).
+- **Context Injection**: Every business component receives a `config: ClientConfig` prop.
+- **Dynamic UX**: Features like "Free Delivery" or "Category Filters" adjust automatically based on the client manifest.
+- **Theme Coupling**: CSS variables are strictly tied to the `theme-*` classes on the `<html>` tag, managed by `ThemeProvider`.
 
 ### Current Status
-✅ Phase 1: 47 UI primitives available.
-✅ Phase 2: Real Ecom Header & Navbar integrated.
-✅ Phase 3: Home Page (Hero + Products) fully data-driven.
-✅ Phase 4: Commerce Flow (Cart, Product Detail, Checkout) fully implemented and data-driven.
-⏳ Next: Implementing Auth modals and specific client extras.
+✅ **Phase 1-4 Complete**: Core e-commerce engine is fully functional.
+✅ **Phase 5 (Major part Complete)**: Auth system is live and integrated. Checkout is now a "protected route".
+⏳ **Next**: Finalizing specialized client extras (Restaurant Layouts & Age Barriers).
