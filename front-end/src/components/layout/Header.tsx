@@ -50,7 +50,10 @@ export function Header({
 
     useEffect(() => {
         const saved = localStorage.getItem('recentSearches');
-        if (saved) setRecentSearches(JSON.parse(saved));
+        if (saved) {
+            const parsed = JSON.parse(saved) as string[];
+            setRecentSearches(parsed.filter(s => s && s.trim() !== ''));
+        }
     }, []);
 
     const filteredCategories = searchQuery
@@ -60,10 +63,14 @@ export function Header({
         : [];
 
     function selectSearch(query: string, isCategory = false) {
+        if (!query.trim()) {
+            setShowSuggestions(false);
+            return;
+        }
         setSearchQuery(query);
         setShowSuggestions(false);
         if (isCategory) onCategorySelect?.(query);
-        const updated = [query, ...recentSearches.filter(s => s !== query)].slice(0, 5);
+        const updated = [query, ...recentSearches.filter(s => s && s.trim() !== '' && s !== query)].slice(0, 5);
         setRecentSearches(updated);
         localStorage.setItem('recentSearches', JSON.stringify(updated));
     }
