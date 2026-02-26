@@ -5,6 +5,8 @@ import { NavBar } from "@/components/layout/Navbar"
 import { useTheme } from "@/components/theme-provider"
 import { getClientConfig, getProducts } from "@/mock/api"
 import type { ClientConfig, Product } from "@/mock/types"
+import { ProductDetail } from "@/components/commerce/ProductDetail"
+import { Checkout } from "@/components/commerce/Checkout"
 import { useEffect } from "react"
 
 // ── ui imports ───────────────────────────────────────────────────────────────
@@ -25,11 +27,9 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
@@ -65,6 +65,7 @@ function HomePage() {
   const [notifications, setNotifications] = useState(true)
   const [isSignedIn, setIsSignedIn] = useState(true)
   const [cartOpen, setCartOpen] = useState(false)
+  const [checkoutOpen, setCheckoutOpen] = useState(false)
 
   // ── Fetch dynamic data on theme/client change ──────────────────────────────
   useEffect(() => {
@@ -213,27 +214,31 @@ function HomePage() {
                     ? "🎉 Free delivery unlocked!"
                     : `Add $${(config.freeDeliveryThreshold - cartTotal).toFixed(2)} more for free delivery`}
                 </p>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button className="w-full">Checkout · ${cartTotal.toFixed(2)}</Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Confirm your order?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        {cartCount} items · ${cartTotal.toFixed(2)} total. We'll process your order immediately.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => { setCartItems([]); setCartOpen(false) }}>Place Order 🎉</AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
+                <Button
+                  className="w-full h-12 text-base font-bold rounded-xl"
+                  onClick={() => {
+                    setCartOpen(false);
+                    setCheckoutOpen(true);
+                  }}
+                >
+                  Checkout · ${cartTotal.toFixed(2)}
+                </Button>
               </div>
             )}
           </SheetContent>
         </Sheet>
+
+        {/* ── CHECKOUT MODAL ───────────── */}
+        <Checkout
+          isOpen={checkoutOpen}
+          onClose={() => setCheckoutOpen(false)}
+          items={cartItems.map(ci => ({
+            ...allProducts.find(p => p.id === ci.id)!,
+            quantity: ci.qty
+          }))}
+          config={config}
+          onClearCart={() => setCartItems([])}
+        />
 
         {/* ── HERO SECTION ────────────────────────────────────────── */}
         <div className="relative py-12 md:py-24 px-4 overflow-hidden rounded-3xl mx-4 my-8">
@@ -441,63 +446,12 @@ function HomePage() {
                           </div>
                         </CardHeader>
                         <CardFooter className="pt-0 pb-4 gap-2">
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button variant="outline" size="sm" className="flex-1">Details</Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-w-2xl">
-                              <DialogHeader>
-                                <DialogTitle className="flex items-center gap-4 text-2xl">
-                                  {product.image.startsWith('http') ? (
-                                    <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 shadow-lg">
-                                      <img src={product.image} className="w-full h-full object-cover" />
-                                    </div>
-                                  ) : (
-                                    <span className="text-4xl">{product.image}</span>
-                                  )}
-                                  <div>
-                                    <span>{product.name}</span>
-                                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mt-1">{product.category}</p>
-                                  </div>
-                                </DialogTitle>
-                                <DialogDescription className="text-sm">
-                                  {product.description}
-                                </DialogDescription>
-                              </DialogHeader>
-                              <div className="grid grid-cols-2 gap-8 py-6">
-                                <div className="space-y-4">
-                                  <div className="flex justify-between items-baseline">
-                                    <span className="text-muted-foreground text-sm">Price</span>
-                                    <div className="text-right">
-                                      {product.originalPrice && <p className="text-sm text-muted-foreground line-through">${product.originalPrice}</p>}
-                                      <p className="text-3xl font-bold text-primary">${product.price}</p>
-                                    </div>
-                                  </div>
-                                  <div className="space-y-2">
-                                    <div className="flex justify-between text-xs">
-                                      <span>Rating</span>
-                                      <span>{product.rating}/5.0</span>
-                                    </div>
-                                    <Progress value={product.rating * 20} className="h-2" />
-                                  </div>
-                                </div>
-                                <div className="space-y-4">
-                                  <div className="flex flex-wrap gap-2">
-                                    {product.tags?.map(t => <Badge key={t} variant="secondary" className="text-[10px]">{t}</Badge>)}
-                                  </div>
-                                  <div className={`p-3 rounded-lg flex items-center gap-3 ${product.inStock ? "bg-green-500/10 text-green-600" : "bg-destructive/10 text-destructive"}`}>
-                                    <Package className="h-4 w-4" />
-                                    <span className="text-sm font-semibold">{product.inStock ? "Available Now" : "Out of Stock"}</span>
-                                  </div>
-                                </div>
-                              </div>
-                              <DialogFooter>
-                                <Button onClick={() => addToCart(product.id)} className="w-full h-12 text-lg font-bold" disabled={!product.inStock}>
-                                  <ShoppingCart className="h-5 w-5 mr-3" /> Add to Cart
-                                </Button>
-                              </DialogFooter>
-                            </DialogContent>
-                          </Dialog>
+                          <ProductDetail
+                            product={product}
+                            config={config}
+                            onAddToCart={addToCart}
+                            trigger={<Button variant="outline" size="sm" className="flex-1">Details</Button>}
+                          />
                           {inCart ? (
                             <div className="flex items-center gap-1 border border-border rounded-md px-2 bg-muted/30">
                               <button className="h-9 w-6 flex items-center justify-center text-muted-foreground hover:text-foreground"
@@ -654,6 +608,6 @@ function HomePage() {
           </div>
         </footer>
       </div>
-    </TooltipProvider>
+    </TooltipProvider >
   )
 }

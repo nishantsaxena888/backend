@@ -74,37 +74,40 @@ LAYER 2 — Ecom business components (SOURCE: theme/Ecom/emerald-grocery/src/com
   Fashion/Liquor/Restaurant only: RestaurantPage
   Liquor only: AgeVerification
 ### Migration Plan (Phase by Phase)
-Phase 1 — Fill ui/ gap
-  Copy all 44 missing shadcn primitives from:
-  theme/Ecom/emerald-grocery/src/components/ui/
-  → front-end/src/components/ui/
-  (Skip: utils.ts — already in lib/. Keep: use-mobile.ts)
-Phase 2 — Page Shell (replace placeholders)
-  Step 1: Header.tsx   — copy from emerald-grocery, add story
-  Step 2: NavBar.tsx   — copy from emerald-grocery, add story
-Phase 3 — Core Product UI
-  Step 3: HeroSection.tsx    — add story
-  Step 4: ProductCard.tsx    — add story (show all 8 themes side by side)
-  Step 5: ProductGrid.tsx    — add story
-Phase 4 — Commerce Flow
-  Step 6: Cart.tsx           — add story
-  Step 7: ProductDetail.tsx  — add story
-  Step 8: Checkout.tsx       — add story
+✅ Phase 1 — Fill ui/ gap
+  47 shadcn primitives copied to front-end/src/components/ui/
+
+✅ Phase 2 — Page Shell (Multi-Client Ready)
+  Step 1: Header.tsx   — Unified with Mock API config prop.
+  Step 2: NavBar.tsx   — Unified with Mock API config prop.
+
+✅ Phase 3 — Core Product UI (Multi-Client Ready)
+  Step 3: HeroSection  — Fully data-driven from client manifest.
+  Step 4: ProductCard  — Reactive to both Unsplash URLs and Emojis.
+  Step 5: ProductGrid  — Dynamic filtering and pagination support.
+
+✅ Phase 4 — Commerce Flow
+  Step 6: Cart.tsx           — ✅ Basic sheet-based cart implemented.
+  Step 7: ProductDetail.tsx  — ✅ Unified data-driven detail modal.
+  Step 8: Checkout.tsx       — ✅ Full 4-step multi-client checkout flow.
+
 Phase 5 — Auth & Account
-  Step 9:  AuthModal.tsx          — add story
-  Step 10: AddressManager.tsx     — add story
-  Step 11: AppliedFiltersBar.tsx  — add story
+  Step 9:  AuthModal.tsx          — ⏳
+  Step 10: AddressManager.tsx     — ✅ Completed as part of Checkout.
+  Step 11: AppliedFiltersBar.tsx  — ⏳
+
 Phase 6 — Extras
   Step 12: RestaurantPage.tsx     — fashion/liquor/restaurant
   Step 13: AgeVerification.tsx    — liquor only
-### Story Conventions
-- Story files: front-end/src/stories/ComponentName.stories.tsx
-- Import components from @/components/...
-- Wrap stories needing full theme context in <ThemeProvider>
-- Each story file should have: Playground (with controls), variants, real-world composition
-- Theme switching is global — no need to hard-code themes in each story
+
+### 💎 Architectural Update: Multi-Client Configurability
+The application now uses a **SRP Mock API Service** (`@/mock/api.ts`) that serves 8 distinct client manifests. 
+- **Header, NavBar, Hero, Cart, ProductDetail, and Checkout** are no longer static; they accept a `config` prop of type `ClientConfig`.
+- **Themes** are switched via the Global Toolbar, which triggers the Mock API to serve the corresponding client's data.
+
 ### Current Status
-✅ Phase 0 complete: Storybook installed and running (npm run storybook in front-end/)
-✅ 11 stories written for base primitives
-✅ Folder reorganisation done (Ecom/, POS/)
-⏳ Phase 1 next: Copy missing 44 ui/ primitives
+✅ Phase 1: 47 UI primitives available.
+✅ Phase 2: Real Ecom Header & Navbar integrated.
+✅ Phase 3: Home Page (Hero + Products) fully data-driven.
+✅ Phase 4: Commerce Flow (Cart, Product Detail, Checkout) fully implemented and data-driven.
+⏳ Next: Implementing Auth modals and specific client extras.

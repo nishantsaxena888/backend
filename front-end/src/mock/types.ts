@@ -18,6 +18,10 @@ export interface Product {
     tags?: string[];
 }
 
+export interface CartItem extends Product {
+    quantity: number;
+}
+
 export interface HeroConfig {
     headline: string;
     subheadline: string;
