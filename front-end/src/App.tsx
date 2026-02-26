@@ -2,6 +2,10 @@ import { useState } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Header } from "@/components/layout/Header"
 import { NavBar } from "@/components/layout/Navbar"
+import { useTheme } from "@/components/theme-provider"
+import { getClientConfig, getProducts } from "@/mock/api"
+import type { ClientConfig, Product } from "@/mock/types"
+import { useEffect } from "react"
 
 // ── ui imports ───────────────────────────────────────────────────────────────
 import { Button } from "@/components/ui/button"
@@ -17,7 +21,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
@@ -26,7 +30,6 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
-import { Toggle } from "@/components/ui/toggle"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
@@ -34,21 +37,11 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 
 import {
   ShoppingCart, Heart, Star,
-  Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight,
-  Info, AlertTriangle, Package, DollarSign,
+  AlignLeft, AlignCenter, AlignRight,
+  Package, DollarSign,
   ChevronRight, Filter, Zap, Shield, Truck, RefreshCw, Plus, Minus, X
 } from "lucide-react"
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
-
-// ─── PRODUCTS ────────────────────────────────────────────────────────────────
-const PRODUCTS = [
-  { id: 1, name: "Organic Avocados", price: 4.99, rating: 4.8, reviews: 234, category: "Fresh Produce", badge: "Organic", image: "🥑" },
-  { id: 2, name: "Sourdough Bread", price: 6.99, rating: 4.6, reviews: 189, category: "Bakery", badge: "Fresh", image: "🍞" },
-  { id: 3, name: "Almond Milk", price: 3.49, rating: 4.4, reviews: 312, category: "Dairy & Eggs", badge: "Vegan", image: "🥛" },
-  { id: 4, name: "Greek Yoghurt", price: 3.99, rating: 4.7, reviews: 156, category: "Dairy & Eggs", badge: "Sale", image: "🫙" },
-  { id: 5, name: "Wild Salmon", price: 12.99, rating: 4.9, reviews: 98, category: "Meat & Seafood", badge: "Premium", image: "🐟" },
-  { id: 6, name: "Dark Chocolate", price: 2.99, rating: 4.5, reviews: 421, category: "Snacks", badge: "Popular", image: "🍫" },
-]
 
 // ─── APP ROOT ────────────────────────────────────────────────────────────────
 export default function App() {
@@ -60,21 +53,53 @@ export default function App() {
 }
 
 function HomePage() {
+  const { theme } = useTheme()
+  const [config, setConfig] = useState<ClientConfig | null>(null)
+  const [allProducts, setAllProducts] = useState<Product[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
   const [selectedCategory, setSelectedCategory] = useState("All Products")
-  const [cartItems, setCartItems] = useState<{ id: number; qty: number }[]>([])
-  const [wishlist, setWishlist] = useState<number[]>([])
-  const [priceRange, setPriceRange] = useState([0, 50])
+  const [cartItems, setCartItems] = useState<{ id: string; qty: number }[]>([])
+  const [wishlist, setWishlist] = useState<string[]>([])
+  const [priceRange, setPriceRange] = useState([0, 5000]) // High default for luxury pieces
   const [notifications, setNotifications] = useState(true)
   const [isSignedIn, setIsSignedIn] = useState(true)
   const [cartOpen, setCartOpen] = useState(false)
 
+  // ── Fetch dynamic data on theme/client change ──────────────────────────────
+  useEffect(() => {
+    async function init() {
+      setIsLoading(true)
+      try {
+        const [c, p] = await Promise.all([
+          getClientConfig(theme),
+          getProducts(theme)
+        ])
+        setConfig(c)
+        setAllProducts(p)
+        setSelectedCategory("All Products")
+
+        // Adjust price range based on client type
+        if (c.id.includes('luxury')) setPriceRange([0, 15000])
+        else if (c.type === 'liquor') setPriceRange([0, 200])
+        else setPriceRange([0, 50])
+
+      } catch (err) {
+        console.error("Failed to fetch client data", err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    init()
+  }, [theme])
+
   const cartCount = cartItems.reduce((s, i) => s + i.qty, 0)
   const cartTotal = cartItems.reduce((s, i) => {
-    const p = PRODUCTS.find(p => p.id === i.id)
+    const p = allProducts.find(p => p.id === i.id)
     return s + (p?.price ?? 0) * i.qty
   }, 0)
 
-  function addToCart(id: number) {
+  function addToCart(id: string) {
     setCartItems(prev => {
       const ex = prev.find(i => i.id === id)
       return ex
@@ -82,26 +107,38 @@ function HomePage() {
         : [...prev, { id, qty: 1 }]
     })
   }
-  function removeFromCart(id: number) {
+  function removeFromCart(id: string) {
     setCartItems(prev => prev.filter(i => i.id !== id))
   }
-  function changeQty(id: number, delta: number) {
+  function changeQty(id: string, delta: number) {
     setCartItems(prev =>
       prev.map(i => i.id === id ? { ...i, qty: Math.max(1, i.qty + delta) } : i)
     )
   }
-  function toggleWishlist(id: number) {
+  function toggleWishlist(id: string) {
     setWishlist(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id])
   }
 
-  const filtered = PRODUCTS.filter(p => {
+  const filtered = allProducts.filter(p => {
     const matchCat = selectedCategory === "All Products" || p.category === selectedCategory
     const matchPrice = p.price >= priceRange[0] && p.price <= priceRange[1]
     return matchCat && matchPrice
   })
 
-  const sidebarCategories = [...new Set(PRODUCTS.map(p => p.category))]
+  const sidebarCategories = [...new Set(allProducts.map(p => p.category))]
   const user = isSignedIn ? { name: "Nishant Saxena", email: "nishant@inventure.ai" } : null
+
+  if (isLoading || !config) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-8 space-y-4">
+        <Zap className="h-12 w-12 text-primary animate-pulse" />
+        <div className="flex flex-col items-center gap-2">
+          <Skeleton className="h-6 w-48" />
+          <Skeleton className="h-4 w-32" />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <TooltipProvider>
@@ -109,6 +146,7 @@ function HomePage() {
 
         {/* ── REAL ECOM HEADER ─────────────────────────────────── */}
         <Header
+          config={config}
           cartCount={cartCount}
           onCartClick={() => setCartOpen(true)}
           onCategorySelect={setSelectedCategory}
@@ -120,11 +158,12 @@ function HomePage() {
 
         {/* ── REAL ECOM NAVBAR ─────────────────────────────────── */}
         <NavBar
+          config={config}
           selectedCategory={selectedCategory}
           onCategoryChange={setSelectedCategory}
         />
 
-        {/* ── CART SHEET (triggered from header) ───────────────── */}
+        {/* ── CART SHEET ───────────────── */}
         <Sheet open={cartOpen} onOpenChange={setCartOpen}>
           <SheetContent className="flex flex-col">
             <SheetHeader>
@@ -139,10 +178,17 @@ function HomePage() {
               ) : (
                 <div className="space-y-3">
                   {cartItems.map(ci => {
-                    const p = PRODUCTS.find(p => p.id === ci.id)!
+                    const p = allProducts.find(p => p.id === ci.id)!
+                    if (!p) return null
                     return (
                       <div key={ci.id} className="flex items-center gap-3 border border-border rounded-lg p-3">
-                        <span className="text-2xl">{p.image}</span>
+                        {p.image.startsWith('http') ? (
+                          <div className="w-10 h-10 rounded overflow-hidden">
+                            <img src={p.image} className="w-full h-full object-cover" />
+                          </div>
+                        ) : (
+                          <span className="text-2xl">{p.image}</span>
+                        )}
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium truncate">{p.name}</p>
                           <p className="text-xs text-muted-foreground">${p.price} × {ci.qty}</p>
@@ -161,9 +207,11 @@ function HomePage() {
             </ScrollArea>
             {cartItems.length > 0 && (
               <div className="pt-4 border-t space-y-3">
-                <Progress value={Math.min((cartTotal / 30) * 100, 100)} className="h-1.5" />
+                <Progress value={Math.min((cartTotal / config.freeDeliveryThreshold) * 100, 100)} className="h-1.5" />
                 <p className="text-xs text-muted-foreground text-center">
-                  {cartTotal >= 30 ? "🎉 Free delivery unlocked!" : `Add $${(30 - cartTotal).toFixed(2)} more for free delivery`}
+                  {cartTotal >= config.freeDeliveryThreshold
+                    ? "🎉 Free delivery unlocked!"
+                    : `Add $${(config.freeDeliveryThreshold - cartTotal).toFixed(2)} more for free delivery`}
                 </p>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
@@ -187,6 +235,44 @@ function HomePage() {
           </SheetContent>
         </Sheet>
 
+        {/* ── HERO SECTION ────────────────────────────────────────── */}
+        <div className="relative py-12 md:py-24 px-4 overflow-hidden rounded-3xl mx-4 my-8">
+          <div className="absolute inset-0 bg-primary/10 -z-10" />
+          <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/20 to-transparent -z-10 blur-3xl opacity-50" />
+
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
+            <div className="flex-1 space-y-6 text-center md:text-left">
+              {config.hero.badge && (
+                <Badge variant="secondary" className="px-4 py-1.5 text-sm font-medium animate-bounce">
+                  {config.hero.badge}
+                </Badge>
+              )}
+              <h2 className="text-4xl md:text-7xl font-bold tracking-tight text-foreground leading-[1.1]">
+                {config.hero.headline}
+              </h2>
+              <p className="text-lg md:text-xl text-muted-foreground max-w-xl">
+                {config.hero.subheadline}
+              </p>
+              <div className="flex flex-wrap items-center gap-4 justify-center md:justify-start pt-4">
+                <Button size="lg" className="rounded-full px-8 h-12 text-base font-semibold shadow-lg shadow-primary/25">
+                  {config.hero.cta}
+                </Button>
+                <Button size="lg" variant="outline" className="rounded-full px-8 h-12 text-base font-semibold">
+                  Browse Offers
+                </Button>
+              </div>
+            </div>
+            <div className="flex-1 relative hidden lg:block">
+              <div className="w-full aspect-square rounded-full border-[32px] border-primary/5 animate-[pulse_4s_infinite]" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-[160px] drop-shadow-2xl grayscale-[0.2] hover:grayscale-0 transition-all duration-500 cursor-default">
+                  {config.logoIcon}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* ── PAGE BODY ───────────────────────────────────────────── */}
         <main className="max-w-7xl mx-auto px-4 py-8 space-y-10">
 
@@ -203,18 +289,17 @@ function HomePage() {
 
           {/* Hero Alert */}
           <Alert className="border-primary/30 bg-primary/5">
-            <Info className="h-4 w-4 text-primary" />
-            <AlertTitle className="text-primary font-semibold">Phase 2 Live — Real Ecom Header & Navbar</AlertTitle>
+            <Zap className="h-4 w-4 text-primary" />
+            <AlertTitle className="text-primary font-semibold">Client: {config.name} ({theme})</AlertTitle>
             <AlertDescription>
-              The header and nav above are the real Ecom components, fully re-themed to use CSS variables.
-              Switch themes via the header's theme selector — every element updates instantly.
+              All data (products, categories, hero content) is now served via a <b>Mock API Service</b> using a separate manifest for each of the 8 clients.
             </AlertDescription>
           </Alert>
 
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { label: "Products", value: String(PRODUCTS.length), sub: "In stock", icon: Package },
+              { label: "Products", value: String(allProducts.length), sub: "In stock", icon: Package },
               { label: "In Cart", value: String(cartCount), sub: "Items added", icon: ShoppingCart },
               { label: "Wishlist", value: String(wishlist.length), sub: "Saved items", icon: Heart },
               { label: "Cart Total", value: `$${cartTotal.toFixed(2)}`, sub: "Before tax", icon: DollarSign },
@@ -244,7 +329,7 @@ function HomePage() {
                 <CardContent className="space-y-5">
                   <div className="space-y-2">
                     <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Price Range</Label>
-                    <Slider value={priceRange} onValueChange={setPriceRange} min={0} max={50} step={1} />
+                    <Slider value={priceRange} onValueChange={setPriceRange} min={0} max={config.id.includes('luxury') ? 15000 : 500} step={config.id.includes('luxury') ? 100 : 1} />
                     <div className="flex justify-between text-xs text-muted-foreground">
                       <span>${priceRange[0]}</span><span>${priceRange[1]}</span>
                     </div>
@@ -278,7 +363,7 @@ function HomePage() {
                     <Label className="text-sm">Price alerts</Label>
                     <Switch checked={notifications} onCheckedChange={setNotifications} />
                   </div>
-                  <Button variant="outline" size="sm" className="w-full" onClick={() => { setPriceRange([0, 50]); setSelectedCategory("All Products") }}>
+                  <Button variant="outline" size="sm" className="w-full" onClick={() => { setPriceRange([0, config.id.includes('luxury') ? 15000 : 500]); setSelectedCategory("All Products") }}>
                     <RefreshCw className="h-3 w-3 mr-1.5" /> Reset Filters
                   </Button>
                 </CardContent>
@@ -302,7 +387,7 @@ function HomePage() {
                   </PopoverTrigger>
                   <PopoverContent className="w-56 space-y-3">
                     <p className="text-sm font-medium">Price Range</p>
-                    <Slider value={priceRange} onValueChange={setPriceRange} min={0} max={50} step={1} />
+                    <Slider value={priceRange} onValueChange={setPriceRange} min={0} max={config.id.includes('luxury') ? 15000 : 500} step={config.id.includes('luxury') ? 100 : 1} />
                     <div className="flex justify-between text-xs text-muted-foreground">
                       <span>${priceRange[0]}</span><span>${priceRange[1]}</span>
                     </div>
@@ -314,7 +399,7 @@ function HomePage() {
                 <div className="text-center py-16 text-muted-foreground">
                   <Package className="h-12 w-12 mx-auto mb-3 opacity-30" />
                   <p>No products match your filters</p>
-                  <Button variant="link" onClick={() => { setPriceRange([0, 50]); setSelectedCategory("All Products") }}>Clear filters</Button>
+                  <Button variant="link" onClick={() => { setPriceRange([0, config.id.includes('luxury') ? 15000 : 500]); setSelectedCategory("All Products") }}>Clear filters</Button>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -322,14 +407,18 @@ function HomePage() {
                     const inCart = cartItems.find(i => i.id === product.id)
                     const inWishlist = wishlist.includes(product.id)
                     return (
-                      <Card key={product.id} className="group hover:shadow-md transition-all duration-200 hover:-translate-y-0.5">
-                        <div className="relative h-40 bg-accent/40 rounded-t-lg flex items-center justify-center text-6xl">
-                          {product.image}
-                          <Badge className="absolute top-2 left-2 text-xs">{product.badge}</Badge>
+                      <Card key={product.id} className="group hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 flex flex-col overflow-hidden">
+                        <div className="relative h-44 overflow-hidden bg-accent/20 flex items-center justify-center">
+                          {product.image.startsWith('http') ? (
+                            <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                          ) : (
+                            <span className="text-6xl">{product.image}</span>
+                          )}
+                          {product.badge && <Badge className="absolute top-2 left-2 text-[10px] uppercase font-bold tracking-tight">{product.badge}</Badge>}
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <button onClick={() => toggleWishlist(product.id)}
-                                className={`absolute top-2 right-2 h-7 w-7 rounded-full flex items-center justify-center transition-colors ${inWishlist ? "bg-destructive text-white" : "bg-background/80 text-muted-foreground hover:text-destructive"
+                              <button onClick={(e) => { e.stopPropagation(); toggleWishlist(product.id) }}
+                                className={`absolute top-2 right-2 h-7 w-7 rounded-full flex items-center justify-center backdrop-blur-sm transition-colors ${inWishlist ? "bg-primary text-primary-foreground" : "bg-background/60 text-muted-foreground hover:bg-background"
                                   }`}>
                                 <Heart className="h-3.5 w-3.5" fill={inWishlist ? "currentColor" : "none"} />
                               </button>
@@ -337,62 +426,93 @@ function HomePage() {
                             <TooltipContent>{inWishlist ? "Remove from wishlist" : "Save for later"}</TooltipContent>
                           </Tooltip>
                         </div>
-                        <CardHeader className="pb-2 pt-3">
+                        <CardHeader className="pb-2 pt-3 flex-1">
                           <div className="flex items-start justify-between gap-2">
-                            <CardTitle className="text-sm font-semibold leading-tight">{product.name}</CardTitle>
+                            <CardTitle className="text-sm font-semibold leading-tight line-clamp-2">{product.name}</CardTitle>
                             <span className="text-base font-bold text-primary whitespace-nowrap">${product.price}</span>
                           </div>
-                          <div className="flex items-center gap-1.5">
+                          <div className="flex items-center gap-1.5 mt-1">
                             <div className="flex">
                               {Array.from({ length: 5 }).map((_, i) => (
-                                <Star key={i} className={`h-3 w-3 ${i < Math.floor(product.rating) ? "text-yellow-400 fill-yellow-400" : "text-muted-foreground/30"}`} />
+                                <Star key={i} className={`h-3 w-3 ${i < Math.floor(product.rating) ? "text-primary fill-primary" : "text-muted-foreground/30"}`} />
                               ))}
                             </div>
-                            <span className="text-[11px] text-muted-foreground">{product.rating} ({product.reviews})</span>
+                            <span className="text-[11px] text-muted-foreground font-medium">{product.rating} ({product.reviews})</span>
                           </div>
                         </CardHeader>
-                        <CardFooter className="pt-0 gap-2">
+                        <CardFooter className="pt-0 pb-4 gap-2">
                           <Dialog>
                             <DialogTrigger asChild>
                               <Button variant="outline" size="sm" className="flex-1">Details</Button>
                             </DialogTrigger>
-                            <DialogContent>
+                            <DialogContent className="max-w-2xl">
                               <DialogHeader>
-                                <DialogTitle className="flex items-center gap-3">
-                                  <span className="text-3xl">{product.image}</span> {product.name}
+                                <DialogTitle className="flex items-center gap-4 text-2xl">
+                                  {product.image.startsWith('http') ? (
+                                    <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 shadow-lg">
+                                      <img src={product.image} className="w-full h-full object-cover" />
+                                    </div>
+                                  ) : (
+                                    <span className="text-4xl">{product.image}</span>
+                                  )}
+                                  <div>
+                                    <span>{product.name}</span>
+                                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mt-1">{product.category}</p>
+                                  </div>
                                 </DialogTitle>
-                                <DialogDescription>{product.category} · {product.reviews} reviews · {product.rating}★</DialogDescription>
+                                <DialogDescription className="text-sm">
+                                  {product.description}
+                                </DialogDescription>
                               </DialogHeader>
-                              <div className="space-y-3 py-2">
-                                <div className="flex justify-between">
-                                  <span className="text-muted-foreground text-sm">Price</span>
-                                  <span className="text-xl font-bold text-primary">${product.price}</span>
+                              <div className="grid grid-cols-2 gap-8 py-6">
+                                <div className="space-y-4">
+                                  <div className="flex justify-between items-baseline">
+                                    <span className="text-muted-foreground text-sm">Price</span>
+                                    <div className="text-right">
+                                      {product.originalPrice && <p className="text-sm text-muted-foreground line-through">${product.originalPrice}</p>}
+                                      <p className="text-3xl font-bold text-primary">${product.price}</p>
+                                    </div>
+                                  </div>
+                                  <div className="space-y-2">
+                                    <div className="flex justify-between text-xs">
+                                      <span>Rating</span>
+                                      <span>{product.rating}/5.0</span>
+                                    </div>
+                                    <Progress value={product.rating * 20} className="h-2" />
+                                  </div>
                                 </div>
-                                <Progress value={product.rating * 20} className="h-2" />
-                                <p className="text-xs text-muted-foreground">Rating: {product.rating}/5.0</p>
+                                <div className="space-y-4">
+                                  <div className="flex flex-wrap gap-2">
+                                    {product.tags?.map(t => <Badge key={t} variant="secondary" className="text-[10px]">{t}</Badge>)}
+                                  </div>
+                                  <div className={`p-3 rounded-lg flex items-center gap-3 ${product.inStock ? "bg-green-500/10 text-green-600" : "bg-destructive/10 text-destructive"}`}>
+                                    <Package className="h-4 w-4" />
+                                    <span className="text-sm font-semibold">{product.inStock ? "Available Now" : "Out of Stock"}</span>
+                                  </div>
+                                </div>
                               </div>
                               <DialogFooter>
-                                <Button onClick={() => addToCart(product.id)} className="w-full">
-                                  <ShoppingCart className="h-4 w-4 mr-2" /> Add to Cart
+                                <Button onClick={() => addToCart(product.id)} className="w-full h-12 text-lg font-bold" disabled={!product.inStock}>
+                                  <ShoppingCart className="h-5 w-5 mr-3" /> Add to Cart
                                 </Button>
                               </DialogFooter>
                             </DialogContent>
                           </Dialog>
                           {inCart ? (
-                            <div className="flex items-center gap-1 border border-border rounded-md px-2">
-                              <button className="h-7 w-5 flex items-center justify-center text-muted-foreground hover:text-foreground"
+                            <div className="flex items-center gap-1 border border-border rounded-md px-2 bg-muted/30">
+                              <button className="h-9 w-6 flex items-center justify-center text-muted-foreground hover:text-foreground"
                                 onClick={() => changeQty(product.id, -1)}>
                                 <Minus className="h-3 w-3" />
                               </button>
-                              <span className="text-sm font-medium w-4 text-center">{inCart.qty}</span>
-                              <button className="h-7 w-5 flex items-center justify-center text-muted-foreground hover:text-foreground"
+                              <span className="text-sm font-bold w-5 text-center">{inCart.qty}</span>
+                              <button className="h-9 w-6 flex items-center justify-center text-muted-foreground hover:text-foreground"
                                 onClick={() => addToCart(product.id)}>
                                 <Plus className="h-3 w-3" />
                               </button>
                             </div>
                           ) : (
-                            <Button size="sm" className="flex-1" onClick={() => addToCart(product.id)}>
-                              <ShoppingCart className="h-3.5 w-3.5 mr-1.5" /> Add
+                            <Button size="sm" className="flex-1 font-bold" onClick={() => addToCart(product.id)} disabled={!product.inStock}>
+                              <Plus className="h-3.5 w-3.5 mr-1.5" /> Add
                             </Button>
                           )}
                         </CardFooter>
@@ -404,206 +524,133 @@ function HomePage() {
             </div>
           </div>
 
-          <Separator />
+          <Separator className="my-12" />
 
-          {/* Tabs section */}
+          {/* User Section */}
           <section>
             <Tabs defaultValue="orders">
-              <TabsList>
-                <TabsTrigger value="orders">Orders</TabsTrigger>
-                <TabsTrigger value="account">Account</TabsTrigger>
-                <TabsTrigger value="help">Help</TabsTrigger>
+              <TabsList className="bg-muted/50 p-1">
+                <TabsTrigger value="orders" className="data-[state=active]:bg-background">Recent Orders</TabsTrigger>
+                <TabsTrigger value="account" className="data-[state=active]:bg-background">My Profile</TabsTrigger>
+                <TabsTrigger value="help" className="data-[state=active]:bg-background">Support</TabsTrigger>
               </TabsList>
-              <TabsContent value="orders" className="mt-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Recent Orders</CardTitle>
-                    <CardDescription>Your last 5 purchases</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Order</TableHead>
-                          <TableHead>Item</TableHead>
-                          <TableHead>Amount</TableHead>
-                          <TableHead>Status</TableHead>
+              <TabsContent value="orders" className="mt-6">
+                <Card className="border-none shadow-none bg-muted/20 p-4">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Order ID</TableHead>
+                        <TableHead>Date</TableHead>
+                        <TableHead>Amount</TableHead>
+                        <TableHead>Status</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {[
+                        { id: "#001", date: "24 Feb 2026", amount: "$42.50", status: "Delivered" },
+                        { id: "#002", date: "22 Feb 2026", amount: "$18.99", status: "In Transit" },
+                        { id: "#003", date: "15 Feb 2026", amount: "$12.00", status: "Completed" },
+                      ].map(row => (
+                        <TableRow key={row.id}>
+                          <TableCell className="font-mono text-xs">{row.id}</TableCell>
+                          <TableCell>{row.date}</TableCell>
+                          <TableCell className="font-bold">{row.amount}</TableCell>
+                          <TableCell><Badge variant="outline">{row.status}</Badge></TableCell>
                         </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {[
-                          { id: "#001", item: "Organic Bundle", amount: "$42.50", status: "Delivered" },
-                          { id: "#002", item: "Dairy Pack", amount: "$18.99", status: "In Transit" },
-                          { id: "#003", item: "Bakery Box", amount: "$12.00", status: "Processing" },
-                          { id: "#004", item: "Seafood Box", amount: "$35.99", status: "Delivered" },
-                          { id: "#005", item: "Snack Pack", amount: "$9.99", status: "Cancelled" },
-                        ].map(row => (
-                          <TableRow key={row.id}>
-                            <TableCell className="font-mono text-xs text-muted-foreground">{row.id}</TableCell>
-                            <TableCell className="font-medium">{row.item}</TableCell>
-                            <TableCell>{row.amount}</TableCell>
-                            <TableCell>
-                              <Badge variant={row.status === "Delivered" ? "default" : row.status === "Cancelled" ? "destructive" : "secondary"} className="text-xs">
-                                {row.status}
-                              </Badge>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </CardContent>
+                      ))}
+                    </TableBody>
+                  </Table>
                 </Card>
               </TabsContent>
-              <TabsContent value="account" className="mt-4">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <Card>
-                    <CardHeader><CardTitle>Profile</CardTitle></CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="flex items-center gap-4">
-                        <Avatar className="h-16 w-16">
-                          <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=NS" />
-                          <AvatarFallback className="bg-primary text-primary-foreground text-xl font-bold">NS</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-semibold">Nishant Saxena</p>
-                          <p className="text-sm text-muted-foreground">nishant@inventure.ai</p>
-                          <Badge variant="secondary" className="mt-1 text-xs">Premium Member</Badge>
-                        </div>
+              <TabsContent value="account" className="mt-6">
+                <div className="grid md:grid-cols-2 gap-8">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-6">
+                      <Avatar className="h-20 w-20 border-2 border-primary/20">
+                        <AvatarImage src={`https://api.dicebear.com/7.x/shapes/svg?seed=${theme}`} />
+                        <AvatarFallback>NS</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <h4 className="text-xl font-bold">Nishant Saxena</h4>
+                        <p className="text-sm text-muted-foreground uppercase">{theme.replace('-', ' ')}</p>
                       </div>
-                      <Separator />
-                      <div className="space-y-3">
-                        <div className="space-y-1"><Label>Full Name</Label><Input defaultValue="Nishant Saxena" /></div>
-                        <div className="space-y-1"><Label>Email</Label><Input defaultValue="nishant@inventure.ai" type="email" /></div>
-                        <div className="space-y-1"><Label>Bio</Label><Textarea rows={3} defaultValue="Building the future of e-commerce." /></div>
-                      </div>
-                      <Button className="w-full">Save Changes</Button>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardHeader><CardTitle>Preferences</CardTitle></CardHeader>
-                    <CardContent className="space-y-4">
-                      {[
-                        { label: "Email notifications", checked: true },
-                        { label: "SMS order updates", checked: true },
-                        { label: "Weekly deals digest", checked: false },
-                        { label: "Price drop alerts", checked: notifications },
-                      ].map(({ label, checked }) => (
-                        <div key={label} className="flex items-center justify-between">
-                          <Label className="font-normal">{label}</Label>
-                          <Switch defaultChecked={checked} />
-                        </div>
-                      ))}
-                      <Separator />
-                      <div className="space-y-2">
-                        <Label>Preferred Theme</Label>
-                        <p className="text-xs text-muted-foreground">Use the theme selector in the top-right header to switch themes.</p>
-                      </div>
-                    </CardContent>
+                    </div>
+                    <div className="grid gap-4 pt-4">
+                      <div className="space-y-1"><Label>Display Name</Label><Input defaultValue="Nishant Saxena" /></div>
+                      <div className="space-y-1"><Label>Email Address</Label><Input defaultValue="nishant@inventure.ai" /></div>
+                      <Button className="w-fit">Update Profile</Button>
+                    </div>
+                  </div>
+                  <Card className="p-6 bg-primary/5 border-primary/10">
+                    <h5 className="font-bold mb-4">Account Overview</h5>
+                    <div className="space-y-3">
+                      <div className="flex justify-between text-sm"><span>Member Since</span><span className="font-medium">Feb 2026</span></div>
+                      <div className="flex justify-between text-sm"><span>Total Orders</span><span className="font-medium">12</span></div>
+                      <div className="flex justify-between text-sm"><span>Loyalty Points</span><span className="font-medium text-primary">850 pts</span></div>
+                      <Separator className="my-2" />
+                      <div className="flex justify-between text-sm"><span>Verified Client</span><span className="text-green-600 font-bold">Yes</span></div>
+                    </div>
                   </Card>
                 </div>
               </TabsContent>
-              <TabsContent value="help" className="mt-4">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <Card>
-                    <CardHeader><CardTitle>FAQs</CardTitle></CardHeader>
-                    <CardContent>
-                      <Accordion type="single" collapsible>
-                        {[
-                          { q: "How long does delivery take?", a: "Standard: 2–4 hours. Express: 30 minutes." },
-                          { q: "Can I return a product?", a: "Yes — return within 7 days for a full refund." },
-                          { q: "Is my payment secure?", a: "All transactions are encrypted with TLS." },
-                          { q: "Do you offer bulk discounts?", a: "Orders over $100 get 10% off automatically." },
-                        ].map((item, i) => (
-                          <AccordionItem key={i} value={`faq-${i}`}>
-                            <AccordionTrigger className="text-sm">{item.q}</AccordionTrigger>
-                            <AccordionContent className="text-sm text-muted-foreground">{item.a}</AccordionContent>
-                          </AccordionItem>
-                        ))}
-                      </Accordion>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardHeader><CardTitle>Contact Us</CardTitle></CardHeader>
-                    <CardContent className="space-y-4">
-                      <Alert>
-                        <AlertTriangle className="h-4 w-4" />
-                        <AlertTitle>Avg response time</AlertTitle>
-                        <AlertDescription>We reply within 2 business hours.</AlertDescription>
-                      </Alert>
-                      <div className="space-y-3">
-                        <div className="space-y-1"><Label>Subject</Label><Input placeholder="Describe your issue…" /></div>
-                        <div className="space-y-1"><Label>Message</Label><Textarea rows={4} /></div>
-                        <div className="space-y-1">
-                          <Label>Formatting</Label>
-                          <div className="flex gap-1">
-                            <Toggle size="sm"><Bold className="h-3.5 w-3.5" /></Toggle>
-                            <Toggle size="sm"><Italic className="h-3.5 w-3.5" /></Toggle>
-                            <Toggle size="sm"><Underline className="h-3.5 w-3.5" /></Toggle>
-                          </div>
-                        </div>
-                        <Button className="w-full">Send Message</Button>
-                      </div>
-                    </CardContent>
+              <TabsContent value="help" className="mt-6">
+                <div className="grid md:grid-cols-2 gap-12">
+                  <div className="space-y-6">
+                    <h4 className="text-lg font-bold">Frequently Asked Questions</h4>
+                    <Accordion type="single" collapsible className="w-full">
+                      <AccordionItem value="q1">
+                        <AccordionTrigger>What is the delivery window?</AccordionTrigger>
+                        <AccordionContent>Orders are typically delivered within 45-60 minutes for food, and same-day for groceries.</AccordionContent>
+                      </AccordionItem>
+                      <AccordionItem value="q2">
+                        <AccordionTrigger>How do I track my order?</AccordionTrigger>
+                        <AccordionContent>You will receive a real-time tracking link via SMS once the driver picks up your order.</AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  </div>
+                  <Card className="p-6">
+                    <h4 className="font-bold mb-4">Contact Support</h4>
+                    <Textarea placeholder="How can we help you today?" className="mb-4" />
+                    <Button className="w-full">Submit Ticket</Button>
                   </Card>
                 </div>
               </TabsContent>
             </Tabs>
           </section>
 
-          {/* Skeleton loading states */}
-          <section>
-            <h2 className="text-xl font-bold mb-4 text-muted-foreground">Loading States</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {[1, 2, 3].map(i => (
-                <Card key={i}>
-                  <div className="h-32 bg-muted/50 rounded-t-lg flex items-center justify-center">
-                    <Skeleton className="h-16 w-16 rounded-xl" />
-                  </div>
-                  <CardHeader className="pb-2">
-                    <Skeleton className="h-4 w-3/4" />
-                    <Skeleton className="h-3 w-1/2 mt-2" />
-                  </CardHeader>
-                  <CardContent>
-                    <Skeleton className="h-3 w-full mb-2" /><Skeleton className="h-3 w-4/5" />
-                    <div className="flex gap-2 mt-4"><Skeleton className="h-8 flex-1 rounded-md" /><Skeleton className="h-8 flex-1 rounded-md" /></div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </section>
-
           {/* Trust badges */}
-          <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <section className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-12">
             {[
-              { icon: Truck, title: "Free Delivery", sub: "On orders over $30" },
-              { icon: Shield, title: "Secure Payment", sub: "256-bit SSL" },
-              { icon: RefreshCw, title: "Easy Returns", sub: "7-day policy" },
-              { icon: Zap, title: "Fast Dispatch", sub: "Order before 2 PM" },
+              { icon: Truck, title: "Fast Delivery", sub: config.hours },
+              { icon: Shield, title: "Curated for You", sub: config.tagline },
+              { icon: RefreshCw, title: "Support 24/7", sub: config.phone },
+              { icon: Zap, title: "Instant Updates", sub: "Phase 2 Complete" },
             ].map(({ icon: Icon, title, sub }) => (
-              <Card key={title} className="flex items-center gap-3 p-4">
-                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                  <Icon className="h-5 w-5 text-primary" />
+              <div key={title} className="flex flex-col items-center text-center p-6 rounded-2xl bg-muted/30 border border-transparent hover:border-primary/20 hover:bg-muted/50 transition-all group">
+                <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                  <Icon className="h-6 w-6" />
                 </div>
-                <div>
-                  <p className="text-sm font-semibold">{title}</p>
-                  <p className="text-xs text-muted-foreground">{sub}</p>
-                </div>
-              </Card>
+                <h6 className="font-bold text-sm mb-1">{title}</h6>
+                <p className="text-xs text-muted-foreground">{sub}</p>
+              </div>
             ))}
           </section>
         </main>
 
-        {/* Footer */}
-        <footer className="border-t mt-8 py-8 bg-muted/30">
-          <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2 font-bold text-primary">
-              <Zap className="h-5 w-5" /> Inventure
+        <footer className="border-t py-12 bg-muted/20">
+          <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="flex flex-col items-center md:items-start gap-2">
+              <div className="flex items-center gap-2 font-bold text-xl">
+                <span className="text-2xl">{config.logoIcon}</span> {config.name}
+              </div>
+              <p className="text-sm text-muted-foreground">{config.tagline} · Built with SRP Mock API</p>
             </div>
-            <div className="flex items-center gap-3 text-sm text-muted-foreground">
-              <span>Active theme:</span>
-              <Badge variant="outline">Phase 2 ✅</Badge>
+            <div className="flex gap-8 text-sm font-medium text-muted-foreground">
+              <a href="#" className="hover:text-primary transition-colors">Privacy</a>
+              <a href="#" className="hover:text-primary transition-colors">Terms</a>
+              <a href="#" className="hover:text-primary transition-colors">Contact</a>
             </div>
-            <p className="text-xs text-muted-foreground">© 2026 Inventure · Phase 2 complete</p>
+            <p className="text-xs text-muted-foreground">© 2026 InventureAI · Phase 2 Complete</p>
           </div>
         </footer>
       </div>

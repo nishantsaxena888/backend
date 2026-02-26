@@ -1,10 +1,12 @@
-import { Search, ShoppingCart, MapPin, User, Phone, Clock, TrendingUp, X, LogOut, Package, Zap, Palette } from 'lucide-react';
+import { Search, ShoppingCart, MapPin, User, Phone, Clock, X, LogOut, Zap, Palette } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTheme } from '@/components/theme-provider';
+import type { ClientConfig } from '@/mock/types';
 
 interface HeaderProps {
+    config: ClientConfig;
     cartCount: number;
     onCartClick: () => void;
     onCategorySelect?: (category: string) => void;
@@ -13,27 +15,6 @@ interface HeaderProps {
     onSignOut?: () => void;
     deliveryCity?: string;
 }
-
-const POPULAR_SEARCHES = [
-    'Fresh Tomatoes', 'Organic Milk', 'Chicken Breast',
-    'Brown Bread', 'Fresh Apples', 'Eggs',
-];
-
-const PRODUCT_SUGGESTIONS = [
-    'Fresh Tomatoes', 'Organic Carrots', 'Red Onions', 'Fresh Spinach',
-    'Organic Milk', 'Free Range Eggs', 'Chicken Breast', 'Fresh Salmon',
-    'Whole Wheat Bread', 'Orange Juice', 'Olive Oil', 'Basmati Rice',
-    'Fresh Apples', 'Bananas',
-];
-
-const BROWSE_CATEGORIES = [
-    { name: 'Fresh Produce', icon: '🥬' },
-    { name: 'Dairy & Eggs', icon: '🥛' },
-    { name: 'Meat & Seafood', icon: '🥩' },
-    { name: 'Bakery', icon: '🍞' },
-    { name: 'Beverages', icon: '🥤' },
-    { name: 'Pantry', icon: '🥫' },
-];
 
 const THEMES = [
     { value: 'emerald-grocery', label: '🥦 Emerald Grocery' },
@@ -47,6 +28,7 @@ const THEMES = [
 ] as const;
 
 export function Header({
+    config,
     cartCount,
     onCartClick,
     onCategorySelect,
@@ -66,15 +48,9 @@ export function Header({
         if (saved) setRecentSearches(JSON.parse(saved));
     }, []);
 
-    const filteredSuggestions = searchQuery
-        ? PRODUCT_SUGGESTIONS.filter(s =>
-            s.toLowerCase().includes(searchQuery.toLowerCase())
-        ).slice(0, 5)
-        : [];
-
     const filteredCategories = searchQuery
-        ? BROWSE_CATEGORIES.filter(c =>
-            c.name.toLowerCase().includes(searchQuery.toLowerCase())
+        ? config.categories.filter(c =>
+            c.toLowerCase().includes(searchQuery.toLowerCase())
         )
         : [];
 
@@ -108,16 +84,16 @@ export function Header({
                 <div className="max-w-7xl mx-auto px-4 py-2">
                     <div className="flex items-center justify-between text-sm text-primary-foreground">
                         <div className="flex items-center gap-2">
-                            <Package className="w-4 h-4" />
-                            <span>Wholesale Pricing for Retailers &amp; Distributors</span>
+                            <Zap className="w-4 h-4" />
+                            <span>{config.topBarMessage}</span>
                         </div>
                         <div className="hidden sm:flex items-center gap-6">
                             <div className="flex items-center gap-2">
                                 <Phone className="w-3.5 h-3.5" />
-                                <span>1-800-GROCERY</span>
+                                <span>{config.phone}</span>
                             </div>
                             <span>|</span>
-                            <span>Mon–Sat: 6 AM – 8 PM</span>
+                            <span>{config.hours}</span>
                         </div>
                     </div>
                 </div>
@@ -129,12 +105,12 @@ export function Header({
 
                     {/* Logo */}
                     <div className="flex items-center gap-3 shrink-0">
-                        <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                            <Zap className="h-6 w-6 text-primary-foreground" />
+                        <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-2xl">
+                            {config.logoIcon}
                         </div>
                         <div>
-                            <h1 className="text-foreground text-xl font-semibold">Inventure</h1>
-                            <p className="text-primary text-xs font-medium">Wholesale</p>
+                            <h1 className="text-foreground text-xl font-bold">{config.name}</h1>
+                            <p className="text-primary text-[10px] font-bold uppercase tracking-widest">{config.tagline}</p>
                         </div>
                     </div>
 
@@ -143,7 +119,7 @@ export function Header({
                         <div className="relative">
                             <input
                                 type="text"
-                                placeholder="Search products, categories..."
+                                placeholder={`Search for products in ${config.name}...`}
                                 value={searchQuery}
                                 onChange={e => setSearchQuery(e.target.value)}
                                 onFocus={() => setShowSuggestions(true)}
@@ -161,31 +137,15 @@ export function Header({
                             {showSuggestions && (
                                 <div className="absolute top-full left-0 right-0 mt-2 bg-popover border border-border rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
 
-                                    {/* Product suggestions */}
-                                    {searchQuery && filteredSuggestions.length > 0 && (
-                                        <div className="border-b border-border">
-                                            <div className="px-4 py-2 text-xs text-muted-foreground bg-muted/50 flex items-center gap-2">
-                                                <Search className="w-3 h-3" /> Products
-                                            </div>
-                                            {filteredSuggestions.map(s => (
-                                                <button key={s} onClick={() => selectSearch(s)}
-                                                    className="w-full px-4 py-2.5 text-left text-foreground hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3 text-sm">
-                                                    <Search className="w-4 h-4 text-muted-foreground" />
-                                                    <span className="flex-1">{s}</span>
-                                                </button>
-                                            ))}
-                                        </div>
-                                    )}
-
                                     {/* Category suggestions when searching */}
                                     {searchQuery && filteredCategories.length > 0 && (
                                         <div className="border-b border-border">
-                                            <div className="px-4 py-2 text-xs text-muted-foreground bg-muted/50">Categories</div>
+                                            <div className="px-4 py-2 text-xs text-muted-foreground bg-muted/50">Suggested Categories</div>
                                             {filteredCategories.map(c => (
-                                                <button key={c.name} onClick={() => selectSearch(c.name, true)}
+                                                <button key={c} onClick={() => selectSearch(c, true)}
                                                     className="w-full px-4 py-2.5 text-left text-foreground hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3 text-sm">
-                                                    <span className="text-lg">{c.icon}</span>
-                                                    <span className="flex-1">{c.name}</span>
+                                                    <Search className="w-4 h-4 text-muted-foreground" />
+                                                    <span className="flex-1">{c}</span>
                                                 </button>
                                             ))}
                                         </div>
@@ -212,32 +172,15 @@ export function Header({
                                         </div>
                                     )}
 
-                                    {/* Popular searches */}
-                                    {!searchQuery && (
-                                        <div className="border-b border-border">
-                                            <div className="px-4 py-2 text-xs text-muted-foreground bg-muted/50 flex items-center gap-2">
-                                                <TrendingUp className="w-3 h-3" /> Popular
-                                            </div>
-                                            {POPULAR_SEARCHES.map(term => (
-                                                <button key={term} onClick={() => selectSearch(term)}
-                                                    className="w-full px-4 py-2.5 text-left text-foreground hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3 text-sm">
-                                                    <TrendingUp className="w-4 h-4 text-primary" />
-                                                    <span className="flex-1">{term}</span>
-                                                </button>
-                                            ))}
-                                        </div>
-                                    )}
-
                                     {/* Browse categories */}
                                     {!searchQuery && (
                                         <div>
                                             <div className="px-4 py-2 text-xs text-muted-foreground bg-muted/50">Browse Categories</div>
                                             <div className="grid grid-cols-2 gap-2 p-3">
-                                                {BROWSE_CATEGORIES.map(c => (
-                                                    <button key={c.name} onClick={() => selectSearch(c.name, true)}
-                                                        className="flex items-center gap-2 p-2.5 rounded-md border border-border hover:border-primary hover:bg-accent transition-all text-sm text-foreground">
-                                                        <span className="text-xl">{c.icon}</span>
-                                                        <span>{c.name}</span>
+                                                {config.categories.slice(0, 6).map(c => (
+                                                    <button key={c} onClick={() => selectSearch(c, true)}
+                                                        className="flex items-center gap-2 p-2.5 rounded-md border border-border hover:border-primary hover:bg-accent transition-all text-xs text-foreground text-left">
+                                                        <span>{c}</span>
                                                     </button>
                                                 ))}
                                             </div>
