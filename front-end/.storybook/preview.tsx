@@ -14,22 +14,33 @@ export const THEMES = [
     { label: '🍽️ Restaurant Black', value: 'restaurant-black' },
 ]
 
-const ALL_THEME_CLASSES = THEMES.map((t) => `theme-${t.value}`)
+import { ThemeProvider, useTheme, type Theme } from '../src/components/theme-provider'
+import { LanguageProvider } from '../src/components/language-provider'
 
-// Decorator that applies the selected theme class to <html>
-const withTheme = (Story: React.ComponentType, context: any) => {
-    const { theme } = context.globals
-
+const ThemeSync = ({ storybookTheme, children }: { storybookTheme: Theme, children: React.ReactNode }) => {
+    const { theme, setTheme } = useTheme();
     useEffect(() => {
-        const root = document.documentElement
-        // Remove all theme classes first
-        root.classList.remove(...ALL_THEME_CLASSES)
-        if (theme) {
-            root.classList.add(`theme-${theme}`)
+        if (theme !== storybookTheme && storybookTheme) {
+            setTheme(storybookTheme);
         }
-    }, [theme])
+    }, [storybookTheme, theme, setTheme]);
 
-    return <Story />
+    return <>{children}</>;
+}
+
+const withProviders = (Story: React.ComponentType, context: any) => {
+    const { theme } = context.globals;
+    return (
+        <ThemeProvider defaultTheme={theme || 'emerald-grocery'}>
+            <LanguageProvider>
+                <ThemeSync storybookTheme={theme as Theme}>
+                    <div className="min-h-screen bg-background text-foreground transition-colors duration-300 p-6">
+                        <Story />
+                    </div>
+                </ThemeSync>
+            </LanguageProvider>
+        </ThemeProvider>
+    );
 }
 
 const preview: Preview = {
@@ -50,12 +61,7 @@ const preview: Preview = {
         },
     },
     decorators: [
-        withTheme,
-        (Story) => (
-            <div className="min-h-screen bg-background text-foreground transition-colors duration-300 p-6">
-                <Story />
-            </div>
-        ),
+        withProviders,
     ],
     parameters: {
         controls: {
