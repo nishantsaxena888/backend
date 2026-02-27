@@ -29,3 +29,13 @@ cd front-end && npm run storybook
 
 ---
 *Developed by Inventure AI*
+
+## 🏗️ Bootstrapping New Projects with AI
+
+When using an AI coding assistant (like Cursor or GitHub Copilot) to generate a new application within the ecosystem, provide the AI with the exact prompts below. These prompts enforce strict adherence to the project's multi-theme architecture and identical component tracking.
+
+### 1. Generating the POS System
+> **Prompt:** "Strictly follow the architectural rules in `prompt_new_project.md` to bootstrap a new project called `front-end-pos`, porting the user interface and features from the `theme/POS` directory into our standardized, multi-theme ecosystem."
+
+### 2. Generating the Admin Dashboard
+> **Prompt:** "Strictly follow the architectural rules in `prompt_new_project.md` to bootstrap a new project called `front-end-dashboard`, porting the user interface and features from the `theme/Admin Dashboard Invoice Print Etc` directory into our standardized, multi-theme ecosystem."
