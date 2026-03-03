@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Search, Plus, Minus, AlertCircle } from "lucide-react";
+import { ArrowLeft, Search } from "lucide-react";
 import { useWarehouseInventory } from "../hooks/useWarehouseInventory";
 import { POSSwitcher } from "@/components/POSSwitcher";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import {
     Table,
     TableBody,
@@ -15,6 +14,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import { WarehouseInventoryRow } from "../components/WarehouseInventoryRow";
 
 export default function WarehousePOS() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -65,59 +65,13 @@ export default function WarehousePOS() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {filteredInventory.map((product) => {
-                                    const isLowStock = product.stock <= product.lowStockThreshold;
-
-                                    return (
-                                        <TableRow key={product.id} className="group hover:bg-muted/30 transition-colors">
-                                            <TableCell className="font-mono text-xs">{product.sku}</TableCell>
-                                            <TableCell className="font-bold">{product.name}</TableCell>
-                                            <TableCell>
-                                                <Badge variant="outline" className="rounded-md bg-background">
-                                                    {product.category}
-                                                </Badge>
-                                            </TableCell>
-                                            <TableCell className="text-right text-muted-foreground text-sm">
-                                                {product.unit}
-                                            </TableCell>
-                                            <TableCell className="text-right font-black text-lg">
-                                                {product.stock}
-                                            </TableCell>
-                                            <TableCell className="text-center">
-                                                {isLowStock ? (
-                                                    <Badge variant="destructive" className="rounded-md gap-1">
-                                                        <AlertCircle className="w-3 h-3" />
-                                                        Low Stock
-                                                    </Badge>
-                                                ) : (
-                                                    <Badge className="bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 rounded-md border-none">
-                                                        In Stock
-                                                    </Badge>
-                                                )}
-                                            </TableCell>
-                                            <TableCell className="text-right">
-                                                <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <Button
-                                                        variant="outline"
-                                                        size="icon"
-                                                        className="w-8 h-8 rounded-lg border-border/50 hover:bg-muted hover:text-destructive"
-                                                        onClick={() => updateStock(product.sku, -1)}
-                                                    >
-                                                        <Minus className="w-4 h-4" />
-                                                    </Button>
-                                                    <Button
-                                                        variant="outline"
-                                                        size="icon"
-                                                        className="w-8 h-8 rounded-lg border-border/50 hover:bg-muted text-primary"
-                                                        onClick={() => updateStock(product.sku, 1)}
-                                                    >
-                                                        <Plus className="w-4 h-4" />
-                                                    </Button>
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
+                                {filteredInventory.map((product) => (
+                                    <WarehouseInventoryRow
+                                        key={product.id}
+                                        product={product}
+                                        onUpdateStock={updateStock}
+                                    />
+                                ))}
 
                                 {filteredInventory.length === 0 && (
                                     <TableRow>

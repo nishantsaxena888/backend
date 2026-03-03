@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Plus, Minus, X, ShoppingBag } from "lucide-react";
+import { ArrowLeft, ShoppingBag } from "lucide-react";
 import { MOCK_RESTAURANT_PRODUCTS, RESTAURANT_CATEGORIES } from "../mock/data";
 import { useRestaurantCart } from "../hooks/useRestaurantCart";
 import { POSSwitcher } from "@/components/POSSwitcher";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { RestaurantCategoryFilter } from "../components/RestaurantCategoryFilter";
+import { RestaurantProductCard } from "../components/RestaurantProductCard";
+import { RestaurantCartItem } from "../components/RestaurantCartItem";
 
 export default function RestaurantPOS() {
     const [activeCategory, setActiveCategory] = useState("All");
@@ -43,41 +45,20 @@ export default function RestaurantPOS() {
                 </header>
 
                 <div className="p-6">
-                    <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-none">
-                        {RESTAURANT_CATEGORIES.map(category => (
-                            <Button
-                                key={category}
-                                variant={activeCategory === category ? "default" : "outline"}
-                                className={`rounded-xl font-bold px-6 py-2 ${activeCategory === category
-                                    ? "shadow-lg shadow-primary/20"
-                                    : "border-border/50 text-muted-foreground"
-                                    }`}
-                                onClick={() => setActiveCategory(category)}
-                            >
-                                {category}
-                            </Button>
-                        ))}
-                    </div>
+                    <RestaurantCategoryFilter
+                        categories={RESTAURANT_CATEGORIES}
+                        activeCategory={activeCategory}
+                        onCategoryChange={setActiveCategory}
+                    />
 
                     <ScrollArea className="h-[calc(100vh-200px)]">
                         <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 pr-4">
                             {filteredProducts.map(product => (
-                                <Card
+                                <RestaurantProductCard
                                     key={product.id}
-                                    className="group rounded-3xl border-none shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer bg-background overflow-hidden"
-                                    onClick={() => addToCart(product)}
-                                >
-                                    <CardContent className="p-0">
-                                        <div className="aspect-square relative flex items-center justify-center text-6xl bg-orange-500/10 group-hover:bg-orange-500/20 transition-colors">
-                                            {product.image}
-                                        </div>
-                                        <div className="p-4 space-y-1">
-                                            <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">{product.category}</p>
-                                            <h3 className="font-black truncate">{product.name}</h3>
-                                            <p className="text-lg font-black text-primary">${product.price.toFixed(2)}</p>
-                                        </div>
-                                    </CardContent>
-                                </Card>
+                                    product={product}
+                                    onClick={addToCart}
+                                />
                             ))}
                         </div>
                     </ScrollArea>
@@ -101,49 +82,12 @@ export default function RestaurantPOS() {
                 <ScrollArea className="flex-1 p-6">
                     <div className="space-y-4">
                         {cartItems.map(item => (
-                            <div key={item.id} className="group bg-muted/30 p-4 rounded-3xl space-y-4 hover:bg-muted/50 transition-all border border-transparent hover:border-border/50">
-                                <div className="flex gap-4">
-                                    <div className="w-14 h-14 rounded-2xl bg-orange-500/10 flex items-center justify-center text-2xl shrink-0">
-                                        {item.image}
-                                    </div>
-                                    <div className="flex-1 min-w-0 py-1">
-                                        <h4 className="font-black text-sm leading-tight mb-1">{item.name}</h4>
-                                        <div className="flex items-center justify-between mt-2">
-                                            <p className="font-black text-primary">${(item.price * item.quantity).toFixed(2)}</p>
-                                        </div>
-                                    </div>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="w-8 h-8 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 shrink-0"
-                                        onClick={() => removeFromCart(item.id)}
-                                    >
-                                        <X className="w-4 h-4" />
-                                    </Button>
-                                </div>
-
-                                <div className="flex items-center justify-between bg-background rounded-2xl p-1 gap-2 border border-border/50">
-                                    <div className="flex items-center gap-1">
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-8 w-8 rounded-xl hover:bg-muted text-muted-foreground"
-                                            onClick={() => updateQuantity(item.id, -1)}
-                                        >
-                                            <Minus className="h-3 w-3" />
-                                        </Button>
-                                        <span className="w-8 text-center text-sm font-black">{item.quantity}</span>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-8 w-8 rounded-xl hover:bg-muted text-muted-foreground"
-                                            onClick={() => updateQuantity(item.id, 1)}
-                                        >
-                                            <Plus className="h-3 w-3" />
-                                        </Button>
-                                    </div>
-                                </div>
-                            </div>
+                            <RestaurantCartItem
+                                key={item.id}
+                                item={item}
+                                onUpdateQuantity={updateQuantity}
+                                onRemove={removeFromCart}
+                            />
                         ))}
 
                         {cartItems.length === 0 && (
