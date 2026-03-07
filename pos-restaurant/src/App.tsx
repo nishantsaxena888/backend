@@ -8,7 +8,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <LanguageProvider>
-        <ThemeProvider defaultTheme="restaurant-black">
+        <ThemeProvider defaultTheme="restaurant-light">
           <TooltipProvider>
             <RestaurantPOS />
           </TooltipProvider>

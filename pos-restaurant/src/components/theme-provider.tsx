@@ -9,6 +9,7 @@ export type Theme =
     | "liqour-black"
     | "liquor-orange"
     | "restaurant-black"
+    | "restaurant-light"
     | "warehouse-blue"
 
 type ThemeProviderProps = {
@@ -37,9 +38,11 @@ export function ThemeProvider({
 }: ThemeProviderProps) {
     const [theme, setTheme] = useState<Theme>(() => {
         try {
-            return (localStorage.getItem(storageKey) as Theme) || defaultTheme
+            const stored = localStorage.getItem(storageKey) as Theme;
+            if (stored === 'restaurant-black') return 'restaurant-light';
+            return stored || defaultTheme;
         } catch (e) {
-            return defaultTheme
+            return defaultTheme;
         }
     })
 
@@ -56,6 +59,7 @@ export function ThemeProvider({
             "theme-liqour-black",
             "theme-liquor-orange",
             "theme-restaurant-black",
+            "theme-restaurant-light",
             "theme-warehouse-blue"
         )
 

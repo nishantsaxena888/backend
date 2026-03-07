@@ -5,9 +5,12 @@ import { OrdersManagement } from './components/OrdersManagement';
 import { CustomersManagement } from './components/CustomersManagement';
 import { SuppliersManagement } from './components/SuppliersManagement';
 import { LocationsManagement } from './components/LocationsManagement';
-import { LayoutDashboard, Package, Menu, X, ShoppingCart, Users, Building2, MapPin, BarChart3 } from 'lucide-react';
+import { LayoutDashboard, Package, Menu, X, ShoppingCart, Users, Building2, MapPin, BarChart3, Utensils, Warehouse, Wine } from 'lucide-react';
+import { RestaurantProductForm } from './components/forms/RestaurantProductForm';
+import { WarehouseProductForm } from './components/forms/WarehouseProductForm';
+import { LiquorProductForm } from './components/forms/LiquorProductForm';
 
-type View = 'dashboard' | 'inventory' | 'orders' | 'customers' | 'suppliers' | 'locations' | 'reports';
+type View = 'dashboard' | 'inventory' | 'orders' | 'customers' | 'suppliers' | 'locations' | 'reports' | 'restaurant-pos' | 'warehouse-pos' | 'liquor-pos';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<View>('dashboard');
@@ -17,9 +20,8 @@ export default function App() {
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
       <aside
-        className={`${
-          sidebarOpen ? 'w-64' : 'w-20'
-        } bg-white border-r border-gray-200 transition-all duration-300 flex flex-col`}
+        className={`${sidebarOpen ? 'w-64' : 'w-20'
+          } bg-white border-r border-gray-200 transition-all duration-300 flex flex-col`}
       >
         <div className="p-4 border-b border-gray-200 flex items-center justify-between">
           {sidebarOpen && <h1 className="text-xl">Low-Code Platform</h1>}
@@ -31,14 +33,14 @@ export default function App() {
           </button>
         </div>
 
-        <nav className="flex-1 p-4 space-y-1">
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-4 mt-2">Platform Area</div>
           <button
             onClick={() => setCurrentView('dashboard')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-              currentView === 'dashboard'
-                ? 'bg-blue-50 text-blue-600'
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${currentView === 'dashboard'
+              ? 'bg-blue-50 text-blue-600'
+              : 'text-gray-700 hover:bg-gray-100'
+              }`}
           >
             <LayoutDashboard className="w-5 h-5 flex-shrink-0" />
             {sidebarOpen && <span>Dashboard</span>}
@@ -46,11 +48,10 @@ export default function App() {
 
           <button
             onClick={() => setCurrentView('inventory')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-              currentView === 'inventory'
-                ? 'bg-blue-50 text-blue-600'
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${currentView === 'inventory'
+              ? 'bg-blue-50 text-blue-600'
+              : 'text-gray-700 hover:bg-gray-100'
+              }`}
           >
             <Package className="w-5 h-5 flex-shrink-0" />
             {sidebarOpen && <span>Products</span>}
@@ -58,11 +59,10 @@ export default function App() {
 
           <button
             onClick={() => setCurrentView('orders')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-              currentView === 'orders'
-                ? 'bg-blue-50 text-blue-600'
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${currentView === 'orders'
+              ? 'bg-blue-50 text-blue-600'
+              : 'text-gray-700 hover:bg-gray-100'
+              }`}
           >
             <ShoppingCart className="w-5 h-5 flex-shrink-0" />
             {sidebarOpen && <span>Orders</span>}
@@ -70,11 +70,10 @@ export default function App() {
 
           <button
             onClick={() => setCurrentView('customers')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-              currentView === 'customers'
-                ? 'bg-blue-50 text-blue-600'
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${currentView === 'customers'
+              ? 'bg-blue-50 text-blue-600'
+              : 'text-gray-700 hover:bg-gray-100'
+              }`}
           >
             <Users className="w-5 h-5 flex-shrink-0" />
             {sidebarOpen && <span>Customers</span>}
@@ -82,11 +81,10 @@ export default function App() {
 
           <button
             onClick={() => setCurrentView('suppliers')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-              currentView === 'suppliers'
-                ? 'bg-blue-50 text-blue-600'
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${currentView === 'suppliers'
+              ? 'bg-blue-50 text-blue-600'
+              : 'text-gray-700 hover:bg-gray-100'
+              }`}
           >
             <Building2 className="w-5 h-5 flex-shrink-0" />
             {sidebarOpen && <span>Suppliers</span>}
@@ -94,11 +92,10 @@ export default function App() {
 
           <button
             onClick={() => setCurrentView('locations')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-              currentView === 'locations'
-                ? 'bg-blue-50 text-blue-600'
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${currentView === 'locations'
+              ? 'bg-blue-50 text-blue-600'
+              : 'text-gray-700 hover:bg-gray-100'
+              }`}
           >
             <MapPin className="w-5 h-5 flex-shrink-0" />
             {sidebarOpen && <span>Locations</span>}
@@ -106,14 +103,48 @@ export default function App() {
 
           <button
             onClick={() => setCurrentView('reports')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-              currentView === 'reports'
-                ? 'bg-blue-50 text-blue-600'
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${currentView === 'reports'
+              ? 'bg-blue-50 text-blue-600'
+              : 'text-gray-700 hover:bg-gray-100'
+              }`}
           >
             <BarChart3 className="w-5 h-5 flex-shrink-0" />
             {sidebarOpen && <span>Reports</span>}
+          </button>
+          {/* POS Links */}
+          <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-4 mt-8">External Systems</div>
+
+          <button
+            onClick={() => setCurrentView('restaurant-pos')}
+            className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-colors ${currentView === 'restaurant-pos' ? 'bg-orange-50 text-orange-600' : 'text-gray-700 hover:bg-gray-100'
+              }`}
+          >
+            <div className="flex items-center gap-3">
+              <Utensils className={`w-5 h-5 flex-shrink-0 ${currentView === 'restaurant-pos' ? 'text-orange-600' : 'text-orange-500'}`} />
+              {sidebarOpen && <span>Add Restaurant Item</span>}
+            </div>
+          </button>
+
+          <button
+            onClick={() => setCurrentView('warehouse-pos')}
+            className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-colors ${currentView === 'warehouse-pos' ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-100'
+              }`}
+          >
+            <div className="flex items-center gap-3">
+              <Warehouse className={`w-5 h-5 flex-shrink-0 ${currentView === 'warehouse-pos' ? 'text-blue-600' : 'text-blue-500'}`} />
+              {sidebarOpen && <span>Add Warehouse Item</span>}
+            </div>
+          </button>
+
+          <button
+            onClick={() => setCurrentView('liquor-pos')}
+            className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-colors ${currentView === 'liquor-pos' ? 'bg-purple-50 text-purple-600' : 'text-gray-700 hover:bg-gray-100'
+              }`}
+          >
+            <div className="flex items-center gap-3">
+              <Wine className={`w-5 h-5 flex-shrink-0 ${currentView === 'liquor-pos' ? 'text-purple-600' : 'text-purple-500'}`} />
+              {sidebarOpen && <span>Add Liquor Item</span>}
+            </div>
           </button>
         </nav>
 
@@ -132,7 +163,7 @@ export default function App() {
       {/* Main Content */}
       <main className="flex-1 overflow-auto">
         <div className="p-8">
-          {currentView === 'dashboard' && <Dashboard />}
+          {currentView === 'dashboard' && <Dashboard onNavigate={(v) => setCurrentView(v as View)} />}
           {currentView === 'inventory' && <InventoryTable />}
           {currentView === 'orders' && <OrdersManagement />}
           {currentView === 'customers' && <CustomersManagement />}
@@ -153,8 +184,11 @@ export default function App() {
               </div>
             </div>
           )}
+          {currentView === 'restaurant-pos' && <RestaurantProductForm />}
+          {currentView === 'warehouse-pos' && <WarehouseProductForm />}
+          {currentView === 'liquor-pos' && <LiquorProductForm />}
         </div>
       </main>
-    </div>
+    </div >
   );
 }

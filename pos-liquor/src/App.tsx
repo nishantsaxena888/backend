@@ -8,7 +8,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <LanguageProvider>
-        <ThemeProvider defaultTheme="liqour-black">
+        <ThemeProvider defaultTheme="liquor-orange">
           <TooltipProvider>
             <LiquorPOS />
           </TooltipProvider>

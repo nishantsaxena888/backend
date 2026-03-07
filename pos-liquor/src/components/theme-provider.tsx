@@ -37,9 +37,11 @@ export function ThemeProvider({
 }: ThemeProviderProps) {
     const [theme, setTheme] = useState<Theme>(() => {
         try {
-            return (localStorage.getItem(storageKey) as Theme) || defaultTheme
+            const stored = localStorage.getItem(storageKey) as Theme;
+            if (stored === 'liqour-black') return 'liquor-orange';
+            return stored || defaultTheme;
         } catch (e) {
-            return defaultTheme
+            return defaultTheme;
         }
     })
 

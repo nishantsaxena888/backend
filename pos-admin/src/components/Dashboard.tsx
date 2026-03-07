@@ -1,4 +1,4 @@
-import { TrendingUp, TrendingDown, Package, AlertTriangle, DollarSign, ShoppingCart } from 'lucide-react';
+import { TrendingUp, TrendingDown, Package, AlertTriangle, DollarSign, ShoppingCart, Utensils, Warehouse, Wine } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const salesData = [
@@ -26,7 +26,11 @@ const topProducts = [
   { id: 5, name: 'Desk Lamp', sold: 198, revenue: 8910 },
 ];
 
-export function Dashboard() {
+interface DashboardProps {
+  onNavigate?: (view: string) => void;
+}
+
+export function Dashboard({ onNavigate }: DashboardProps) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -37,6 +41,48 @@ export function Dashboard() {
           <option>Last 6 months</option>
           <option>Last year</option>
         </select>
+      </div>
+
+      {/* POS Applications */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <button onClick={() => onNavigate?.('restaurant-pos')} className="bg-white p-6 rounded-xl border border-gray-200 hover:border-orange-500 hover:shadow-md transition-all group flex items-center justify-between cursor-pointer w-full text-left">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center group-hover:bg-orange-500 transition-colors">
+              <Utensils className="w-6 h-6 text-orange-600 group-hover:text-white transition-colors" />
+            </div>
+            <div>
+              <h3 className="text-lg font-medium text-gray-900">Add Restaurant Item</h3>
+              <p className="text-sm text-gray-500">Create new menu items</p>
+            </div>
+          </div>
+          <span className="text-gray-400 group-hover:text-orange-500 transition-colors">→</span>
+        </button>
+
+        <button onClick={() => onNavigate?.('warehouse-pos')} className="bg-white p-6 rounded-xl border border-gray-200 hover:border-blue-500 hover:shadow-md transition-all group flex items-center justify-between cursor-pointer w-full text-left">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-600 transition-colors">
+              <Warehouse className="w-6 h-6 text-blue-600 group-hover:text-white transition-colors" />
+            </div>
+            <div>
+              <h3 className="text-lg font-medium text-gray-900">Add Warehouse Item</h3>
+              <p className="text-sm text-gray-500">Register new inventory</p>
+            </div>
+          </div>
+          <span className="text-gray-400 group-hover:text-blue-500 transition-colors">→</span>
+        </button>
+
+        <button onClick={() => onNavigate?.('liquor-pos')} className="bg-white p-6 rounded-xl border border-gray-200 hover:border-purple-500 hover:shadow-md transition-all group flex items-center justify-between cursor-pointer w-full text-left">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center group-hover:bg-purple-600 transition-colors">
+              <Wine className="w-6 h-6 text-purple-600 group-hover:text-white transition-colors" />
+            </div>
+            <div>
+              <h3 className="text-lg font-medium text-gray-900">Add Liquor Item</h3>
+              <p className="text-sm text-gray-500">Register new beverages</p>
+            </div>
+          </div>
+          <span className="text-gray-400 group-hover:text-purple-500 transition-colors">→</span>
+        </button>
       </div>
 
       {/* KPI Cards */}
@@ -169,6 +215,6 @@ export function Dashboard() {
           </table>
         </div>
       </div>
-    </div>
+    </div >
   );
 }

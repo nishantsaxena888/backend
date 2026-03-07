@@ -144,21 +144,21 @@
   --border: 24 100% 90%;
 }
 
-/* 8. restaurant-black */
-.theme-restaurant-black {
+/* 8. restaurant-light */
+.theme-restaurant-light {
   --primary: 0 72% 51%;
   --primary-foreground: 0 0% 100%;
-  --background: 0 0% 3%;
-  --foreground: 0 0% 98%;
-  --card: 0 0% 7%;
-  --card-foreground: 0 0% 98%;
-  --popover: 0 0% 10%;
-  --popover-foreground: 0 0% 98%;
-  --muted: 0 0% 15%;
-  --muted-foreground: 0 0% 65%;
-  --accent: 0 72% 30%;
-  --accent-foreground: 0 0% 100%;
-  --border: 0 0% 20%;
+  --background: 0 0% 100%;
+  --foreground: 0 0% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 10%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 10%;
+  --muted: 0 0% 95%;
+  --muted-foreground: 0 0% 45%;
+  --accent: 0 72% 95%;
+  --accent-foreground: 0 72% 40%;
+  --border: 0 0% 90%;
 }
 
 /* 9. warehouse-blue */

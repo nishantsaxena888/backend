@@ -51,7 +51,10 @@ export default defineConfig({
       '@radix-ui/react-aspect-ratio@1.1.2': '@radix-ui/react-aspect-ratio',
       '@radix-ui/react-alert-dialog@1.1.6': '@radix-ui/react-alert-dialog',
       '@radix-ui/react-accordion@1.2.3': '@radix-ui/react-accordion',
-      '@': path.resolve(__dirname, './src')
+      '@radix-ui/react-accordion@1.2.3': '@radix-ui/react-accordion',
+      '@': path.resolve(__dirname, './src'),
+      'components': path.resolve(__dirname, './src/components'),
+      'lib': path.resolve(__dirname, './src/lib'),
     }
   },
   build: {
@@ -66,11 +69,11 @@ export default defineConfig({
     projects: [{
       extends: true,
       plugins: [
-      // The plugin will run tests for the stories defined in your Storybook config
-      // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
-      storybookTest({
-        configDir: path.join(dirname, '.storybook')
-      })],
+        // The plugin will run tests for the stories defined in your Storybook config
+        // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
+        storybookTest({
+          configDir: path.join(dirname, '.storybook')
+        })],
       test: {
         name: 'storybook',
         browser: {
