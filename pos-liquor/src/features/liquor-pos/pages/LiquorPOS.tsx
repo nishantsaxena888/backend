@@ -11,9 +11,11 @@ import { Separator } from "@/components/ui/separator";
 import { CategoryFilter } from "../components/CategoryFilter";
 import { LiquorProductCard } from "../components/LiquorProductCard";
 import { LiquorCartItem } from "../components/LiquorCartItem";
+import { CheckoutModal } from "@/components/CheckoutModal";
 
 export default function LiquorPOS() {
     const [activeCategory, setActiveCategory] = useState("All");
+    const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
     const {
         cartItems,
         addToCart,
@@ -49,25 +51,54 @@ export default function LiquorPOS() {
                     </Badge>
                 </header>
 
-                <div className="p-6">
-                    <CategoryFilter
-                        categories={LIQUOR_CATEGORIES}
-                        activeCategory={activeCategory}
-                        onCategoryChange={setActiveCategory}
-                        activeColorClass="bg-purple-600 hover:bg-purple-700 shadow-purple-500/20"
-                    />
-
-                    <ScrollArea className="h-[calc(100vh-200px)]">
-                        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 pr-4">
-                            {filteredProducts.map(product => (
-                                <LiquorProductCard
-                                    key={product.id}
-                                    product={product}
-                                    onClick={addToCart}
-                                />
-                            ))}
+                <div className="flex flex-1 overflow-hidden">
+                    {/* Vertical Category Sidebar */}
+                    <aside className="w-72 border-r border-border bg-background p-6 flex flex-col shrink-0">
+                        <div className="mb-6 flex items-center justify-between">
+                            <h2 className="text-xl font-black">Categories</h2>
+                            <Badge variant="secondary" className="font-mono">{LIQUOR_CATEGORIES.length}</Badge>
                         </div>
-                    </ScrollArea>
+                        <ScrollArea className="flex-1 pr-4 -mr-4">
+                            <CategoryFilter
+                                categories={LIQUOR_CATEGORIES}
+                                activeCategory={activeCategory}
+                                onCategoryChange={setActiveCategory}
+                                activeColorClass="bg-orange-600 hover:bg-orange-700 shadow-orange-500/20"
+                            />
+                        </ScrollArea>
+                    </aside>
+
+                    {/* Product Grid Area */}
+                    <div className="flex-1 p-6 overflow-hidden flex flex-col bg-muted/5 relative">
+                        {/* Barcode Scanner UI (Mock) */}
+                        <div className="mb-6 bg-background rounded-2xl p-4 border border-border flex items-center gap-4 shadow-sm">
+                            <div className="w-12 h-12 bg-muted/30 rounded-xl flex items-center justify-center text-muted-foreground">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2" /><path d="M17 3h2a2 2 0 0 1 2 2v2" /><path d="M21 17v2a2 2 0 0 1-2 2h-2" /><path d="M7 21H5a2 2 0 0 1-2-2v-2" /><rect width="10" height="8" x="7" y="8" rx="1" /><path d="M7 12h10" /></svg>
+                            </div>
+                            <div className="flex-1">
+                                <p className="text-sm font-bold text-muted-foreground mb-1">Scan Barcode or Search SKU</p>
+                                <input
+                                    type="text"
+                                    placeholder="Focus here to scan... (e.g. 080432400438)"
+                                    className="w-full bg-transparent border-none text-xl font-bold outline-none placeholder:text-muted-foreground/30 focus:placeholder:text-transparent transition-colors"
+                                />
+                            </div>
+                            <Button className="font-bold rounded-xl h-10 px-6">Lookup</Button>
+                        </div>
+
+                        <ScrollArea className="flex-1">
+                            {/* Denser Grid */}
+                            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 pr-4 pb-6">
+                                {filteredProducts.map(product => (
+                                    <LiquorProductCard
+                                        key={product.id}
+                                        product={product}
+                                        onClick={addToCart}
+                                    />
+                                ))}
+                            </div>
+                        </ScrollArea>
+                    </div>
                 </div>
             </main>
 
@@ -129,18 +160,27 @@ export default function LiquorPOS() {
                             Void
                         </Button>
                         <Button
-                            className="h-14 font-black rounded-2xl shadow-lg shadow-purple-500/20 bg-purple-600 hover:bg-purple-700 text-white"
+                            className="h-14 font-black rounded-2xl shadow-lg shadow-orange-500/20 bg-orange-600 hover:bg-orange-700 text-white"
                             disabled={cartItems.length === 0}
-                            onClick={() => {
-                                alert('Sale Complete! Opening cash drawer.');
-                                clearCart();
-                            }}
+                            onClick={() => setIsCheckoutOpen(true)}
                         >
                             Checkout
                         </Button>
                     </div>
                 </div>
             </aside>
+
+            <CheckoutModal
+                isOpen={isCheckoutOpen}
+                onClose={() => setIsCheckoutOpen(false)}
+                onComplete={() => {
+                    alert('Sale Completed. Opening Cash Drawer!');
+                    clearCart();
+                }}
+                subtotal={subtotal}
+                tax={tax}
+                total={total}
+            />
         </div>
     );
 }

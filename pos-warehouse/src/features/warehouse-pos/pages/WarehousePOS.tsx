@@ -15,9 +15,11 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { WarehouseInventoryRow } from "../components/WarehouseInventoryRow";
+import { CheckoutModal } from "@/components/CheckoutModal";
 
 export default function WarehousePOS() {
     const [searchTerm, setSearchTerm] = useState("");
+    const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
     const { inventory, updateStock } = useWarehouseInventory();
 
     const filteredInventory = inventory.filter(item =>
@@ -38,14 +40,22 @@ export default function WarehousePOS() {
                     <POSSwitcher />
                 </div>
 
-                <div className="relative w-96">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input
-                        placeholder="Search by product name or SKU..."
-                        className="pl-11 h-12 bg-muted/50 border-none rounded-2xl"
-                        value={searchTerm}
-                        onChange={e => setSearchTerm(e.target.value)}
-                    />
+                <div className="flex items-center gap-4">
+                    <div className="relative w-96">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Input
+                            placeholder="Search by product name or SKU..."
+                            className="pl-11 h-12 bg-muted/50 border-none rounded-2xl"
+                            value={searchTerm}
+                            onChange={e => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                    <Button
+                        className="h-12 px-6 rounded-2xl font-bold text-white shadow-lg bg-blue-600 hover:bg-blue-700 shadow-blue-500/20"
+                        onClick={() => setIsCheckoutOpen(true)}
+                    >
+                        New Transfer
+                    </Button>
                 </div>
             </header>
 
@@ -86,6 +96,15 @@ export default function WarehousePOS() {
                     </CardContent>
                 </Card>
             </main>
+
+            <CheckoutModal
+                isOpen={isCheckoutOpen}
+                onClose={() => setIsCheckoutOpen(false)}
+                onComplete={() => alert('Transfer logged successfully!')}
+                subtotal={0}
+                tax={0}
+                total={0}
+            />
         </div>
     );
 }

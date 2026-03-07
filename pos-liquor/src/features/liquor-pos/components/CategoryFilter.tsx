@@ -14,14 +14,14 @@ export function CategoryFilter({
     activeColorClass = "bg-purple-600 hover:bg-purple-700 shadow-purple-500/20"
 }: CategoryFilterProps) {
     return (
-        <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-none">
+        <div className="flex flex-col gap-2 w-full">
             {categories.map(category => (
                 <Button
                     key={category}
-                    variant={activeCategory === category ? "default" : "outline"}
-                    className={`rounded-xl font-bold px-6 py-2 ${activeCategory === category
-                            ? "text-white shadow-lg border-none " + activeColorClass
-                            : "border-border/50 text-muted-foreground"
+                    variant={activeCategory === category ? "default" : "ghost"}
+                    className={`w-full justify-start rounded-xl font-bold px-4 py-6 text-base ${activeCategory === category
+                        ? "text-white shadow-md border-none " + activeColorClass
+                        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
                         }`}
                     onClick={() => onCategoryChange(category)}
                 >

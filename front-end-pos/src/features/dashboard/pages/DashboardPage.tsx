@@ -5,10 +5,10 @@ import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/ca
 
 export function DashboardPage() {
     return (
-        <div className="min-h-screen bg-background text-foreground flex flex-col p-8 md:p-12 lg:p-24 space-y-8">
+        <div className="min-h-screen bg-background text-foreground flex flex-col p-6 md:p-12 lg:p-24 space-y-8">
             <header className="space-y-4">
-                <h1 className="text-5xl font-black tracking-tighter">Inventure POS Systems</h1>
-                <p className="text-xl text-muted-foreground max-w-2xl">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight lg:tracking-tighter">Inventure POS Systems</h1>
+                <p className="text-lg md:text-xl text-muted-foreground max-w-2xl">
                     Select a Point of Sale module below to begin operations. Each module is tailored for specific workflows and inventory types.
                 </p>
             </header>

@@ -10,9 +10,11 @@ import { Separator } from "@/components/ui/separator";
 import { RestaurantCategoryFilter } from "../components/RestaurantCategoryFilter";
 import { RestaurantProductCard } from "../components/RestaurantProductCard";
 import { RestaurantCartItem } from "../components/RestaurantCartItem";
+import { CheckoutModal } from "@/components/CheckoutModal";
 
 export default function RestaurantPOS() {
     const [activeCategory, setActiveCategory] = useState("All");
+    const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
     const {
         cartItems,
         addToCart,
@@ -52,7 +54,7 @@ export default function RestaurantPOS() {
                     />
 
                     <ScrollArea className="h-[calc(100vh-200px)]">
-                        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 pr-4">
+                        <div className="grid grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8 pr-4">
                             {filteredProducts.map(product => (
                                 <RestaurantProductCard
                                     key={product.id}
@@ -128,16 +130,25 @@ export default function RestaurantPOS() {
                         <Button
                             className="h-14 font-black rounded-2xl shadow-lg shadow-primary/20 bg-orange-600 hover:bg-orange-700 text-white"
                             disabled={cartItems.length === 0}
-                            onClick={() => {
-                                alert('Order sent to kitchen!');
-                                clearCart();
-                            }}
+                            onClick={() => setIsCheckoutOpen(true)}
                         >
-                            Place Order
+                            Checkout Order
                         </Button>
                     </div>
                 </div>
             </aside>
+
+            <CheckoutModal
+                isOpen={isCheckoutOpen}
+                onClose={() => setIsCheckoutOpen(false)}
+                onComplete={() => {
+                    alert('Order completed and sent to kitchen!');
+                    clearCart();
+                }}
+                subtotal={subtotal}
+                tax={tax}
+                total={total}
+            />
         </div>
     );
 }
