@@ -3,7 +3,9 @@ import { POSThemeProvider, usePOSTheme } from '@/components/theme-provider'
 import { ThemeSwitcher } from '@/components/ThemeSwitcher'
 import { CheckoutDialog } from '@/components/CheckoutDialog'
 import { Header } from '@/components/Header'
-import { CONFIGS, MOCK_PRODUCTS } from '@/mock/data'
+import { AdminDashboard } from '@/components/AdminDashboard'
+import { usePOSStore } from '@/context/store-context'
+import { CONFIGS } from '@/mock/data'
 import type { Product, CartItem } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
@@ -12,11 +14,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from '@/components/ui/sheet'
+// Sheet imports removed as they are now in Header.tsx
 import {
   ShoppingCart,
   Search,
@@ -27,16 +25,20 @@ import {
   Store,
   LayoutDashboard,
   Box,
-  ArrowRight
+  ArrowRight,
+  Settings
 } from 'lucide-react'
 
-function HomePage({ onStart }: { onStart: () => void }) {
+function HomePage({ onStart, onAdmin }: { onStart: () => void; onAdmin: () => void }) {
   const { theme } = usePOSTheme()
   const config = CONFIGS[theme]
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 sm:p-6 text-center space-y-8 sm:space-y-12 animate-in fade-in duration-700 overflow-x-hidden">
-      <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 flex gap-2">
+        <Button variant="outline" size="icon" className="rounded-2xl border-2" onClick={onAdmin}>
+          <Settings className="w-5 h-5" />
+        </Button>
         <ThemeSwitcher />
       </div>
 
@@ -87,8 +89,9 @@ function HomePage({ onStart }: { onStart: () => void }) {
 
 function POSDashboard({ onBack }: { onBack: () => void }) {
   const { theme } = usePOSTheme()
+  const { inventory, addTransaction } = usePOSStore()
   const config = CONFIGS[theme]
-  const products = MOCK_PRODUCTS[theme] || []
+  const products = inventory[theme] || []
 
   const [search, setSearch] = useState('')
   const [activeCategory, setActiveCategory] = useState('All')
@@ -128,6 +131,16 @@ function POSDashboard({ onBack }: { onBack: () => void }) {
   const total = subtotal + tax
 
   const handleCheckoutComplete = () => {
+    addTransaction({
+      total: total,
+      theme: theme,
+      items: cart.map(item => ({
+        id: item.id,
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price
+      }))
+    });
     setIsCheckoutOpen(false)
     setCart([])
   }
@@ -294,15 +307,13 @@ function POSDashboard({ onBack }: { onBack: () => void }) {
 }
 
 export default function App() {
-  const [view, setView] = useState<'home' | 'pos'>('home')
+  const [view, setView] = useState<'home' | 'pos' | 'admin'>('home')
 
   return (
     <POSThemeProvider>
-      {view === 'home' ? (
-        <HomePage onStart={() => setView('pos')} />
-      ) : (
-        <POSDashboard onBack={() => setView('home')} />
-      )}
+      {view === 'home' && <HomePage onStart={() => setView('pos')} onAdmin={() => setView('admin')} />}
+      {view === 'pos' && <POSDashboard onBack={() => setView('home')} />}
+      {view === 'admin' && <AdminDashboard onBack={() => setView('home')} />}
     </POSThemeProvider>
   )
 }
