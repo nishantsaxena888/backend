@@ -65,7 +65,7 @@ export function StockManager({
                 <Switch
                     id="manage-stock"
                     checked={manageStock}
-                    onValueChange={(val: string) => onChange({ taxClass: val })}
+                    onCheckedChange={(checked: boolean) => onChange({ manageStock: checked })}
                 />
             </div>
 
