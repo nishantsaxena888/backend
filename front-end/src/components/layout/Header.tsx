@@ -137,13 +137,13 @@ export function Header({
                 <div className="flex flex-col gap-4">
                     <div className="flex items-center justify-between gap-4">
                         {/* Logo */}
-                        <div className="flex items-center gap-3 shrink-0 min-w-0" onClick={() => onCategorySelect?.('All Products')}>
-                            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-2xl shadow-lg shadow-primary/20 shrink-0 cursor-pointer">
+                        <div className="flex items-center gap-2 sm:gap-3 shrink-0 min-w-0" onClick={() => onCategorySelect?.('All Products')}>
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary rounded-lg flex items-center justify-center text-xl sm:text-2xl shadow-lg shadow-primary/20 shrink-0 cursor-pointer">
                                 {config.logoIcon}
                             </div>
                             <div className="hidden xs:block min-w-0 cursor-pointer">
-                                <h1 className="text-foreground text-lg sm:text-xl font-black tracking-tight leading-none truncate">{config.name}</h1>
-                                <p className="text-primary text-[9px] font-black uppercase tracking-widest mt-0.5 truncate">{config.tagline}</p>
+                                <h1 className="text-foreground text-base sm:text-xl font-black tracking-tight leading-none truncate">{config.name}</h1>
+                                <p className="text-primary text-[8px] sm:text-[9px] font-black uppercase tracking-widest mt-0.5 truncate">{config.tagline}</p>
                             </div>
                         </div>
 

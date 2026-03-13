@@ -12,13 +12,13 @@ import { ProfileView } from "@/components/commerce/ProfileView"
 import { AppliedFiltersBar } from "@/components/commerce/AppliedFiltersBar"
 import { HeroSection } from "@/components/layout/HeroSection"
 import { ProductGrid } from "@/components/commerce/ProductGrid"
+import { Footer } from "@/components/layout/Footer"
 
 // ── ui imports ───────────────────────────────────────────────────────────────
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import { Progress } from "@/components/ui/progress"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Separator } from "@/components/ui/separator"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
@@ -32,7 +32,8 @@ import {
   Plus,
   Minus,
   X,
-  Filter
+  Filter,
+  ImageOff
 } from "lucide-react"
 
 // ─── APP ROOT ────────────────────────────────────────────────────────────────
@@ -46,9 +47,28 @@ export default function App() {
   )
 }
 
+function CartItemImage({ p, l }: { p: Product; l: (obj: any, field: string) => string }) {
+  const [imageError, setImageError] = useState(false);
+
+  return (
+    <div className="w-16 h-16 rounded-2xl bg-background flex items-center justify-center text-3xl shadow-sm overflow-hidden shrink-0">
+      {!p.image || imageError ? (
+        <ImageOff className="w-8 h-8 text-muted-foreground/20" />
+      ) : p.image.startsWith('http') ? (
+        <img
+          src={p.image}
+          alt={l(p, 'name')}
+          onError={() => setImageError(true)}
+          className="w-full h-full object-cover"
+        />
+      ) : p.image}
+    </div>
+  );
+}
+
 function HomePage() {
-  const { theme, setTheme } = useTheme();
-  const { language, setLanguage, t, l } = useLanguage();
+  const { theme } = useTheme();
+  const { t, l } = useLanguage();
   const [config, setConfig] = useState<ClientConfig | null>(null)
   const [allProducts, setAllProducts] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -63,6 +83,7 @@ function HomePage() {
   const [checkoutOpen, setCheckoutOpen] = useState(false)
   const [currentView, setCurrentView] = useState<'home' | 'profile'>('home')
   const [ageVerified, setAgeVerified] = useState<boolean>(false)
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
@@ -202,11 +223,7 @@ function HomePage() {
                     if (!p) return null
                     return (
                       <div key={ci.id} className="flex items-center gap-4 group bg-muted/30 hover:bg-muted/50 p-4 rounded-3xl transition-all">
-                        <div className="w-16 h-16 rounded-2xl bg-background flex items-center justify-center text-3xl shadow-sm overflow-hidden">
-                          {p.image.startsWith('http') ? (
-                            <img src={p.image} className="w-full h-full object-cover" />
-                          ) : p.image}
-                        </div>
+                        <CartItemImage p={p} l={l} />
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-black truncate leading-tight mb-1">{l(p, 'name')}</p>
                           <p className="text-xs font-bold text-primary">${p.price}</p>
@@ -337,7 +354,12 @@ function HomePage() {
                         <Package className="w-3 h-3" /> {filtered.length} {t('product.curated_for')} {config.name}
                       </p>
                     </div>
-                    <ToggleGroup type="single" defaultValue="grid" className="bg-muted/50 p-1 rounded-xl border border-border/50">
+                    <ToggleGroup
+                      type="single"
+                      value={viewMode}
+                      onValueChange={(v) => v && setViewMode(v as 'grid' | 'list')}
+                      className="bg-muted/50 p-1 rounded-xl border border-border/50 shrink-0 self-start md:self-auto"
+                    >
                       <ToggleGroupItem value="grid" className="rounded-lg h-10 px-4 font-bold text-[10px] uppercase data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">{t('product.view_grid')}</ToggleGroupItem>
                       <ToggleGroupItem value="list" className="rounded-lg h-10 px-4 font-bold text-[10px] uppercase data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">{t('product.view_list')}</ToggleGroupItem>
                     </ToggleGroup>
@@ -352,6 +374,7 @@ function HomePage() {
                       onAddToCart={addToCart}
                       onChangeQty={changeQty}
                       onToggleWishlist={toggleWishlist}
+                      viewMode={viewMode}
                     />
                   ) : (
                     <div className="py-32 text-center space-y-6 bg-muted/20 rounded-[60px] border-4 border-dotted border-border/50">
@@ -398,38 +421,11 @@ function HomePage() {
           onClearCart={() => setCartItems([])}
         />
 
-        <footer className="border-t py-12 md:py-24 bg-muted/10">
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-              <div className="col-span-1 md:col-span-2 space-y-6 text-center md:text-left">
-                <div className="flex items-center justify-center md:justify-start gap-2 md:gap-4">
-                  <div className="w-14 h-14 bg-primary rounded-[20px] flex items-center justify-center text-3xl shadow-xl">{config.logoIcon}</div>
-                  <h2 className="text-3xl font-black tracking-tighter">{config.name}</h2>
-                </div>
-                <p className="text-muted-foreground text-sm font-medium leading-relaxed max-w-sm mx-auto md:mx-0">{config.tagline}</p>
-              </div>
-              <div className="space-y-6 text-center md:text-left">
-                <h4 className="text-xs font-black uppercase tracking-widest text-foreground">{t('footer.navigation')}</h4>
-                <div className="flex flex-col gap-3 text-sm font-bold text-muted-foreground">
-                  <button onClick={() => setCurrentView('home')} className="hover:text-primary transition-colors">{t('footer.shop_all')}</button>
-                  <button onClick={() => setCurrentView('profile')} className="hover:text-primary transition-colors">{t('footer.my_profile')}</button>
-                </div>
-              </div>
-              <div className="space-y-6 text-center md:text-left">
-                <h4 className="text-xs font-black uppercase tracking-widest text-foreground">{t('footer.contact')}</h4>
-                <div className="flex flex-col gap-3 text-sm font-bold text-muted-foreground">
-                  <span>{config.phone}</span>
-                  <span>{config.hours}</span>
-                </div>
-              </div>
-            </div>
-            <Separator className="bg-border/30" />
-            <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-              <p>© 2026 INVENTURE INC.</p>
-              <p>POWERED BY SRP MOCK API</p>
-            </div>
-          </div>
-        </footer>
+        <Footer
+          config={config}
+          onCategorySelect={(c) => { setSelectedCategory(c); setCurrentView('home'); }}
+          onViewChange={(v) => setCurrentView(v)}
+        />
       </div>
     </TooltipProvider>
   )

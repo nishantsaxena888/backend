@@ -175,6 +175,16 @@ const translations = {
         'footer.shop_all': 'Shop All',
         'footer.my_profile': 'My Profile',
         'footer.contact': 'Contact',
+        'footer.newsletter': 'Newsletter',
+        'footer.subscribe_msg': 'Subscribe to our newsletter for the latest updates and exclusive offers.',
+        'footer.email_placeholder': 'Enter your email',
+        'footer.subscribe': 'Subscribe',
+        'footer.follow_us': 'Follow Us',
+        'footer.categories': 'Categories',
+        'footer.quick_links': 'Quick Links',
+        'footer.help': 'Help & Support',
+        'footer.privacy': 'Privacy Policy',
+        'footer.terms': 'Terms of Service',
 
         // Hero
         'hero.explore': 'Explore Collection',
@@ -345,6 +355,16 @@ const translations = {
         'footer.shop_all': 'Comprar Todo',
         'footer.my_profile': 'Mi Perfil',
         'footer.contact': 'Contacto',
+        'footer.newsletter': 'Boletín informativo',
+        'footer.subscribe_msg': 'Suscríbase a nuestro boletín para recibir las últimas actualizaciones y ofertas exclusivas.',
+        'footer.email_placeholder': 'Introduce tu correo electrónico',
+        'footer.subscribe': 'Suscribirse',
+        'footer.follow_us': 'Síguenos',
+        'footer.categories': 'Categorías',
+        'footer.quick_links': 'Enlaces Rápidos',
+        'footer.help': 'Ayuda y Soporte',
+        'footer.privacy': 'Política de Privacidad',
+        'footer.terms': 'Términos de Servicio',
 
         // Hero
         'hero.explore': 'Explorar Colección',
@@ -375,18 +395,27 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         return translations[language][key as keyof typeof translations['en']] || key;
     };
 
-    /** Helper to get localized value from an object with translations field */
+    /** Helper to get localized value from an object with optional translations field */
     const l = (obj: any, field: string): any => {
         if (!obj) return '';
-        if (language === 'en') return obj[field];
 
-        // Handle nested hero specifically for ClientConfig
-        if (field.startsWith('hero.')) {
-            const heroField = field.split('.')[1];
-            return (obj as any).translations?.[language]?.hero?.[heroField] ?? (obj as any).hero?.[heroField];
-        }
+        // Handle nested paths like 'hero.headline'
+        const parts = field.split('.');
 
-        return (obj as any).translations?.[language]?.[field] ?? obj[field];
+        const getNestedValue = (target: any, path: string[]) => {
+            return path.reduce((acc, part) => acc?.[part], target);
+        };
+
+        // 1. Try to get localized value
+        const localized = obj.translations?.[language];
+        const localizedValue = localized ? getNestedValue(localized, parts) : undefined;
+
+        if (localizedValue !== undefined) return localizedValue;
+
+        // 2. Fallback to default value (English)
+        const defaultValue = getNestedValue(obj, parts);
+
+        return defaultValue ?? '';
     };
 
     return (

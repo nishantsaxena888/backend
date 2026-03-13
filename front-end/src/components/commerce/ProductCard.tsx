@@ -1,4 +1,5 @@
-import { Heart, Plus, Minus, Star } from "lucide-react";
+import { useState } from "react";
+import { Heart, Plus, Minus, Star, ImageOff } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,13 +28,21 @@ export function ProductCard({
     onToggleWishlist
 }: ProductCardProps) {
     const { t } = useLanguage();
+    const [imageError, setImageError] = useState(false);
+
     return (
         <Card className="group hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 border-none bg-muted/20 hover:bg-background rounded-[24px] md:rounded-[40px] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-500">
             <div className="relative h-48 md:h-64 overflow-hidden bg-muted/40 flex items-center justify-center m-2 md:m-4 mb-0 rounded-[20px] md:rounded-[32px]">
-                {product.image.startsWith('http') ? (
+                {!product.image || imageError ? (
+                    <div className="flex flex-col items-center justify-center text-muted-foreground/30 gap-2">
+                        <ImageOff className="w-16 h-16 md:w-20 md:h-20" />
+                        <span className="text-[10px] font-black uppercase tracking-widest leading-none">No Image</span>
+                    </div>
+                ) : product.image.startsWith('http') ? (
                     <img
                         src={product.image}
                         alt={product.name}
+                        onError={() => setImageError(true)}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
                 ) : (

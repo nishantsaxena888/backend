@@ -1,4 +1,5 @@
-import { Star, ShoppingCart, Heart, Truck, Shield, RotateCcw, Package, Clock } from 'lucide-react';
+import { useState } from 'react';
+import { Star, ShoppingCart, Heart, Truck, Shield, RotateCcw, Package, Clock, ImageOff } from 'lucide-react';
 import type { Product, ClientConfig } from '@/mock/types';
 import {
     Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger
@@ -16,6 +17,8 @@ interface ProductDetailProps {
 
 export function ProductDetail({ product, config, onAddToCart, trigger }: ProductDetailProps) {
     const { t } = useLanguage();
+    const [imageError, setImageError] = useState(false);
+
     const renderStars = (rating: number) => {
         return (
             <div className="flex items-center gap-1">
@@ -39,10 +42,16 @@ export function ProductDetail({ product, config, onAddToCart, trigger }: Product
                 <div className="grid md:grid-cols-2">
                     {/* Left: Image Section */}
                     <div className="relative bg-muted/20 flex items-center justify-center p-12 min-h-[400px]">
-                        {product.image.startsWith('http') ? (
+                        {!product.image || imageError ? (
+                            <div className="flex flex-col items-center justify-center text-muted-foreground/20 gap-4">
+                                <ImageOff className="w-32 h-32" />
+                                <span className="text-sm font-black uppercase tracking-widest leading-none">No Image</span>
+                            </div>
+                        ) : product.image.startsWith('http') ? (
                             <img
                                 src={product.image}
                                 alt={product.name}
+                                onError={() => setImageError(true)}
                                 className="w-full h-full object-cover rounded-2xl shadow-xl"
                             />
                         ) : (
