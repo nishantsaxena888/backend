@@ -203,3 +203,18 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+
+  /* Hide number input spinners/steppers */
+  .no-spinner::-webkit-inner-spin-button,
+  .no-spinner::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .no-spinner {
+    -moz-appearance: textfield;
+    appearance: none;
+  }
+}
