@@ -1,17 +1,20 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { CheckoutDialog } from './CheckoutDialog';
 import { POSThemeProvider } from './theme-provider';
+import { LanguageProvider } from './language-provider';
 
 const meta: Meta<typeof CheckoutDialog> = {
     title: 'Components/CheckoutDialog',
     component: CheckoutDialog,
     decorators: [
         (Story) => (
-            <POSThemeProvider>
-                <div className="p-8 bg-background">
-                    <Story />
-                </div>
-            </POSThemeProvider>
+            <LanguageProvider>
+                <POSThemeProvider>
+                    <div className="p-8 bg-background">
+                        <Story />
+                    </div>
+                </POSThemeProvider>
+            </LanguageProvider>
         ),
     ],
     parameters: {

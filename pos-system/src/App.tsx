@@ -1,11 +1,13 @@
 import { useState, useMemo } from 'react'
 import { POSThemeProvider, usePOSTheme } from '@/components/theme-provider'
+import { LanguageProvider } from '@/components/language-provider'
 import { ThemeSwitcher } from '@/components/ThemeSwitcher'
 import { CheckoutDialog } from '@/components/CheckoutDialog'
 import { Header } from '@/components/Header'
 import { AdminDashboard } from '@/components/AdminDashboard'
 import { usePOSStore } from '@/context/store-context'
-import { CONFIGS } from '@/mock/data'
+import { useLanguage } from '@/components/language-provider'
+import { CONFIGS, t } from '@/mock/data'
 import type { Product, CartItem } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
@@ -31,7 +33,9 @@ import {
 
 function HomePage({ onStart, onAdmin }: { onStart: () => void; onAdmin: () => void }) {
   const { theme } = usePOSTheme()
+  const { currentLanguage } = useLanguage()
   const config = CONFIGS[theme]
+  const translatedName = t(theme, currentLanguage.code)
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 sm:p-6 text-center space-y-8 sm:space-y-12 animate-in fade-in duration-700 overflow-x-hidden">
@@ -48,10 +52,10 @@ function HomePage({ onStart, onAdmin }: { onStart: () => void; onAdmin: () => vo
         </div>
         <div className="space-y-2">
           <h1 className="text-4xl sm:text-6xl font-black tracking-tighter leading-none">
-            {config.name.split(' ')[0]} <span className="text-primary">POS</span>
+            {translatedName.split(' ')[0]} <span className="text-primary">POS</span>
           </h1>
           <p className="text-lg sm:text-xl text-muted-foreground font-bold tracking-tight">
-            The next generation of intelligent commerce for {config.name.split(' ')[0]}s.
+            The next generation of intelligent commerce for {translatedName.split(' ')[0]}s.
           </p>
         </div>
       </div>
@@ -89,6 +93,7 @@ function HomePage({ onStart, onAdmin }: { onStart: () => void; onAdmin: () => vo
 
 function POSDashboard({ onBack }: { onBack: () => void }) {
   const { theme } = usePOSTheme()
+  const { currentLanguage } = useLanguage()
   const { inventory, addTransaction } = usePOSStore()
   const config = CONFIGS[theme]
   const products = inventory[theme] || []
@@ -100,11 +105,12 @@ function POSDashboard({ onBack }: { onBack: () => void }) {
 
   const filteredProducts = useMemo(() => {
     return products.filter((p: Product) => {
-      const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase()) || p.sku.toLowerCase().includes(search.toLowerCase())
+      const translatedName = t(p.name, currentLanguage.code, 'products')
+      const matchesSearch = translatedName.toLowerCase().includes(search.toLowerCase()) || p.sku.toLowerCase().includes(search.toLowerCase())
       const matchesCategory = activeCategory === 'All' || p.category === activeCategory
       return matchesSearch && matchesCategory
     })
-  }, [products, search, activeCategory])
+  }, [products, search, activeCategory, currentLanguage.code])
 
   const addToCart = (product: Product) => {
     setCart(prev => {
@@ -247,7 +253,9 @@ function POSDashboard({ onBack }: { onBack: () => void }) {
               <TabsList className="bg-muted/50 p-1 h-10 sm:h-12 rounded-xl border w-full justify-start overflow-x-auto no-scrollbar">
                 <TabsTrigger value="All" className="px-4 sm:px-6 rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-bold text-xs sm:text-sm">All Items</TabsTrigger>
                 {config.categories.map((cat: string) => (
-                  <TabsTrigger key={cat} value={cat} className="px-4 sm:px-6 rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-bold text-xs sm:text-sm">{cat}</TabsTrigger>
+                  <TabsTrigger key={cat} value={cat} className="px-4 sm:px-6 rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-bold text-xs sm:text-sm">
+                    {t(cat, currentLanguage.code, 'categories')}
+                  </TabsTrigger>
                 ))}
               </TabsList>
             </Tabs>
@@ -267,8 +275,12 @@ function POSDashboard({ onBack }: { onBack: () => void }) {
                       {product.image}
                     </div>
                     <div className="p-3 sm:p-4">
-                      <Badge variant="outline" className="text-[8px] sm:text-[10px] font-black uppercase mb-1">{product.category}</Badge>
-                      <h3 className="font-black text-xs sm:text-sm line-clamp-1">{product.name}</h3>
+                      <Badge variant="outline" className="text-[8px] sm:text-[10px] font-black uppercase mb-1">
+                        {t(product.category, currentLanguage.code, 'categories')}
+                      </Badge>
+                      <h3 className="font-black text-xs sm:text-sm line-clamp-1">
+                        {t(product.name, currentLanguage.code, 'products')}
+                      </h3>
                       <p className="text-[10px] sm:text-xs text-muted-foreground font-bold">{product.sku}</p>
                     </div>
                   </CardContent>
@@ -310,10 +322,12 @@ export default function App() {
   const [view, setView] = useState<'home' | 'pos' | 'admin'>('home')
 
   return (
-    <POSThemeProvider>
-      {view === 'home' && <HomePage onStart={() => setView('pos')} onAdmin={() => setView('admin')} />}
-      {view === 'pos' && <POSDashboard onBack={() => setView('home')} />}
-      {view === 'admin' && <AdminDashboard onBack={() => setView('home')} />}
-    </POSThemeProvider>
+    <LanguageProvider>
+      <POSThemeProvider>
+        {view === 'home' && <HomePage onStart={() => setView('pos')} onAdmin={() => setView('admin')} />}
+        {view === 'pos' && <POSDashboard onBack={() => setView('home')} />}
+        {view === 'admin' && <AdminDashboard onBack={() => setView('home')} />}
+      </POSThemeProvider>
+    </LanguageProvider>
   )
 }

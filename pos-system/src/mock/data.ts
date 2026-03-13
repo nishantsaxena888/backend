@@ -1,4 +1,138 @@
-import type { POSConfig, Product } from '../types';
+import type { POSConfig, Product, Language } from '../types';
+
+export const LANGUAGES: Language[] = [
+    { code: 'en', name: 'English', flag: '🇺🇸' },
+    { code: 'es', name: 'Spanish', flag: '🇪🇸' },
+    { code: 'fr', name: 'French', flag: '🇫🇷' },
+    { code: 'de', name: 'German', flag: '🇩🇪' },
+    { code: 'jp', name: 'Japanese', flag: '🇯🇵' },
+    { code: 'hi', name: 'Hindi', flag: '🇮🇳' },
+    { code: 'ar', name: 'Arabic', flag: '🇸🇦' },
+    { code: 'zh', name: 'Chinese', flag: '🇨🇳' },
+];
+
+export const TRANSLATIONS: Record<string, any> = {
+    es: {
+        warehouse: "Almacén Industrial",
+        restaurant: "Restaurante Bistro",
+        liquor: "Licores Vintage",
+        categories: {
+            'Heavy Machinery': 'Maquinaria Pesada',
+            'Tools': 'Herramientas',
+            'Safety Gear': 'Equipo de Seguridad',
+            'Construction': 'Construcción',
+            'Starters': 'Entradas',
+            'Main Course': 'Plato Principal',
+            'Desserts': 'Postres',
+            'Beverages': 'Bebidas',
+            'Whisk(e)y': 'Whisky',
+            'Wine': 'Vino',
+            'Beer': 'Cerveza',
+            'Spirits': 'Licores'
+        },
+        products: {
+            'Hydraulic Press': 'Prensa Hidráulica',
+            'Power Drill x4': 'Taladro de Potencia x4',
+            'Truffle Pasta': 'Pasta de Trufa',
+            'Red Wine Bottle': 'Botella de Vino Tinto',
+            'Single Malt 18y': 'Malta Única 18 años',
+            'Cabernet Sauvignon': 'Cabernet Sauvignon'
+        }
+    },
+    hi: {
+        warehouse: "औद्योगिक गोदाम",
+        restaurant: "बिस्ट्रो फ्लेयर",
+        liquor: "विंटेज स्पिरिट्स",
+        categories: {
+            'Heavy Machinery': 'भारी मशीनरी',
+            'Tools': 'औजार',
+            'Safety Gear': 'सुरक्षा उपकरण',
+            'Construction': 'निर्माण',
+            'Starters': 'स्टार्टर्स',
+            'Main Course': 'मुख्य भोजन',
+            'Desserts': 'मिठाई',
+            'Beverages': 'पेय पदार्थ',
+            'Whisk(e)y': 'व्हिस्की',
+            'Wine': 'शराब',
+            'Beer': 'बीयर',
+            'Spirits': 'स्पिरिट्स'
+        },
+        products: {
+            'Hydraulic Press': 'हाइड्रोलिक प्रेस',
+            'Power Drill x4': 'पावर ड्रिल x4',
+            'Truffle Pasta': 'ट्रफल पास्ता',
+            'Red Wine Bottle': 'लाल शराब की बोतल',
+            'Single Malt 18y': 'सिंगल माल्ट 18y',
+            'Cabernet Sauvignon': 'कैबरनेट सॉविनन'
+        }
+    },
+    ar: {
+        warehouse: "مستودع صناعي",
+        restaurant: "بيسترو فلير",
+        liquor: "مشروبات معتقة",
+        categories: {
+            'Heavy Machinery': 'آلات ثقيلة',
+            'Tools': 'أدوات',
+            'Safety Gear': 'معدات السلامة',
+            'Construction': 'بناء',
+            'Starters': 'مقبلات',
+            'Main Course': 'الطبق الرئيسي',
+            'Desserts': 'حلويات',
+            'Beverages': 'مشروبات',
+            'Whisk(e)y': 'ويسكي',
+            'Wine': 'نبيذ',
+            'Beer': 'بيرة',
+            'Spirits': 'مشروبات كحولية'
+        },
+        products: {
+            'Hydraulic Press': 'مكبس هيدروليكي',
+            'Power Drill x4': 'مثقاب كهربائي x4',
+            'Truffle Pasta': 'باستا الكمأة',
+            'Red Wine Bottle': 'زجاجة نبيذ أحمر',
+            'Single Malt 18y': 'سنجل مالت 18 سنة',
+            'Cabernet Sauvignon': 'كابيرنت سوفينيون'
+        }
+    },
+    zh: {
+        warehouse: "工业仓库",
+        restaurant: "小酒馆风情",
+        liquor: "年份烈酒",
+        categories: {
+            'Heavy Machinery': '重型机械',
+            'Tools': '工具',
+            'Safety Gear': '安全装备',
+            'Construction': '建筑',
+            'Starters': '前菜',
+            'Main Course': '主菜',
+            'Desserts': '甜点',
+            'Beverages': '饮料',
+            'Whisk(e)y': '威士忌',
+            'Wine': '葡萄酒',
+            'Beer': '啤酒',
+            'Spirits': '烈酒'
+        },
+        products: {
+            'Hydraulic Press': '液压机',
+            'Power Drill x4': '电钻 x4',
+            'Truffle Pasta': '松露意大利面',
+            'Red Wine Bottle': '红酒瓶',
+            'Single Malt 18y': '18年单项麦芽',
+            'Cabernet Sauvignon': '赤霞珠'
+        }
+    }
+};
+
+export const t = (key: string, locale: string, section?: 'categories' | 'products') => {
+    if (locale === 'en') return key;
+    const langData = TRANSLATIONS[locale];
+    if (!langData) return key;
+
+    if (section && langData[section]) {
+        return langData[section][key] || key;
+    }
+
+    return langData[key] || key;
+};
 
 export const CONFIGS: Record<string, POSConfig> = {
     warehouse: {

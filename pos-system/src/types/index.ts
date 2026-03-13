@@ -32,3 +32,9 @@ export interface POSConfig {
     categories: string[];
     primaryColor: string;
 }
+
+export interface Language {
+    code: string;
+    name: string;
+    flag: string;
+}

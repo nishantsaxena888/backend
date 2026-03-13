@@ -1,6 +1,7 @@
 import { LayoutDashboard, ShoppingCart } from "lucide-react";
 import { Button } from "./core/Button";
 import { ThemeSwitcher } from "./ThemeSwitcher";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -9,7 +10,8 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet";
 import type { POSTheme } from "../types";
-import { CONFIGS } from "../mock/data";
+import { useLanguage } from "./language-provider";
+import { CONFIGS, t } from "../mock/data";
 
 interface HeaderProps {
     theme: POSTheme;
@@ -20,6 +22,8 @@ interface HeaderProps {
 
 export function Header({ theme, onBack, cartCount, CartContent }: HeaderProps) {
     const config = CONFIGS[theme];
+    const { currentLanguage } = useLanguage();
+    const translatedName = t(theme, currentLanguage.code);
 
     return (
         <header className="flex items-center justify-between px-3 sm:px-6 py-2 sm:py-4 border-b bg-card shadow-sm z-10 shrink-0 gap-2">
@@ -31,13 +35,14 @@ export function Header({ theme, onBack, cartCount, CartContent }: HeaderProps) {
                     {config.logo}
                 </div>
                 <div className="min-w-0 flex flex-col justify-center">
-                    <h1 className="text-sm sm:text-xl font-black tracking-tight leading-none truncate">{config.name}</h1>
+                    <h1 className="text-sm sm:text-xl font-black tracking-tight leading-none truncate">{translatedName}</h1>
                     <p className="hidden xs:block text-[8px] sm:text-xs font-bold text-muted-foreground uppercase tracking-widest mt-0.5 sm:mt-1 truncate">Terminal #01 · Active</p>
                 </div>
             </div>
 
             <div className="flex items-center gap-2 sm:gap-6 shrink-0">
                 <ThemeSwitcher />
+                <LanguageSwitcher />
 
                 <div className="hidden lg:flex items-center gap-3">
                     <Separator orientation="vertical" className="h-8" />

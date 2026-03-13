@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Header } from './Header';
 import { POSThemeProvider } from './theme-provider';
+import { LanguageProvider } from './language-provider';
 
 const MockCartContent = ({ isMobile }: { isMobile?: boolean }) => (
     <div className="p-8 text-center font-bold">
@@ -13,11 +14,13 @@ const meta: Meta<typeof Header> = {
     component: Header,
     decorators: [
         (Story) => (
-            <POSThemeProvider>
-                <div className="w-full">
-                    <Story />
-                </div>
-            </POSThemeProvider>
+            <LanguageProvider>
+                <POSThemeProvider>
+                    <div className="w-full">
+                        <Story />
+                    </div>
+                </POSThemeProvider>
+            </LanguageProvider>
         ),
     ],
     parameters: {
