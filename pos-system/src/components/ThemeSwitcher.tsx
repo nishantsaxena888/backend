@@ -35,10 +35,13 @@ export function ThemeSwitcher() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="flex gap-3 h-12 px-4 rounded-2xl border-2 bg-card/50 backdrop-blur-xl hover:bg-accent hover:border-primary transition-all group overflow-hidden">
-                    <Palette className="w-4 h-4 sm:w-5 sm:h-5 text-primary group-hover:rotate-12 transition-transform" />
-                    <span className="font-black text-xs sm:text-sm tracking-tight hidden md:inline">{activeTheme.label}</span>
-                    <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 opacity-30 group-hover:opacity-100 transition-opacity" />
+                <Button variant="outline" className="flex items-center gap-3 h-10 px-4 rounded-xl border-2 bg-card/50 backdrop-blur-xl hover:bg-accent hover:border-primary transition-all group overflow-hidden">
+                    <Palette className="w-4 h-4 text-primary group-hover:rotate-12 transition-transform shrink-0" />
+                    <div className="flex items-center gap-2 font-bold text-xs sm:text-sm tracking-tight hidden md:flex">
+                        <span className="text-base leading-none shrink-0">{activeTheme.label.split(' ')[0]}</span>
+                        <span className="truncate">{activeTheme.label.split(' ').slice(1).join(' ')}</span>
+                    </div>
+                    <ChevronDown className="w-3 h-3 opacity-30 group-hover:opacity-100 transition-opacity shrink-0" />
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-64 p-2 rounded-[24px] shadow-2xl border-2 bg-popover/80 backdrop-blur-2xl animate-in fade-in zoom-in-95 duration-200">

@@ -1,4 +1,4 @@
-import { LayoutDashboard, ShoppingCart } from "lucide-react";
+import { ArrowLeft, ShoppingCart } from "lucide-react";
 import { Button } from "./core/Button";
 import { ThemeSwitcher } from "./ThemeSwitcher";
 import { LanguageSwitcher } from "./LanguageSwitcher";
@@ -28,8 +28,8 @@ export function Header({ theme, onBack, cartCount, CartContent }: HeaderProps) {
     return (
         <header className="flex items-center justify-between px-3 sm:px-6 py-2 sm:py-4 border-b bg-card shadow-sm z-10 shrink-0 gap-2">
             <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-                <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-10 sm:w-10 rounded-xl hover:bg-muted shrink-0" onClick={onBack}>
-                    <LayoutDashboard className="w-4 h-4 sm:w-5 sm:h-5" />
+                <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl hover:bg-muted shrink-0" onClick={onBack}>
+                    <ArrowLeft className="w-5 h-5" />
                 </Button>
                 <div className="w-9 h-9 sm:w-12 sm:h-12 bg-primary rounded-xl flex items-center justify-center text-primary-foreground text-lg sm:text-2xl shadow-lg ring-4 ring-primary/10 shrink-0">
                     {config.logo}

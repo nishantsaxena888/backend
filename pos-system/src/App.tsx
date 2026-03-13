@@ -28,7 +28,8 @@ import {
   LayoutDashboard,
   Box,
   ArrowRight,
-  Settings
+  Settings,
+  List
 } from 'lucide-react'
 
 function HomePage({ onStart, onAdmin }: { onStart: () => void; onAdmin: () => void }) {
@@ -100,6 +101,7 @@ function POSDashboard({ onBack }: { onBack: () => void }) {
 
   const [search, setSearch] = useState('')
   const [activeCategory, setActiveCategory] = useState('All')
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [cart, setCart] = useState<CartItem[]>([])
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
 
@@ -239,14 +241,34 @@ function POSDashboard({ onBack }: { onBack: () => void }) {
         <div className="flex-1 flex flex-col p-4 sm:p-6 space-y-4 sm:space-y-6 overflow-hidden">
           {/* Search & Categories */}
           <div className="space-y-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Product/barcode..."
-                className="pl-10 h-10 sm:h-12 bg-card rounded-xl border-2 focus-visible:ring-primary"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
+            <div className="flex items-center gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Product/barcode..."
+                  className="pl-10 h-10 sm:h-12 bg-card rounded-xl border-2 focus-visible:ring-primary"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+              <div className="flex bg-muted/30 p-1.5 rounded-xl border-2">
+                <Button
+                  variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                  size="icon"
+                  className="h-8 w-8 rounded-lg"
+                  onClick={() => setViewMode('grid')}
+                >
+                  <LayoutDashboard className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant={viewMode === 'list' ? 'default' : 'ghost'}
+                  size="icon"
+                  className="h-8 w-8 rounded-lg"
+                  onClick={() => setViewMode('list')}
+                >
+                  <List className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
 
             <Tabs defaultValue="All" className="w-full" onValueChange={setActiveCategory}>
@@ -261,38 +283,69 @@ function POSDashboard({ onBack }: { onBack: () => void }) {
             </Tabs>
           </div>
 
-          {/* Product Grid */}
+          {/* Product Grid/List View */}
           <ScrollArea className="flex-1 -mx-2 px-2">
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 pb-4">
-              {filteredProducts.map((product: Product) => (
-                <Card
-                  key={product.id}
-                  className="group hover:shadow-xl active:scale-95 transition-all cursor-pointer bg-card border-2 hover:border-primary/50 overflow-hidden"
-                  onClick={() => addToCart(product)}
-                >
-                  <CardContent className="p-0">
-                    <div className="aspect-square bg-muted flex items-center justify-center text-3xl sm:text-4xl group-hover:scale-110 transition-transform">
+            {viewMode === 'grid' ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 pb-4">
+                {filteredProducts.map((product: Product) => (
+                  <Card
+                    key={product.id}
+                    className="group hover:shadow-xl active:scale-95 transition-all cursor-pointer bg-card border-2 hover:border-primary/50 overflow-hidden"
+                    onClick={() => addToCart(product)}
+                  >
+                    <CardContent className="p-0">
+                      <div className="aspect-square bg-muted flex items-center justify-center text-3xl sm:text-4xl group-hover:scale-110 transition-transform">
+                        {product.image}
+                      </div>
+                      <div className="p-3 sm:p-4">
+                        <Badge variant="outline" className="text-[8px] sm:text-[10px] font-black uppercase mb-1">
+                          {t(product.category, currentLanguage.code, 'categories')}
+                        </Badge>
+                        <h3 className="font-black text-xs sm:text-sm line-clamp-1">
+                          {t(product.name, currentLanguage.code, 'products')}
+                        </h3>
+                        <p className="text-[10px] sm:text-xs text-muted-foreground font-bold">{product.sku}</p>
+                      </div>
+                    </CardContent>
+                    <CardFooter className="px-3 sm:px-4 pb-3 sm:pb-4 pt-0 justify-between items-center">
+                      <span className="text-base sm:text-lg font-black text-primary">${product.price}</span>
+                      <Button size="icon" variant="secondary" className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg">
+                        <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-2 pb-4">
+                {filteredProducts.map((product: Product) => (
+                  <Card
+                    key={product.id}
+                    className="group flex flex-row items-center p-3 sm:p-4 gap-4 hover:border-primary/50 transition-all cursor-pointer bg-card border-2"
+                    onClick={() => addToCart(product)}
+                  >
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-muted rounded-xl flex items-center justify-center text-2xl sm:text-3xl shrink-0">
                       {product.image}
                     </div>
-                    <div className="p-3 sm:p-4">
-                      <Badge variant="outline" className="text-[8px] sm:text-[10px] font-black uppercase mb-1">
-                        {t(product.category, currentLanguage.code, 'categories')}
-                      </Badge>
-                      <h3 className="font-black text-xs sm:text-sm line-clamp-1">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-black text-sm sm:text-md line-clamp-1">
                         {t(product.name, currentLanguage.code, 'products')}
                       </h3>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground font-bold">{product.sku}</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground font-bold tracking-widest">{product.sku}</p>
+                      <Badge variant="outline" className="text-[8px] sm:text-[9px] font-black uppercase mt-1">
+                        {t(product.category, currentLanguage.code, 'categories')}
+                      </Badge>
                     </div>
-                  </CardContent>
-                  <CardFooter className="px-3 sm:px-4 pb-3 sm:pb-4 pt-0 justify-between items-center">
-                    <span className="text-base sm:text-lg font-black text-primary">${product.price}</span>
-                    <Button size="icon" variant="secondary" className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg">
-                      <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))}
-            </div>
+                    <div className="text-right flex flex-col items-end gap-2">
+                      <span className="text-lg sm:text-xl font-black text-primary">${product.price}</span>
+                      <Button size="sm" variant="secondary" className="h-8 px-3 rounded-lg font-black text-[10px] uppercase tracking-widest">
+                        <Plus className="w-3 h-3 mr-1" /> Add
+                      </Button>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            )}
             {filteredProducts.length === 0 && (
               <div className="h-64 flex flex-col items-center justify-center text-muted-foreground space-y-2">
                 <Store className="w-10 h-10 sm:w-12 sm:h-12 opacity-20" />
