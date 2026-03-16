@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from './Button';
 import { POSThemeProvider } from '../theme-provider';
-import { ShoppingCart, Plus, ArrowRight } from 'lucide-react';
+import { Plus, ArrowRight } from 'lucide-react';
 
 const meta: Meta<typeof Button> = {
     title: 'Core/Button',

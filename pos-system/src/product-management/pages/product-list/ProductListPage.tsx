@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Plus, Package } from "lucide-react";
 import { useProducts } from "../../hooks/useProducts";
 import { ProductTable } from "../../components/ProductTable";

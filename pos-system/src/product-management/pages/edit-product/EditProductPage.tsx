@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useProducts } from "../../hooks/useProducts";
 import { ProductForm } from "../../components/ProductForm";
 import type { Product } from "../../types";

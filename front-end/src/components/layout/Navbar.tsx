@@ -8,7 +8,7 @@ interface NavBarProps {
 }
 
 export function NavBar({ config, selectedCategory = 'All Products', onCategoryChange }: NavBarProps) {
-    const { t, l, language } = useLanguage();
+    const { t, language } = useLanguage();
 
     // Get localized categories or fall back to English
     const clientCategories = language === 'en'

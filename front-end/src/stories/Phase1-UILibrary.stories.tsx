@@ -46,9 +46,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 
 // ── Icons ────────────────────────────────────────────────────────────────────
 import {
-    Info, AlertTriangle, CheckCircle, ShoppingCart, Heart, Star,
+    Info, AlertTriangle, ShoppingCart, Heart, Star,
     Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight,
-    Home, Package, Users, Settings, ChevronRight
+    ChevronRight
 } from 'lucide-react'
 
 // ─────────────────────────────────────────────────────────────────────────────
