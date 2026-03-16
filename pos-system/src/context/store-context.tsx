@@ -26,10 +26,23 @@ interface POSStoreState {
 const POSStoreContext = createContext<POSStoreState | undefined>(undefined);
 
 export function POSStoreProvider({ children }: { children: ReactNode }) {
-    // Initialize state from localStorage or use MOCK_PRODUCTS
     const [inventory, setInventory] = useState<Record<string, Product[]>>(() => {
         const saved = localStorage.getItem('pos-inventory');
-        return saved ? JSON.parse(saved) : MOCK_PRODUCTS;
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                // Migrate any legacy 'Whisk(e)y' category to 'Whiskey'
+                if (parsed.liquor && Array.isArray(parsed.liquor)) {
+                    parsed.liquor = parsed.liquor.map((p: Product) =>
+                        p.category === 'Whisk(e)y' ? { ...p, category: 'Whiskey' } : p
+                    );
+                }
+                return parsed;
+            } catch (e) {
+                return MOCK_PRODUCTS;
+            }
+        }
+        return MOCK_PRODUCTS;
     });
 
     const [transactions, setTransactions] = useState<Transaction[]>(() => {

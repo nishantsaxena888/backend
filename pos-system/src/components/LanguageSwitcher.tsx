@@ -20,8 +20,7 @@ export function LanguageSwitcher() {
                     className="flex gap-2 h-10 px-3 rounded-xl border-2 bg-card/50 backdrop-blur-xl hover:bg-accent hover:border-primary transition-all group overflow-hidden"
                 >
                     <div className="flex items-center gap-2">
-                        <span className="text-base sm:text-lg">{currentLanguage.flag}</span>
-                        <span className="font-bold text-xs uppercase tracking-wider hidden sm:inline">{currentLanguage.code}</span>
+                        <span className="font-bold text-sm uppercase tracking-wider">{currentLanguage.code}</span>
                     </div>
                     <ChevronDown className="w-3 h-3 opacity-30 group-hover:opacity-100 transition-opacity" />
                 </Button>

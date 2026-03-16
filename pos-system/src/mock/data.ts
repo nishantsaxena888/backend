@@ -12,6 +12,168 @@ export const LANGUAGES: Language[] = [
 ];
 
 export const TRANSLATIONS: Record<string, any> = {
+    fr: {
+        warehouse: "Entrepôt Industriel",
+        restaurant: "Bistro Français",
+        liquor: "Spiritueux Vintage",
+        categories: {
+            'Heavy Machinery': 'Machinerie Lourde',
+            'Tools': 'Outils',
+            'Safety Gear': 'Équipement de Sécurité',
+            'Construction': 'Construction',
+            'Starters': 'Entrées',
+            'Main Course': 'Plat Principal',
+            'Desserts': 'Desserts',
+            'Beverages': 'Boissons',
+            'Whiskey': 'Whisky',
+            'Wine': 'Vin',
+            'Beer': 'Bière',
+            'Spirits': 'Spiritueux'
+        },
+        products: {
+            'Hydraulic Press': 'Presse Hydraulique',
+            'Power Drill x4': 'Perceuse x4',
+            'Truffle Pasta': 'Pâtes aux Truffes',
+            'Red Wine Bottle': 'Bouteille de Vin Rouge',
+            'Single Malt 18y': 'Single Malt 18 ans',
+            'Cabernet Sauvignon': 'Cabernet Sauvignon'
+        },
+        ui: {
+            'All Items': 'Tous les Articles',
+            'Add': 'Ajouter',
+            'in Cart': 'dans le Panier',
+            'Product Details': 'Détails du Produit',
+            'Add to Cart': 'Ajouter au Panier',
+            'Cart': 'Panier',
+            'Checkout': 'Payer',
+            'Total': 'Total',
+            'Tax': 'Taxe',
+            'Discount': 'Remise',
+            'Subtotal': 'Sous-total',
+            'Clear Cart': 'Vider le Panier',
+            'Saved Items': 'Articles Sauvegardés',
+            'Your wishlist is empty': 'Votre liste de souhaits est vide',
+            'No products found': 'Aucun produit trouvé',
+            'Search products...': 'Rechercher des produits...',
+            'Product/barcode...': 'Produit/code-barres...',
+            'Items': 'Articles',
+            'Terminal': 'Terminal',
+            'Active': 'Actif',
+            'Manager Access': 'Accès Gestionnaire',
+            'Admin': 'Admin',
+            'Tax (8%)': 'Taxe (8%)',
+            'Void': 'Annuler',
+            'Pay': 'Payer'
+        }
+    },
+    de: {
+        warehouse: "Industrielager",
+        restaurant: "Bistro Flair",
+        liquor: "Vintage Spirituosen",
+        categories: {
+            'Heavy Machinery': 'Schwere Maschinen',
+            'Tools': 'Werkzeuge',
+            'Safety Gear': 'Sicherheitsausrüstung',
+            'Construction': 'Bauwesen',
+            'Starters': 'Vorspeisen',
+            'Main Course': 'Hauptspeise',
+            'Desserts': 'Desserts',
+            'Beverages': 'Getränke',
+            'Whiskey': 'Whisky',
+            'Wine': 'Wein',
+            'Beer': 'Bier',
+            'Spirits': 'Spirituosen'
+        },
+        products: {
+            'Hydraulic Press': 'Hydraulikpresse',
+            'Power Drill x4': 'Bohrmaschine x4',
+            'Truffle Pasta': 'Trüffelpasta',
+            'Red Wine Bottle': 'Rotweinflasche',
+            'Single Malt 18y': 'Single Malt 18 J.',
+            'Cabernet Sauvignon': 'Cabernet Sauvignon'
+        },
+        ui: {
+            'All Items': 'Alle Artikel',
+            'Add': 'Hinzufügen',
+            'in Cart': 'im Warenkorb',
+            'Product Details': 'Produktdetails',
+            'Add to Cart': 'In den Warenkorb',
+            'Cart': 'Warenkorb',
+            'Checkout': 'Kasse',
+            'Total': 'Gesamt',
+            'Tax': 'Steuer',
+            'Discount': 'Rabatt',
+            'Subtotal': 'Zwischensumme',
+            'Clear Cart': 'Warenkorb leeren',
+            'Saved Items': 'Gespeicherte Artikel',
+            'Your wishlist is empty': 'Deine Wunschliste ist leer',
+            'No products found': 'Keine Produkte gefunden',
+            'Search products...': 'Produkte suchen...',
+            'Product/barcode...': 'Produkt/Barcode...',
+            'Items': 'Artikel',
+            'Terminal': 'Terminal',
+            'Active': 'Aktiv',
+            'Manager Access': 'Manager-Zugang',
+            'Admin': 'Admin',
+            'Tax (8%)': 'Steuer (8%)',
+            'Void': 'Stornieren',
+            'Pay': 'Bezahlen'
+        }
+    },
+    jp: {
+        warehouse: "産業用倉庫",
+        restaurant: "ビストロフレア",
+        liquor: "ビンテージスピリッツ",
+        categories: {
+            'Heavy Machinery': '重機',
+            'Tools': 'ツール',
+            'Safety Gear': '安全装置',
+            'Construction': '建設',
+            'Starters': '前菜',
+            'Main Course': 'メインコース',
+            'Desserts': 'デザート',
+            'Beverages': '飲料',
+            'Whiskey': 'ウイスキー',
+            'Wine': 'ワイン',
+            'Beer': 'ビール',
+            'Spirits': '蒸留酒'
+        },
+        products: {
+            'Hydraulic Press': '油圧プレス',
+            'Power Drill x4': '電動ドリル x4',
+            'Truffle Pasta': 'トリュフパスタ',
+            'Red Wine Bottle': '赤ワインボトル',
+            'Single Malt 18y': 'シングルモルト18年',
+            'Cabernet Sauvignon': 'カベルネ・ソーヴィニヨン'
+        },
+        ui: {
+            'All Items': 'すべてのアイテム',
+            'Add': '追加',
+            'in Cart': 'カート内',
+            'Product Details': '製品詳細',
+            'Add to Cart': 'カートに追加',
+            'Cart': 'カート',
+            'Checkout': 'チェックアウト',
+            'Total': '合計',
+            'Tax': '税金',
+            'Discount': '割引',
+            'Subtotal': '小計',
+            'Clear Cart': 'カートを空にする',
+            'Saved Items': '保存されたアイテム',
+            'Your wishlist is empty': 'ウィッシュリストは空です',
+            'No products found': '製品が見つかりません',
+            'Search products...': '製品を検索...',
+            'Product/barcode...': '製品/バーコード...',
+            'Items': 'アイテム',
+            'Terminal': 'ターミナル',
+            'Active': 'アクティブ',
+            'Manager Access': '管理者アクセス',
+            'Admin': '管理者',
+            'Tax (8%)': '税金 (8%)',
+            'Void': '無効',
+            'Pay': '支払う'
+        }
+    },
     es: {
         warehouse: "Almacén Industrial",
         restaurant: "Restaurante Bistro",
@@ -25,7 +187,7 @@ export const TRANSLATIONS: Record<string, any> = {
             'Main Course': 'Plato Principal',
             'Desserts': 'Postres',
             'Beverages': 'Bebidas',
-            'Whisk(e)y': 'Whisky',
+            'Whiskey': 'Whisky',
             'Wine': 'Vino',
             'Beer': 'Cerveza',
             'Spirits': 'Licores'
@@ -37,6 +199,33 @@ export const TRANSLATIONS: Record<string, any> = {
             'Red Wine Bottle': 'Botella de Vino Tinto',
             'Single Malt 18y': 'Malta Única 18 años',
             'Cabernet Sauvignon': 'Cabernet Sauvignon'
+        },
+        ui: {
+            'All Items': 'Todos los Artículos',
+            'Add': 'Añadir',
+            'in Cart': 'en el Carrito',
+            'Product Details': 'Detalles del Producto',
+            'Add to Cart': 'Añadir al Carrito',
+            'Cart': 'Carrito',
+            'Checkout': 'Pagar',
+            'Total': 'Total',
+            'Tax': 'Impuesto',
+            'Discount': 'Descuento',
+            'Subtotal': 'Subtotal',
+            'Clear Cart': 'Vaciar Carrito',
+            'Saved Items': 'Artículos Guardados',
+            'Your wishlist is empty': 'Tu lista de deseos está vacía',
+            'No products found': 'No se encontraron productos',
+            'Search products...': 'Buscar productos...',
+            'Product/barcode...': 'Producto/código de barras...',
+            'Items': 'Artículos',
+            'Terminal': 'Terminal',
+            'Active': 'Activo',
+            'Manager Access': 'Acceso de Gerente',
+            'Admin': 'Admin',
+            'Tax (8%)': 'Impuesto (8%)',
+            'Void': 'Anular',
+            'Pay': 'Pagar'
         }
     },
     hi: {
@@ -52,7 +241,7 @@ export const TRANSLATIONS: Record<string, any> = {
             'Main Course': 'मुख्य भोजन',
             'Desserts': 'मिठाई',
             'Beverages': 'पेय पदार्थ',
-            'Whisk(e)y': 'व्हिस्की',
+            'Whiskey': 'व्हिस्की',
             'Wine': 'शराब',
             'Beer': 'बीयर',
             'Spirits': 'स्पिरिट्स'
@@ -64,6 +253,33 @@ export const TRANSLATIONS: Record<string, any> = {
             'Red Wine Bottle': 'लाल शराब की बोतल',
             'Single Malt 18y': 'सिंगल माल्ट 18y',
             'Cabernet Sauvignon': 'कैबरनेट सॉविनन'
+        },
+        ui: {
+            'All Items': 'सभी वस्तुएं',
+            'Add': 'जोड़ें',
+            'in Cart': 'कार्ट में',
+            'Product Details': 'उत्पाद विवरण',
+            'Add to Cart': 'कार्ट में डालें',
+            'Cart': 'कार्ट',
+            'Checkout': 'चेकआउट',
+            'Total': 'कुल',
+            'Tax': 'कर',
+            'Discount': 'छूट',
+            'Subtotal': 'उप-कुल',
+            'Clear Cart': 'कार्ट खाली करें',
+            'Saved Items': 'सहेजे गए आइटम',
+            'Your wishlist is empty': 'आपकी विशलिस्ट खाली है',
+            'No products found': 'कोई उत्पाद नहीं मिला',
+            'Search products...': 'उत्पाद खोजें...',
+            'Product/barcode...': 'उत्पाद/बारकोड...',
+            'Items': 'आइटम',
+            'Terminal': 'टर्मिनल',
+            'Active': 'सक्रिय',
+            'Manager Access': 'प्रबंधक पहुँच',
+            'Admin': 'व्यवस्थापक',
+            'Tax (8%)': 'कर (8%)',
+            'Void': 'रद्द करें',
+            'Pay': 'भुगतान करें'
         }
     },
     ar: {
@@ -79,7 +295,7 @@ export const TRANSLATIONS: Record<string, any> = {
             'Main Course': 'الطبق الرئيسي',
             'Desserts': 'حلويات',
             'Beverages': 'مشروبات',
-            'Whisk(e)y': 'ويسكي',
+            'Whiskey': 'ويسكي',
             'Wine': 'نبيذ',
             'Beer': 'بيرة',
             'Spirits': 'مشروبات كحولية'
@@ -91,6 +307,33 @@ export const TRANSLATIONS: Record<string, any> = {
             'Red Wine Bottle': 'زجاجة نبيذ أحمر',
             'Single Malt 18y': 'سنجل مالت 18 سنة',
             'Cabernet Sauvignon': 'كابيرنت سوفينيون'
+        },
+        ui: {
+            'All Items': 'جميع العناصر',
+            'Add': 'إضافة',
+            'in Cart': 'في العربة',
+            'Product Details': 'تفاصيل المنتج',
+            'Add to Cart': 'أضف إلى السلة',
+            'Cart': 'عربة التسوق',
+            'Checkout': 'الدفع',
+            'Total': 'المجموع',
+            'Tax': 'ضريبة',
+            'Discount': 'خصم',
+            'Subtotal': 'المجموع الفرعي',
+            'Clear Cart': 'تفريغ العربة',
+            'Saved Items': 'العناصر المحفوظة',
+            'Your wishlist is empty': 'قائمة الأمنيات فارغة',
+            'No products found': 'لم يتم العثور على منتجات',
+            'Search products...': 'البحث عن منتجات...',
+            'Product/barcode...': 'منتج/باركود...',
+            'Items': 'عناصر',
+            'Terminal': 'محطة',
+            'Active': 'نشط',
+            'Manager Access': 'وصول المدير',
+            'Admin': 'مسؤول',
+            'Tax (8%)': 'ضريبة (8%)',
+            'Void': 'إلغاء',
+            'Pay': 'دفع'
         }
     },
     zh: {
@@ -106,7 +349,7 @@ export const TRANSLATIONS: Record<string, any> = {
             'Main Course': '主菜',
             'Desserts': '甜点',
             'Beverages': '饮料',
-            'Whisk(e)y': '威士忌',
+            'Whiskey': '威士忌',
             'Wine': '葡萄酒',
             'Beer': '啤酒',
             'Spirits': '烈酒'
@@ -118,11 +361,38 @@ export const TRANSLATIONS: Record<string, any> = {
             'Red Wine Bottle': '红酒瓶',
             'Single Malt 18y': '18年单项麦芽',
             'Cabernet Sauvignon': '赤霞珠'
+        },
+        ui: {
+            'All Items': '全部商品',
+            'Add': '添加',
+            'in Cart': '在购物车中',
+            'Product Details': '商品详情',
+            'Add to Cart': '加入购物车',
+            'Cart': '购物车',
+            'Checkout': '结账',
+            'Total': '总计',
+            'Tax': '税',
+            'Discount': '折扣',
+            'Subtotal': '小计',
+            'Clear Cart': '清空购物车',
+            'Saved Items': '已保存商品',
+            'Your wishlist is empty': '您的心愿单是空的',
+            'No products found': '未找到产品',
+            'Search products...': '搜索产品...',
+            'Product/barcode...': '产品/条形码...',
+            'Items': '件',
+            'Terminal': '终端',
+            'Active': '活跃',
+            'Manager Access': '管理员访问权限',
+            'Admin': '管理员',
+            'Tax (8%)': '税 (8%)',
+            'Void': '作废',
+            'Pay': '支付'
         }
-    }
+    },
 };
 
-export const t = (key: string, locale: string, section?: 'categories' | 'products') => {
+export const t = (key: string, locale: string, section?: 'categories' | 'products' | 'ui') => {
     if (locale === 'en') return key;
     const langData = TRANSLATIONS[locale];
     if (!langData) return key;
@@ -153,7 +423,7 @@ export const CONFIGS: Record<string, POSConfig> = {
         id: 'liquor',
         name: 'Vintage Spirits POS',
         logo: '🍾',
-        categories: ['Whisk(e)y', 'Wine', 'Beer', 'Spirits'],
+        categories: ['Whiskey', 'Wine', 'Beer', 'Spirits'],
         primaryColor: '#fbbf24',
     },
     'emerald-grocery': {
@@ -224,7 +494,7 @@ export const MOCK_PRODUCTS: Record<string, Product[]> = {
         { id: 'r2', name: 'Red Wine Bottle', price: 45, category: 'Beverages', image: '🍷', sku: 'RS-002' },
     ],
     liquor: [
-        { id: 'l1', name: 'Single Malt 18y', price: 120, category: 'Whisk(e)y', image: '🥃', sku: 'LQ-001' },
+        { id: 'l1', name: 'Single Malt 18y', price: 120, category: 'Whiskey', image: '🥃', sku: 'LQ-001' },
         { id: 'l2', name: 'Cabernet Sauvignon', price: 55, category: 'Wine', image: '🍷', sku: 'LQ-002' },
     ],
     'emerald-grocery': [
