@@ -217,4 +217,14 @@
     -moz-appearance: textfield;
     appearance: none;
   }
+
+  /* Hide scrollbar for elements with .no-scrollbar class */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }

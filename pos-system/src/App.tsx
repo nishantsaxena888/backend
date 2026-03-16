@@ -29,7 +29,8 @@ import {
   Box,
   ArrowRight,
   Settings,
-  List
+  List,
+  Heart
 } from 'lucide-react'
 
 function HomePage({ onStart, onAdmin }: { onStart: () => void; onAdmin: () => void }) {
@@ -103,7 +104,13 @@ function POSDashboard({ onBack }: { onBack: () => void }) {
   const [activeCategory, setActiveCategory] = useState('All')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [cart, setCart] = useState<CartItem[]>([])
+  const [wishlist, setWishlist] = useState<string[]>([])
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
+
+  const toggleWishlist = (e: React.MouseEvent, productId: string) => {
+    e.stopPropagation()
+    setWishlist(prev => prev.includes(productId) ? prev.filter(id => id !== productId) : [...prev, productId])
+  }
 
   const filteredProducts = useMemo(() => {
     return products.filter((p: Product) => {
@@ -227,13 +234,59 @@ function POSDashboard({ onBack }: { onBack: () => void }) {
     </div>
   )
 
+  const WishlistContent = ({ isMobile = false }) => {
+    const wishlistItems = products.filter(p => wishlist.includes(p.id))
+    return (
+      <div className={`flex flex-col h-full ${isMobile ? '' : 'w-[400px] border-l shadow-2xl bg-card'}`}>
+        <div className="p-4 sm:p-6 border-b flex items-center justify-between">
+          <h2 className="text-lg font-black flex items-center gap-2">
+            <Heart className="w-5 h-5 text-destructive fill-destructive" /> Saved Items
+          </h2>
+          <Badge variant="secondary" className="font-black h-6">{wishlistItems.length} Items</Badge>
+        </div>
+
+        <ScrollArea className="flex-1 p-4 sm:p-6">
+          <div className="space-y-4">
+            {wishlistItems.map(item => (
+              <div key={item.id} className="flex gap-3 sm:gap-4 items-center">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-muted rounded-lg flex items-center justify-center text-lg sm:text-xl">
+                  {item.image}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs sm:text-sm font-black line-clamp-1 leading-none">{item.name}</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground font-bold">${item.price}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button size="sm" variant="secondary" className="h-8 px-3 rounded-lg font-black text-[10px] uppercase tracking-widest" onClick={() => addToCart(item)}>
+                    <Plus className="w-3 h-3 mr-1" /> Add
+                  </Button>
+                  <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10" onClick={(e) => toggleWishlist(e, item.id)}>
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+            {wishlistItems.length === 0 && (
+              <div className="h-64 flex flex-col items-center justify-center text-center space-y-2 opacity-30">
+                <Heart className="w-12 h-12" />
+                <p className="text-xs sm:text-sm font-bold">Your wishlist is empty</p>
+              </div>
+            )}
+          </div>
+        </ScrollArea>
+      </div>
+    )
+  }
+
   return (
     <div className="flex flex-col h-screen bg-background text-foreground transition-all duration-500 overflow-hidden animate-in slide-in-from-bottom-4 duration-500">
       <Header
         theme={theme}
         onBack={onBack}
         cartCount={cart.length}
+        wishlistCount={wishlist.length}
         CartContent={CartContent}
+        WishlistContent={WishlistContent}
       />
 
       <div className="flex flex-1 overflow-hidden">
@@ -243,39 +296,39 @@ function POSDashboard({ onBack }: { onBack: () => void }) {
           <div className="space-y-4">
             <div className="flex items-center gap-4">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
                   placeholder="Product/barcode..."
-                  className="pl-10 h-10 sm:h-12 bg-card rounded-xl border-2 focus-visible:ring-primary"
+                  className="pl-11 h-12 sm:h-14 bg-card rounded-2xl border-2 focus-visible:ring-primary text-base placeholder:text-muted-foreground/70"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
               </div>
-              <div className="flex bg-muted/30 p-1.5 rounded-xl border-2">
+              <div className="flex gap-1.5 items-center bg-muted/30 p-1.5 rounded-2xl border-2 h-12 sm:h-14">
                 <Button
                   variant={viewMode === 'grid' ? 'default' : 'ghost'}
                   size="icon"
-                  className="h-8 w-8 rounded-lg"
+                  className={`h-full w-10 sm:w-12 rounded-xl transition-all ${viewMode === 'grid' ? 'shadow-md shadow-black/5' : 'hover:bg-muted/50'}`}
                   onClick={() => setViewMode('grid')}
                 >
-                  <LayoutDashboard className="w-4 h-4" />
+                  <LayoutDashboard className="w-5 h-5" />
                 </Button>
                 <Button
                   variant={viewMode === 'list' ? 'default' : 'ghost'}
                   size="icon"
-                  className="h-8 w-8 rounded-lg"
+                  className={`h-full w-10 sm:w-12 rounded-xl transition-all ${viewMode === 'list' ? 'shadow-md shadow-black/5' : 'hover:bg-muted/50'}`}
                   onClick={() => setViewMode('list')}
                 >
-                  <List className="w-4 h-4" />
+                  <List className="w-5 h-5" />
                 </Button>
               </div>
             </div>
 
             <Tabs defaultValue="All" className="w-full" onValueChange={setActiveCategory}>
-              <TabsList className="bg-muted/50 p-1 h-10 sm:h-12 rounded-xl border w-full justify-start overflow-x-auto no-scrollbar">
-                <TabsTrigger value="All" className="px-4 sm:px-6 rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-bold text-xs sm:text-sm">All Items</TabsTrigger>
+              <TabsList className="bg-muted/30 p-1.5 h-auto sm:h-14 rounded-2xl border-2 w-full justify-start overflow-x-auto no-scrollbar flex flex-nowrap items-center gap-1.5 shrink-0 min-w-0">
+                <TabsTrigger value="All" className="shrink-0 px-5 sm:px-6 py-2 sm:py-2.5 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md font-bold text-sm sm:text-base transition-all whitespace-nowrap">All Items</TabsTrigger>
                 {config.categories.map((cat: string) => (
-                  <TabsTrigger key={cat} value={cat} className="px-4 sm:px-6 rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-bold text-xs sm:text-sm">
+                  <TabsTrigger key={cat} value={cat} className="shrink-0 px-5 sm:px-6 py-2 sm:py-2.5 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md font-bold text-sm sm:text-base transition-all whitespace-nowrap">
                     {t(cat, currentLanguage.code, 'categories')}
                   </TabsTrigger>
                 ))}
@@ -284,66 +337,126 @@ function POSDashboard({ onBack }: { onBack: () => void }) {
           </div>
 
           {/* Product Grid/List View */}
-          <ScrollArea className="flex-1 -mx-2 px-2">
+          <ScrollArea hideScrollbar className="flex-1 -mx-2 px-2">
             {viewMode === 'grid' ? (
               <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 pb-4">
-                {filteredProducts.map((product: Product) => (
-                  <Card
-                    key={product.id}
-                    className="group hover:shadow-xl active:scale-95 transition-all cursor-pointer bg-card border-2 hover:border-primary/50 overflow-hidden"
-                    onClick={() => addToCart(product)}
-                  >
-                    <CardContent className="p-0">
-                      <div className="aspect-square bg-muted flex items-center justify-center text-3xl sm:text-4xl group-hover:scale-110 transition-transform">
-                        {product.image}
-                      </div>
-                      <div className="p-3 sm:p-4">
-                        <Badge variant="outline" className="text-[8px] sm:text-[10px] font-black uppercase mb-1">
-                          {t(product.category, currentLanguage.code, 'categories')}
-                        </Badge>
-                        <h3 className="font-black text-xs sm:text-sm line-clamp-1">
-                          {t(product.name, currentLanguage.code, 'products')}
-                        </h3>
-                        <p className="text-[10px] sm:text-xs text-muted-foreground font-bold">{product.sku}</p>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="px-3 sm:px-4 pb-3 sm:pb-4 pt-0 justify-between items-center">
-                      <span className="text-base sm:text-lg font-black text-primary">${product.price}</span>
-                      <Button size="icon" variant="secondary" className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg">
-                        <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                ))}
+                {filteredProducts.map((product: Product) => {
+                  const inCartQty = cart.find(item => item.id === product.id)?.quantity || 0;
+                  return (
+                    <Card
+                      key={product.id}
+                      className={`group hover:shadow-xl active:scale-[0.98] transition-all cursor-pointer bg-card overflow-hidden ${inCartQty > 0 ? 'border-primary border-2 shadow-sm' : 'border-2 hover:border-primary/50'}`}
+                      onClick={() => addToCart(product)}
+                    >
+                      <CardContent className="p-0 relative">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="absolute top-2 right-2 z-10 h-8 w-8 rounded-full bg-background/50 backdrop-blur-md hover:bg-background/80 hover:scale-110 transition-all border shadow-sm"
+                          onClick={(e) => toggleWishlist(e, product.id)}
+                        >
+                          <Heart className={`w-4 h-4 transition-colors ${wishlist.includes(product.id) ? 'fill-destructive text-destructive' : 'text-muted-foreground'}`} />
+                        </Button>
+
+                        {inCartQty > 0 && (
+                          <Badge className="absolute top-2 left-2 z-10 bg-primary text-primary-foreground font-black pointer-events-none shadow-sm h-6 px-2 flex items-center justify-center">
+                            {inCartQty} in Cart
+                          </Badge>
+                        )}
+
+                        <div className="aspect-square bg-muted flex items-center justify-center text-3xl sm:text-4xl group-hover:scale-105 transition-transform duration-300">
+                          {product.image}
+                        </div>
+                        <div className="p-3 sm:p-4">
+                          <Badge variant="outline" className="text-[8px] sm:text-[10px] font-black uppercase mb-1">
+                            {t(product.category, currentLanguage.code, 'categories')}
+                          </Badge>
+                          <h3 className="font-black text-xs sm:text-sm line-clamp-1">
+                            {t(product.name, currentLanguage.code, 'products')}
+                          </h3>
+                          <p className="text-[10px] sm:text-xs text-muted-foreground font-bold">{product.sku}</p>
+                        </div>
+                      </CardContent>
+                      <CardFooter className="px-3 sm:px-4 pb-3 sm:pb-4 pt-0 justify-between items-center">
+                        <span className="text-base sm:text-lg font-black text-primary">${product.price}</span>
+                        {inCartQty > 0 ? (
+                          <div className="flex items-center gap-1 bg-muted/50 rounded-lg p-0.5">
+                            <Button size="icon" variant="ghost" className="h-6 w-6 sm:h-7 sm:w-7" onClick={(e) => { e.stopPropagation(); updateQuantity(product.id, -1); }}>
+                              <Minus className="h-3 w-3" />
+                            </Button>
+                            <span className="w-3 sm:w-4 text-center text-xs font-black">{inCartQty}</span>
+                            <Button size="icon" variant="ghost" className="h-6 w-6 sm:h-7 sm:w-7" onClick={(e) => { e.stopPropagation(); updateQuantity(product.id, 1); }}>
+                              <Plus className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        ) : (
+                          <Button size="icon" variant="secondary" className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg">
+                            <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
+                          </Button>
+                        )}
+                      </CardFooter>
+                    </Card>
+                  )
+                })}
               </div>
             ) : (
               <div className="space-y-2 pb-4">
-                {filteredProducts.map((product: Product) => (
-                  <Card
-                    key={product.id}
-                    className="group flex flex-row items-center p-3 sm:p-4 gap-4 hover:border-primary/50 transition-all cursor-pointer bg-card border-2"
-                    onClick={() => addToCart(product)}
-                  >
-                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-muted rounded-xl flex items-center justify-center text-2xl sm:text-3xl shrink-0">
-                      {product.image}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-black text-sm sm:text-md line-clamp-1">
-                        {t(product.name, currentLanguage.code, 'products')}
-                      </h3>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground font-bold tracking-widest">{product.sku}</p>
-                      <Badge variant="outline" className="text-[8px] sm:text-[9px] font-black uppercase mt-1">
-                        {t(product.category, currentLanguage.code, 'categories')}
-                      </Badge>
-                    </div>
-                    <div className="text-right flex flex-col items-end gap-2">
-                      <span className="text-lg sm:text-xl font-black text-primary">${product.price}</span>
-                      <Button size="sm" variant="secondary" className="h-8 px-3 rounded-lg font-black text-[10px] uppercase tracking-widest">
-                        <Plus className="w-3 h-3 mr-1" /> Add
-                      </Button>
-                    </div>
-                  </Card>
-                ))}
+                {filteredProducts.map((product: Product) => {
+                  const inCartQty = cart.find(item => item.id === product.id)?.quantity || 0;
+                  return (
+                    <Card
+                      key={product.id}
+                      className={`group flex flex-row items-center p-3 sm:p-4 gap-4 transition-all cursor-pointer bg-card ${inCartQty > 0 ? 'border-primary border-2 shadow-sm relative' : 'hover:border-primary/50 border-2'}`}
+                      onClick={() => addToCart(product)}
+                    >
+                      <div className="relative w-12 h-12 sm:w-16 sm:h-16 bg-muted rounded-xl flex items-center justify-center text-2xl sm:text-3xl shrink-0 overflow-hidden">
+                        {inCartQty > 0 && (
+                          <div className="absolute inset-x-0 bottom-0 bg-primary text-primary-foreground text-[10px] sm:text-xs font-black text-center py-0.5 pointer-events-none">
+                            {inCartQty}
+                          </div>
+                        )}
+                        {product.image}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-black text-sm sm:text-md line-clamp-1">
+                          {t(product.name, currentLanguage.code, 'products')}
+                        </h3>
+                        <p className="text-[10px] sm:text-xs text-muted-foreground font-bold tracking-widest">{product.sku}</p>
+                        <Badge variant="outline" className="text-[8px] sm:text-[9px] font-black uppercase mt-1">
+                          {t(product.category, currentLanguage.code, 'categories')}
+                        </Badge>
+                      </div>
+                      <div className="text-right flex flex-col items-end justify-between self-stretch">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 rounded-full hover:bg-muted"
+                          onClick={(e) => toggleWishlist(e, product.id)}
+                        >
+                          <Heart className={`w-4 h-4 transition-colors ${wishlist.includes(product.id) ? 'fill-destructive text-destructive' : 'text-muted-foreground'}`} />
+                        </Button>
+                        <div className="flex items-center gap-3">
+                          <span className="text-lg sm:text-xl font-black text-primary">${product.price}</span>
+                          {inCartQty > 0 ? (
+                            <div className="flex items-center gap-1 bg-muted/50 rounded-lg p-0.5">
+                              <Button size="icon" variant="ghost" className="h-6 w-6 sm:h-7 sm:w-7" onClick={(e) => { e.stopPropagation(); updateQuantity(product.id, -1); }}>
+                                <Minus className="h-3 w-3" />
+                              </Button>
+                              <span className="w-3 sm:w-4 text-center text-xs font-black">{inCartQty}</span>
+                              <Button size="icon" variant="ghost" className="h-6 w-6 sm:h-7 sm:w-7" onClick={(e) => { e.stopPropagation(); updateQuantity(product.id, 1); }}>
+                                <Plus className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          ) : (
+                            <Button size="sm" variant="secondary" className="h-8 px-3 rounded-lg font-black text-[10px] uppercase tracking-widest">
+                              <Plus className="w-3 h-3 mr-1" /> Add
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    </Card>
+                  )
+                })}
               </div>
             )}
             {filteredProducts.length === 0 && (

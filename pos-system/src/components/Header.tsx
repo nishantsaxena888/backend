@@ -1,4 +1,4 @@
-import { ArrowLeft, ShoppingCart } from "lucide-react";
+import { ArrowLeft, ShoppingCart, Heart } from "lucide-react";
 import { Button } from "./core/Button";
 import { ThemeSwitcher } from "./ThemeSwitcher";
 import { LanguageSwitcher } from "./LanguageSwitcher";
@@ -17,10 +17,12 @@ interface HeaderProps {
     theme: POSTheme;
     onBack: () => void;
     cartCount: number;
+    wishlistCount: number;
     CartContent: React.ComponentType<{ isMobile?: boolean }>;
+    WishlistContent: React.ComponentType<{ isMobile?: boolean }>;
 }
 
-export function Header({ theme, onBack, cartCount, CartContent }: HeaderProps) {
+export function Header({ theme, onBack, cartCount, wishlistCount, CartContent, WishlistContent }: HeaderProps) {
     const config = CONFIGS[theme];
     const { currentLanguage } = useLanguage();
     const translatedName = t(theme, currentLanguage.code);
@@ -53,22 +55,40 @@ export function Header({ theme, onBack, cartCount, CartContent }: HeaderProps) {
                     <div className="w-10 h-10 rounded-full bg-muted border-2 border-border flex items-center justify-center font-black">AD</div>
                 </div>
 
-                <div className="sm:hidden">
+                <div className="flex items-center gap-2">
                     <Sheet>
                         <SheetTrigger asChild>
                             <Button variant="outline" size="icon" className="relative rounded-xl border-2">
-                                <ShoppingCart className="w-5 h-5" />
-                                {cartCount > 0 && (
-                                    <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center bg-primary text-[10px]" variant="default">
-                                        {cartCount}
+                                <Heart className={`w-5 h-5 ${wishlistCount > 0 ? 'fill-destructive text-destructive' : 'text-foreground'}`} />
+                                {wishlistCount > 0 && (
+                                    <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center bg-destructive text-[10px]" variant="destructive">
+                                        {wishlistCount}
                                     </Badge>
                                 )}
                             </Button>
                         </SheetTrigger>
                         <SheetContent side="right" className="p-0 w-full xs:w-[400px]">
-                            <CartContent isMobile={true} />
+                            <WishlistContent isMobile={true} />
                         </SheetContent>
                     </Sheet>
+
+                    <div className="sm:hidden ml-1">
+                        <Sheet>
+                            <SheetTrigger asChild>
+                                <Button variant="outline" size="icon" className="relative rounded-xl border-2">
+                                    <ShoppingCart className="w-5 h-5" />
+                                    {cartCount > 0 && (
+                                        <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center bg-primary text-[10px]" variant="default">
+                                            {cartCount}
+                                        </Badge>
+                                    )}
+                                </Button>
+                            </SheetTrigger>
+                            <SheetContent side="right" className="p-0 w-full xs:w-[400px]">
+                                <CartContent isMobile={true} />
+                            </SheetContent>
+                        </Sheet>
+                    </div>
                 </div>
             </div>
         </header>
