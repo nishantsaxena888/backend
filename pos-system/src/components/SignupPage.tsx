@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from './core/Button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
@@ -9,16 +10,20 @@ import { ThemeSwitcher } from './ThemeSwitcher';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { Mail, Lock, User, ArrowRight, ArrowLeft } from 'lucide-react';
 
-export function SignupPage({ onSwitchToLogin }: { onSwitchToLogin: () => void }) {
+export function SignupPage() {
     const { signup, isLoading } = useAuth();
     const { currentLanguage } = useLanguage();
+    const navigate = useNavigate();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        await signup(name, email, password);
+        const success = await signup(name, email, password);
+        if (success) {
+            navigate('/');
+        }
     };
 
     return (
@@ -35,7 +40,7 @@ export function SignupPage({ onSwitchToLogin }: { onSwitchToLogin: () => void })
             <Card className="w-full max-w-[450px] border-2 bg-card/50 backdrop-blur-2xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] rounded-[32px] overflow-hidden animate-in fade-in zoom-in-95 duration-700 relative z-10">
                 <CardHeader className="space-y-4 pt-12 pb-8 text-center">
                     <button
-                        onClick={onSwitchToLogin}
+                        onClick={() => navigate('/login')}
                         className="absolute top-8 left-8 p-2 rounded-xl bg-muted/50 hover:bg-muted text-muted-foreground transition-all"
                     >
                         <ArrowLeft className="w-5 h-5" />
@@ -112,7 +117,7 @@ export function SignupPage({ onSwitchToLogin }: { onSwitchToLogin: () => void })
                     <p className="text-sm text-muted-foreground font-bold">
                         {t('Already have an account?', currentLanguage.code, 'ui')}{' '}
                         <button
-                            onClick={onSwitchToLogin}
+                            onClick={() => navigate('/login')}
                             className="text-primary hover:underline underline-offset-4 font-black"
                         >
                             {t('Sign In', currentLanguage.code, 'ui')}

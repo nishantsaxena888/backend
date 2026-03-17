@@ -10,8 +10,8 @@ interface User {
 
 interface AuthContextType {
     user: User | null;
-    login: (email: string, password: string) => Promise<void>;
-    signup: (name: string, email: string, password: string) => Promise<void>;
+    login: (email: string, password: string) => Promise<boolean>;
+    signup: (name: string, email: string, password: string) => Promise<boolean>;
     logout: () => void;
     isLoading: boolean;
 }
@@ -33,37 +33,51 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const login = async (email: string, _password: string) => {
         setIsLoading(true);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 800));
+        try {
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 800));
 
-        const mockUser: User = {
-            id: '1',
-            name: 'Admin User',
-            email: email,
-            role: 'admin',
-            avatar: 'AD'
-        };
+            const mockUser: User = {
+                id: '1',
+                name: 'Admin User',
+                email: email,
+                role: 'admin',
+                avatar: 'AD'
+            };
 
-        setUser(mockUser);
-        localStorage.setItem('pos_user', JSON.stringify(mockUser));
-        setIsLoading(false);
+            setUser(mockUser);
+            localStorage.setItem('pos_user', JSON.stringify(mockUser));
+            setIsLoading(false);
+            return true;
+        } catch (error) {
+            console.error(error);
+            setIsLoading(false);
+            return false;
+        }
     };
 
     const signup = async (name: string, email: string, _password: string) => {
         setIsLoading(true);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        try {
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 1000));
 
-        const mockUser: User = {
-            id: Math.random().toString(36).substr(2, 9),
-            name,
-            email,
-            role: 'staff',
-        };
+            const mockUser: User = {
+                id: Math.random().toString(36).substr(2, 9),
+                name,
+                email,
+                role: 'staff',
+            };
 
-        setUser(mockUser);
-        localStorage.setItem('pos_user', JSON.stringify(mockUser));
-        setIsLoading(false);
+            setUser(mockUser);
+            localStorage.setItem('pos_user', JSON.stringify(mockUser));
+            setIsLoading(false);
+            return true;
+        } catch (error) {
+            console.error(error);
+            setIsLoading(false);
+            return false;
+        }
     };
 
     const logout = () => {

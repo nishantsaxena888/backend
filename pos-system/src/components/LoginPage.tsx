@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from './core/Button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
@@ -9,15 +10,22 @@ import { ThemeSwitcher } from './ThemeSwitcher';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { Github, Mail, Lock, ArrowRight } from 'lucide-react';
 
-export function LoginPage({ onSwitchToSignup }: { onSwitchToSignup: () => void }) {
+export function LoginPage() {
     const { login, isLoading } = useAuth();
     const { currentLanguage } = useLanguage();
+    const navigate = useNavigate();
+    const location = useLocation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const from = location.state?.from?.pathname || "/";
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        await login(email, password);
+        const success = await login(email, password);
+        if (success) {
+            navigate(from, { replace: true });
+        }
     };
 
     return (
@@ -112,7 +120,7 @@ export function LoginPage({ onSwitchToSignup }: { onSwitchToSignup: () => void }
                     <p className="text-sm text-muted-foreground font-bold">
                         {t("Don't have an account?", currentLanguage.code, 'ui')}{' '}
                         <button
-                            onClick={onSwitchToSignup}
+                            onClick={() => navigate('/signup')}
                             className="text-primary hover:underline underline-offset-4 font-black"
                         >
                             {t('Sign Up', currentLanguage.code, 'ui')}
