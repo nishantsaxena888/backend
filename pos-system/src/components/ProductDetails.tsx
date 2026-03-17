@@ -76,7 +76,7 @@ export function ProductDetails({
 
                             <div className="space-y-4">
                                 <p className="text-base sm:text-lg text-muted-foreground font-medium leading-relaxed">
-                                    Experience the premium quality of our {t(product.name, currentLanguage.code, 'products')}. Carefully sourced and prepared to perfection, it's an essential addition to any connoisseur's collection.
+                                    {t('Experience the premium quality of our', currentLanguage.code, 'ui')} {t(product.name, currentLanguage.code, 'products')}{t('product_desc_suffix', currentLanguage.code, 'ui')}
                                 </p>
                             </div>
 

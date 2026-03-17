@@ -3,6 +3,8 @@ import { useProducts } from "../../hooks/useProducts";
 import { ProductTable } from "../../components/ProductTable";
 import { Button } from "@/components/ui/button";
 import type { Product } from "../../types";
+import { t } from "@/mock/data";
+import { useLanguage } from "@/components/language-provider";
 
 interface ProductListPageProps {
     onCreateNew: () => void;
@@ -11,6 +13,7 @@ interface ProductListPageProps {
 
 export function ProductListPage({ onCreateNew, onEdit }: ProductListPageProps) {
     const { products, loading, deleteProduct, deleteProductsBulk } = useProducts();
+    const { currentLanguage } = useLanguage();
 
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
@@ -20,13 +23,13 @@ export function ProductListPage({ onCreateNew, onEdit }: ProductListPageProps) {
                         <Package className="w-6 h-6" />
                     </div>
                     <div className="space-y-0.5">
-                        <h1 className="text-2xl font-black tracking-tight">Products</h1>
-                        <p className="text-sm text-muted-foreground">Manage your store inventory and product details.</p>
+                        <h1 className="text-2xl font-black tracking-tight">{t('Products', currentLanguage.code, 'ui')}</h1>
+                        <p className="text-sm text-muted-foreground">{t('Manage your store inventory and product details.', currentLanguage.code, 'ui')}</p>
                     </div>
                 </div>
                 <Button onClick={onCreateNew} className="rounded-xl shadow-xl shadow-primary/20 h-11 px-6">
                     <Plus className="w-4 h-4 mr-2" />
-                    Add New Product
+                    {t('Add New Product', currentLanguage.code, 'ui')}
                 </Button>
             </div>
 
@@ -35,7 +38,7 @@ export function ProductListPage({ onCreateNew, onEdit }: ProductListPageProps) {
                     <div className="absolute inset-0 bg-background/50 backdrop-blur-[1px] z-10 flex items-center justify-center rounded-3xl">
                         <div className="flex flex-col items-center gap-2">
                             <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-                            <span className="text-xs font-bold text-primary italic uppercase tracking-widest">Loading...</span>
+                            <span className="text-xs font-bold text-primary italic uppercase tracking-widest">{t('Loading...', currentLanguage.code, 'ui')}</span>
                         </div>
                     </div>
                 )}

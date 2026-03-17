@@ -14,6 +14,8 @@ import { StockManager } from "./StockManager";
 import { PriceSection } from "./PriceSection";
 import { ImageUploader } from "./ImageUploader";
 import { Separator } from "@/components/ui/separator";
+import { t } from "@/mock/data";
+import { useLanguage } from "@/components/language-provider";
 
 interface ProductFormProps {
     initialData?: Partial<Product>;
@@ -23,6 +25,7 @@ interface ProductFormProps {
 }
 
 export function ProductForm({ initialData, onSubmit, onCancel, isLoading }: ProductFormProps) {
+    const { currentLanguage } = useLanguage();
     const {
         register,
         control,
@@ -65,17 +68,17 @@ export function ProductForm({ initialData, onSubmit, onCancel, isLoading }: Prod
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sticky top-0 bg-background/80 backdrop-blur-md z-20 py-4 border-b">
                 <div className="space-y-1">
                     <h2 className="text-2xl font-black tracking-tight">
-                        {initialData?.id ? "Edit Product" : "Create New Product"}
+                        {initialData?.id ? t('Edit Product', currentLanguage.code, 'ui') : t('Create New Product', currentLanguage.code, 'ui')}
                     </h2>
-                    <p className="text-sm text-muted-foreground">Fill in the details below to publish your product.</p>
+                    <p className="text-sm text-muted-foreground">{t('Fill in the details below to publish your product.', currentLanguage.code, 'ui')}</p>
                 </div>
                 <div className="flex gap-3 w-full sm:w-auto">
                     <Button variant="outline" type="button" onClick={onCancel} className="rounded-xl flex-1 sm:flex-none">
-                        Cancel
+                        {t('Cancel', currentLanguage.code, 'ui')}
                     </Button>
                     <Button type="submit" className="rounded-xl flex-1 sm:flex-none shadow-xl shadow-primary/20" disabled={isLoading}>
                         <Save className="w-4 h-4 mr-2" />
-                        {initialData?.id ? "Update Product" : "Publish Product"}
+                        {initialData?.id ? t('Update Product', currentLanguage.code, 'ui') : t('Publish Product', currentLanguage.code, 'ui')}
                     </Button>
                 </div>
             </div>
@@ -86,38 +89,38 @@ export function ProductForm({ initialData, onSubmit, onCancel, isLoading }: Prod
                     <Card className="rounded-[32px] border-2 overflow-hidden shadow-sm">
                         <div className="px-6 py-4 border-b bg-muted/30 flex items-center gap-2">
                             <Info className="w-4 h-4 text-primary" />
-                            <h3 className="font-black text-sm uppercase tracking-widest">Basic Information</h3>
+                            <h3 className="font-black text-sm uppercase tracking-widest">{t('Basic Information', currentLanguage.code, 'ui')}</h3>
                         </div>
                         <CardContent className="p-6 space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="name" className="text-xs font-black uppercase tracking-widest text-muted-foreground">Product Name</Label>
+                                <Label htmlFor="name" className="text-xs font-black uppercase tracking-widest text-muted-foreground">{t('Product Name', currentLanguage.code, 'ui')}</Label>
                                 <Input
                                     id="name"
                                     {...register("name")}
                                     className="h-12 text-lg font-bold rounded-xl border-2 focus-visible:ring-primary/20"
-                                    placeholder="e.g. Wireless Noise Cancelling Headphones"
+                                    placeholder={t('e.g. Wireless Noise Cancelling Headphones', currentLanguage.code, 'ui')}
                                 />
                                 {errors.name && <p className="text-xs text-destructive font-bold">{errors.name.message}</p>}
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="description" className="text-xs font-black uppercase tracking-widest text-muted-foreground">Description (Rich Text)</Label>
+                                <Label htmlFor="description" className="text-xs font-black uppercase tracking-widest text-muted-foreground">{t('Description (Rich Text)', currentLanguage.code, 'ui')}</Label>
                                 <Textarea
                                     id="description"
                                     {...register("description")}
                                     className="min-h-[200px] rounded-xl border-2 focus-visible:ring-primary/20"
-                                    placeholder="Describe your product in detail..."
+                                    placeholder={t('Describe your product in detail...', currentLanguage.code, 'ui')}
                                 />
                                 {errors.description && <p className="text-xs text-destructive font-bold">{errors.description.message}</p>}
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="shortDescription" className="text-xs font-black uppercase tracking-widest text-muted-foreground">Short Description</Label>
+                                <Label htmlFor="shortDescription" className="text-xs font-black uppercase tracking-widest text-muted-foreground">{t('Short Description', currentLanguage.code, 'ui')}</Label>
                                 <Textarea
                                     id="shortDescription"
                                     {...register("shortDescription")}
                                     className="min-h-[80px] rounded-xl border-2 focus-visible:ring-primary/20"
-                                    placeholder="A brief summary for search results..."
+                                    placeholder={t('A brief summary for search results...', currentLanguage.code, 'ui')}
                                 />
                             </div>
                         </CardContent>
@@ -128,19 +131,19 @@ export function ProductForm({ initialData, onSubmit, onCancel, isLoading }: Prod
                         <TabsList className="w-full justify-start h-14 bg-muted/50 p-1.5 rounded-2xl border-2 overflow-x-auto no-scrollbar flex-nowrap">
                             <TabsTrigger value="inventory" className="rounded-xl font-bold gap-2 data-[state=active]:bg-card data-[state=active]:shadow-md data-[state=active]:text-primary shrink-0">
                                 <BarChart3 className="w-4 h-4" />
-                                Inventory
+                                {t('Inventory', currentLanguage.code, 'ui')}
                             </TabsTrigger>
                             <TabsTrigger value="pricing" className="rounded-xl font-bold gap-2 data-[state=active]:bg-card data-[state=active]:shadow-md data-[state=active]:text-primary shrink-0">
                                 <Globe className="w-4 h-4" />
-                                Pricing
+                                {t('Pricing', currentLanguage.code, 'ui')}
                             </TabsTrigger>
                             <TabsTrigger value="shipping" className="rounded-xl font-bold gap-2 data-[state=active]:bg-card data-[state=active]:shadow-md data-[state=active]:text-primary shrink-0">
                                 <Truck className="w-4 h-4" />
-                                Shipping
+                                {t('Shipping', currentLanguage.code, 'ui')}
                             </TabsTrigger>
                             <TabsTrigger value="attributes" className="rounded-xl font-bold gap-2 data-[state=active]:bg-card data-[state=active]:shadow-md data-[state=active]:text-primary shrink-0">
                                 <Plus className="w-4 h-4" />
-                                Attributes
+                                {t('Attributes', currentLanguage.code, 'ui')}
                             </TabsTrigger>
                         </TabsList>
 
@@ -186,19 +189,19 @@ export function ProductForm({ initialData, onSubmit, onCancel, isLoading }: Prod
                                 <CardContent className="p-6 space-y-6">
                                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                                         <div className="space-y-2">
-                                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Weight (kg)</Label>
+                                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('Weight (kg)', currentLanguage.code, 'ui')}</Label>
                                             <Input type="number" step="0.1" {...register("shipping.weight", { valueAsNumber: true })} className="rounded-xl border-2" />
                                         </div>
                                         <div className="space-y-2">
-                                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Length (cm)</Label>
+                                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('Length (cm)', currentLanguage.code, 'ui')}</Label>
                                             <Input type="number" {...register("shipping.length", { valueAsNumber: true })} className="rounded-xl border-2" />
                                         </div>
                                         <div className="space-y-2">
-                                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Width (cm)</Label>
+                                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('Width (cm)', currentLanguage.code, 'ui')}</Label>
                                             <Input type="number" {...register("shipping.width", { valueAsNumber: true })} className="rounded-xl border-2" />
                                         </div>
                                         <div className="space-y-2">
-                                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Height (cm)</Label>
+                                            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('Height (cm)', currentLanguage.code, 'ui')}</Label>
                                             <Input type="number" {...register("shipping.height", { valueAsNumber: true })} className="rounded-xl border-2" />
                                         </div>
                                     </div>
@@ -212,12 +215,12 @@ export function ProductForm({ initialData, onSubmit, onCancel, isLoading }: Prod
                                     {attributeFields.map((field, index) => (
                                         <div key={field.id} className="flex gap-3 items-end animate-in fade-in slide-in-from-left-2 duration-200">
                                             <div className="flex-1 space-y-2">
-                                                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Attribute Name</Label>
-                                                <Input {...register(`attributes.${index}.name` as const)} placeholder="e.g. Size" className="rounded-xl border-2" />
+                                                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('Attribute Name', currentLanguage.code, 'ui')}</Label>
+                                                <Input {...register(`attributes.${index}.name` as const)} placeholder={t('e.g. Size', currentLanguage.code, 'ui')} className="rounded-xl border-2" />
                                             </div>
                                             <div className="flex-1 space-y-2">
-                                                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Value</Label>
-                                                <Input {...register(`attributes.${index}.value` as const)} placeholder="e.g. XL" className="rounded-xl border-2" />
+                                                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('Value', currentLanguage.code, 'ui')}</Label>
+                                                <Input {...register(`attributes.${index}.value` as const)} placeholder={t('e.g. XL', currentLanguage.code, 'ui')} className="rounded-xl border-2" />
                                             </div>
                                             <Button variant="ghost" size="icon" onClick={() => removeAttribute(index)} className="rounded-xl text-destructive hover:bg-destructive/10">
                                                 <X className="w-4 h-4" />
@@ -231,7 +234,7 @@ export function ProductForm({ initialData, onSubmit, onCancel, isLoading }: Prod
                                         className="w-full rounded-xl border-dashed border-2 py-6"
                                     >
                                         <Plus className="w-4 h-4 mr-2" />
-                                        Add Attribute
+                                        {t('Add Attribute', currentLanguage.code, 'ui')}
                                     </Button>
                                 </CardContent>
                             </Card>
@@ -244,11 +247,11 @@ export function ProductForm({ initialData, onSubmit, onCancel, isLoading }: Prod
                     <Card className="rounded-[32px] border-2 overflow-hidden shadow-sm sticky top-24">
                         <div className="px-6 py-4 border-b bg-muted/30 flex items-center gap-2">
                             <Globe className="w-4 h-4 text-primary" />
-                            <h3 className="font-black text-sm uppercase tracking-widest">Publish Settings</h3>
+                            <h3 className="font-black text-sm uppercase tracking-widest">{t('Publish Settings', currentLanguage.code, 'ui')}</h3>
                         </div>
                         <CardContent className="p-6 space-y-6">
                             <div className="space-y-2">
-                                <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Categories</Label>
+                                <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">{t('Categories', currentLanguage.code, 'ui')}</Label>
                                 <CategorySelector
                                     selectedCategories={formValues.categories}
                                     onChange={(cats) => setValue("categories", cats)}
@@ -259,10 +262,10 @@ export function ProductForm({ initialData, onSubmit, onCancel, isLoading }: Prod
                             <Separator />
 
                             <div className="space-y-2">
-                                <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">SEO Slug</Label>
+                                <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">{t('SEO Slug', currentLanguage.code, 'ui')}</Label>
                                 <Input
                                     {...register("seo.slug")}
-                                    placeholder="product-url-slug"
+                                    placeholder={t('product-url-slug', currentLanguage.code, 'ui')}
                                     className="rounded-xl border-2"
                                 />
                                 {errors.seo?.slug && <p className="text-xs text-destructive font-bold">{errors.seo.slug.message}</p>}
@@ -271,7 +274,7 @@ export function ProductForm({ initialData, onSubmit, onCancel, isLoading }: Prod
                             <Separator />
 
                             <div className="space-y-4">
-                                <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Media</Label>
+                                <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">{t('Media', currentLanguage.code, 'ui')}</Label>
                                 <ImageUploader
                                     mainImage={formValues.mainImage}
                                     gallery={formValues.gallery}

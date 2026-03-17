@@ -1,4 +1,3 @@
-
 import { usePOSTheme } from "./theme-provider";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,9 +11,12 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { t } from "@/mock/data";
+import { useLanguage } from "@/components/language-provider";
 
 export function ThemeSwitcher() {
     const { theme, setTheme } = usePOSTheme();
+    const { currentLanguage } = useLanguage();
 
     const themes: { id: POSTheme; label: string }[] = [
         { id: 'emerald-grocery', label: '🥦 Emerald Grocery' },
@@ -45,15 +47,15 @@ export function ThemeSwitcher() {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-64 p-2 rounded-[24px] shadow-2xl border-2 bg-popover/80 backdrop-blur-2xl animate-in fade-in zoom-in-95 duration-200">
-                <div className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">Select Theme</div>
-                {themes.map((t) => (
+                <div className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">{t('Select Theme', currentLanguage.code, 'ui')}</div>
+                {themes.map((themeItem) => (
                     <DropdownMenuItem
-                        key={t.id}
-                        onClick={() => setTheme(t.id)}
-                        className={`flex items-center gap-4 px-4 py-3 rounded-xl cursor-pointer transition-all ${theme === t.id ? 'bg-primary text-primary-foreground font-black shadow-lg shadow-primary/20 scale-105' : 'hover:bg-primary/5 hover:translate-x-1'}`}
+                        key={themeItem.id}
+                        onClick={() => setTheme(themeItem.id)}
+                        className={`flex items-center gap-4 px-4 py-2.5 rounded-2xl cursor-pointer ${theme === themeItem.id ? 'bg-primary text-primary-foreground font-black shadow-lg shadow-primary/20 scale-105 transition-all' : 'hover:bg-primary/5 transition-colors'}`}
                     >
-                        <span className="text-xl leading-none">{t.label.split(' ')[0]}</span>
-                        <span className="font-bold text-sm tracking-tight">{t.label.split(' ').slice(1).join(' ')}</span>
+                        <span className="text-xl leading-none">{themeItem.label.split(' ')[0]}</span>
+                        <span className="font-bold text-sm tracking-tight">{t(themeItem.label.split(' ').slice(1).join(' '), currentLanguage.code, 'ui')}</span>
                     </DropdownMenuItem>
                 ))}
             </DropdownMenuContent>

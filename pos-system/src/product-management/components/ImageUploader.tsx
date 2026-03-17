@@ -2,6 +2,8 @@ import * as React from "react";
 import { Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { t } from "@/mock/data";
+import { useLanguage } from "@/components/language-provider";
 
 interface ImageUploaderProps {
     mainImage?: string;
@@ -10,6 +12,7 @@ interface ImageUploaderProps {
 }
 
 export function ImageUploader({ mainImage, gallery, onChange }: ImageUploaderProps) {
+    const { currentLanguage } = useLanguage();
     const [dragActive, setDragActive] = React.useState(false);
 
     const handleDrag = (e: React.DragEvent) => {
@@ -62,7 +65,7 @@ export function ImageUploader({ mainImage, gallery, onChange }: ImageUploaderPro
                         <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                             <Button size="sm" variant="destructive" className="rounded-xl shadow-xl font-black uppercase text-[10px] tracking-widest" onClick={removeMainImage}>
                                 <X className="w-3 h-3 mr-1.5" />
-                                Remove
+                                {t('Remove', currentLanguage.code, 'ui')}
                             </Button>
                         </div>
                     </>
@@ -71,8 +74,8 @@ export function ImageUploader({ mainImage, gallery, onChange }: ImageUploaderPro
                         <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-4">
                             <Plus className="w-6 h-6" />
                         </div>
-                        <p className="font-black text-sm">Drop product image here</p>
-                        <p className="text-xs text-muted-foreground">Click to browse or drag and drop</p>
+                        <p className="font-black text-sm">{t('Drop product image here', currentLanguage.code, 'ui')}</p>
+                        <p className="text-xs text-muted-foreground">{t('Click to browse or drag and drop', currentLanguage.code, 'ui')}</p>
                     </div>
                 )}
             </div>
@@ -101,7 +104,7 @@ export function ImageUploader({ mainImage, gallery, onChange }: ImageUploaderPro
                     }}
                 >
                     <Plus className="w-5 h-5 mb-1 group-hover:scale-110 transition-transform" />
-                    <span className="text-[10px] font-black uppercase tracking-widest">More</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest">{t('More', currentLanguage.code, 'ui')}</span>
                 </button>
             </div>
         </div>

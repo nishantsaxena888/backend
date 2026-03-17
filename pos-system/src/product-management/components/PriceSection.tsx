@@ -8,6 +8,8 @@ import {
     SelectValue
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { t } from "@/mock/data";
+import { useLanguage } from "@/components/language-provider";
 
 interface PriceSectionProps {
     regularPrice: number;
@@ -24,11 +26,12 @@ export function PriceSection({
     currency,
     onChange
 }: PriceSectionProps) {
+    const { currentLanguage } = useLanguage();
     return (
         <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                    <Label htmlFor="regular-price" className="text-xs font-black uppercase tracking-widest text-muted-foreground">Regular Price ({currency})</Label>
+                    <Label htmlFor="regular-price" className="text-xs font-black uppercase tracking-widest text-muted-foreground">{t('Regular Price', currentLanguage.code, 'ui')} ({currency})</Label>
                     <CurrencyInput
                         id="regular-price"
                         value={regularPrice}
@@ -38,7 +41,7 @@ export function PriceSection({
                     />
                 </div>
                 <div className="space-y-2">
-                    <Label htmlFor="sale-price" className="text-xs font-black uppercase tracking-widest text-muted-foreground">Sale Price ({currency})</Label>
+                    <Label htmlFor="sale-price" className="text-xs font-black uppercase tracking-widest text-muted-foreground">{t('Sale Price', currentLanguage.code, 'ui')} ({currency})</Label>
                     <CurrencyInput
                         id="sale-price"
                         value={salePrice?.toString() || ""}
@@ -46,7 +49,7 @@ export function PriceSection({
                         placeholder="0.00"
                         className="h-12 text-lg font-black rounded-xl border-2 text-primary"
                     />
-                    <p className="text-[10px] text-muted-foreground italic">Leave empty to disable sale</p>
+                    <p className="text-[10px] text-muted-foreground italic">{t('Leave empty to disable sale', currentLanguage.code, 'ui')}</p>
                 </div>
             </div>
 
@@ -54,36 +57,36 @@ export function PriceSection({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                    <Label htmlFor="tax-class" className="text-xs font-black uppercase tracking-widest text-muted-foreground">Tax Class</Label>
+                    <Label htmlFor="tax-class" className="text-xs font-black uppercase tracking-widest text-muted-foreground">{t('Tax Class', currentLanguage.code, 'ui')}</Label>
                     <Select
                         value={taxClass}
                         onValueChange={(val: string) => onChange({ taxClass: val })}
                     >
                         <SelectTrigger id="tax-class" className="rounded-xl border-2">
-                            <SelectValue placeholder="Select tax class" />
+                            <SelectValue placeholder={t('Select tax class', currentLanguage.code, 'ui')} />
                         </SelectTrigger>
                         <SelectContent className="rounded-2xl border-2">
-                            <SelectItem value="standard" className="rounded-lg">Standard Tax (15%)</SelectItem>
-                            <SelectItem value="reduced" className="rounded-lg">Reduced Rate (5%)</SelectItem>
-                            <SelectItem value="zero" className="rounded-lg">Zero Rate (0%)</SelectItem>
+                            <SelectItem value="standard" className="rounded-lg">{t('Standard Tax (15%)', currentLanguage.code, 'ui')}</SelectItem>
+                            <SelectItem value="reduced" className="rounded-lg">{t('Reduced Rate (5%)', currentLanguage.code, 'ui')}</SelectItem>
+                            <SelectItem value="zero" className="rounded-lg">{t('Zero Rate (0%)', currentLanguage.code, 'ui')}</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
                 <div className="space-y-2">
-                    <Label htmlFor="currency" className="text-xs font-black uppercase tracking-widest text-muted-foreground">Display Currency</Label>
+                    <Label htmlFor="currency" className="text-xs font-black uppercase tracking-widest text-muted-foreground">{t('Display Currency', currentLanguage.code, 'ui')}</Label>
                     <Select
                         value={currency}
                         onValueChange={(val: string) => onChange({ currency: val })}
                     >
                         <SelectTrigger id="currency" className="rounded-xl border-2">
-                            <SelectValue placeholder="Select currency" />
+                            <SelectValue placeholder={t('Select currency', currentLanguage.code, 'ui')} />
                         </SelectTrigger>
                         <SelectContent className="rounded-2xl border-2">
-                            <SelectItem value="USD" className="rounded-lg">USD ($)</SelectItem>
-                            <SelectItem value="EUR" className="rounded-lg">EUR (€)</SelectItem>
-                            <SelectItem value="GBP" className="rounded-lg">GBP (£)</SelectItem>
-                            <SelectItem value="INR" className="rounded-lg">INR (₹)</SelectItem>
-                            <SelectItem value="AED" className="rounded-lg">AED (د.إ)</SelectItem>
+                            <SelectItem value="USD" className="rounded-lg">{t('USD ($)', currentLanguage.code, 'ui')}</SelectItem>
+                            <SelectItem value="EUR" className="rounded-lg">{t('EUR (€)', currentLanguage.code, 'ui')}</SelectItem>
+                            <SelectItem value="GBP" className="rounded-lg">{t('GBP (£)', currentLanguage.code, 'ui')}</SelectItem>
+                            <SelectItem value="INR" className="rounded-lg">{t('INR (₹)', currentLanguage.code, 'ui')}</SelectItem>
+                            <SelectItem value="AED" className="rounded-lg">{t('AED (د.إ)', currentLanguage.code, 'ui')}</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>

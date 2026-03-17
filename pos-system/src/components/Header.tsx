@@ -9,6 +9,14 @@ import {
     SheetContent,
     SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { User, Settings, LogOut } from "lucide-react";
 import type { POSTheme } from "../types";
 import { useLanguage } from "./language-provider";
 import { CONFIGS, t } from "../mock/data";
@@ -38,7 +46,7 @@ export function Header({ theme, onBack, cartCount, wishlistCount, CartContent, W
                 </div>
                 <div className="min-w-0 flex flex-col justify-center">
                     <h1 className="text-sm sm:text-xl font-black tracking-tight leading-none truncate">{translatedName}</h1>
-                    <p className="hidden xs:block text-[8px] sm:text-xs font-bold text-muted-foreground uppercase tracking-widest mt-0.5 sm:mt-1 truncate">Terminal #01 · Active</p>
+                    <p className="hidden xs:block text-[8px] sm:text-xs font-bold text-muted-foreground uppercase tracking-widest mt-0.5 sm:mt-1 truncate">{t('Terminal #01 · Active', currentLanguage.code, 'ui')}</p>
                 </div>
             </div>
 
@@ -48,11 +56,32 @@ export function Header({ theme, onBack, cartCount, wishlistCount, CartContent, W
 
                 <div className="hidden lg:flex items-center gap-3">
                     <Separator orientation="vertical" className="h-8" />
-                    <div className="text-right">
-                        <p className="text-sm font-black">Manager Access</p>
-                        <p className="text-[10px] uppercase font-black text-primary">Admin</p>
-                    </div>
-                    <div className="w-10 h-10 rounded-full bg-muted border-2 border-border flex items-center justify-center font-black">AD</div>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
+                                <div className="text-right">
+                                    <p className="text-sm font-black">{t('Manager Access', currentLanguage.code, 'ui')}</p>
+                                    <p className="text-[10px] uppercase font-black text-primary">{t('Admin', currentLanguage.code, 'ui')}</p>
+                                </div>
+                                <div className="w-10 h-10 rounded-full bg-muted border-2 border-border flex items-center justify-center font-black shadow-inner">AD</div>
+                            </div>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-60 p-2 rounded-[24px] shadow-2xl border-2 bg-popover/80 backdrop-blur-2xl animate-in fade-in zoom-in-95 duration-200">
+                            <DropdownMenuItem className="flex items-center gap-4 px-4 py-2.5 rounded-2xl cursor-pointer hover:bg-primary/5 transition-colors">
+                                <User className="w-5 h-5" />
+                                <span className="font-bold text-sm tracking-tight">{t('My Profile', currentLanguage.code, 'ui')}</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="flex items-center gap-4 px-4 py-2.5 rounded-2xl cursor-pointer hover:bg-primary/5 transition-colors">
+                                <Settings className="w-5 h-5" />
+                                <span className="font-bold text-sm tracking-tight">{t('Settings', currentLanguage.code, 'ui')}</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator className="my-2 bg-muted/50" />
+                            <DropdownMenuItem className="flex items-center gap-4 px-4 py-2.5 rounded-2xl cursor-pointer hover:bg-destructive/10 transition-colors text-destructive">
+                                <LogOut className="w-5 h-5" />
+                                <span className="font-bold text-sm tracking-tight">{t('Logout', currentLanguage.code, 'ui')}</span>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
 
                 <div className="flex items-center gap-2">

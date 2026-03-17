@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { t } from "@/mock/data";
+import { useLanguage } from "@/components/language-provider";
 
 const INITIAL_CATEGORIES = ["Electronics", "Audio", "Wearables", "Clothing", "Menswear", "Accessories", "Bags", "Computers"];
 
@@ -18,6 +20,7 @@ interface CategorySelectorProps {
 }
 
 export function CategorySelector({ selectedCategories, onChange }: CategorySelectorProps) {
+    const { currentLanguage } = useLanguage();
     const [categories, setCategories] = React.useState(INITIAL_CATEGORIES);
     const [newCategory, setNewCategory] = React.useState("");
     const [isAdding, setIsAdding] = React.useState(false);
@@ -48,7 +51,7 @@ export function CategorySelector({ selectedCategories, onChange }: CategorySelec
                         variant="secondary"
                         className="pl-2 pr-1 py-1 rounded-lg bg-primary/10 text-primary border-none flex items-center gap-1 group"
                     >
-                        {cat}
+                        {t(cat, currentLanguage.code, 'categories')}
                         <button
                             onClick={() => toggleCategory(cat)}
                             className="hover:bg-primary/20 rounded-full p-0.5 transition-colors"
@@ -58,7 +61,7 @@ export function CategorySelector({ selectedCategories, onChange }: CategorySelec
                     </Badge>
                 ))}
                 {selectedCategories.length === 0 && (
-                    <span className="text-sm text-muted-foreground italic">No categories selected</span>
+                    <span className="text-sm text-muted-foreground italic">{t('No categories selected', currentLanguage.code, 'ui')}</span>
                 )}
             </div>
 
@@ -66,7 +69,7 @@ export function CategorySelector({ selectedCategories, onChange }: CategorySelec
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm" className="rounded-xl border-dashed">
                         <Plus className="w-4 h-4 mr-2" />
-                        Add Category
+                        {t('Add Category', currentLanguage.code, 'ui')}
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-56 p-2 rounded-2xl shadow-xl border-2">
@@ -79,7 +82,7 @@ export function CategorySelector({ selectedCategories, onChange }: CategorySelec
                             }}
                             className="flex items-center justify-between px-3 py-2 rounded-xl cursor-pointer"
                         >
-                            {cat}
+                            {t(cat, currentLanguage.code, 'categories')}
                             {selectedCategories.includes(cat) && <Check className="w-4 h-4 text-primary" />}
                         </DropdownMenuItem>
                     ))}
@@ -107,7 +110,7 @@ export function CategorySelector({ selectedCategories, onChange }: CategorySelec
                                 onClick={() => setIsAdding(true)}
                             >
                                 <Plus className="w-3 h-3 mr-2" />
-                                Create New
+                                {t('Create New', currentLanguage.code, 'ui')}
                             </Button>
                         )}
                     </div>

@@ -58,16 +58,16 @@ function HomePage({ onStart, onAdmin }: { onStart: () => void; onAdmin: () => vo
             {translatedName.split(' ')[0]} <span className="text-primary">POS</span>
           </h1>
           <p className="text-lg sm:text-xl text-muted-foreground font-bold tracking-tight">
-            The next generation of intelligent commerce for {translatedName.split(' ')[0]}s.
+            {t('The next generation of intelligent commerce for', currentLanguage.code, 'ui')} {translatedName.split(' ')[0]}s.
           </p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 w-full max-w-4xl px-4">
         {[
-          { icon: LayoutDashboard, title: 'Dashboard', desc: 'Real-time inventory and sales analytics at your fingertips.' },
-          { icon: Box, title: 'Inventory', desc: 'Manage thousands of SKUs with automated restocking alerts.' },
-          { icon: ShoppingCart, title: 'Checkout', desc: 'High-performance terminal design for rapid transactions.' }
+          { icon: LayoutDashboard, title: t('Dashboard', currentLanguage.code, 'ui'), desc: t('Real-time inventory and sales analytics at your fingertips.', currentLanguage.code, 'ui') },
+          { icon: Box, title: t('Inventory', currentLanguage.code, 'ui'), desc: t('Manage thousands of SKUs with automated restocking alerts.', currentLanguage.code, 'ui') },
+          { icon: ShoppingCart, title: t('Checkout', currentLanguage.code, 'ui'), desc: t('High-performance terminal design for rapid transactions.', currentLanguage.code, 'ui') }
         ].map((item, i) => (
           <Card key={i} className="p-6 sm:p-8 rounded-[24px] sm:rounded-[32px] border-2 bg-card/50 backdrop-blur-xl space-y-4 hover:border-primary transition-all group">
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all">
@@ -84,12 +84,9 @@ function HomePage({ onStart, onAdmin }: { onStart: () => void; onAdmin: () => vo
         className="h-16 sm:h-20 px-8 sm:px-12 rounded-[20px] sm:rounded-[24px] text-lg sm:text-xl font-black shadow-2xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all gap-4"
         onClick={onStart}
       >
-        Open POS Terminal <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" />
+        {t('Open POS Terminal', currentLanguage.code, 'ui')} <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" />
       </Button>
 
-      <div className="pt-8 sm:pt-12 text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 px-4">
-        Inventure AI Systems · Licensed Terminal #4928-1
-      </div>
     </div>
   )
 }
@@ -166,9 +163,9 @@ function POSDashboard({ onBack }: { onBack: () => void }) {
     <div className={`flex flex-col h-full ${isMobile ? '' : 'w-[400px] border-l shadow-2xl bg-card'}`}>
       <div className="p-4 sm:p-6 border-b flex items-center justify-between">
         <h2 className="text-lg font-black flex items-center gap-2">
-          <ShoppingCart className="w-5 h-5" /> Current Order
+          <ShoppingCart className="w-5 h-5" /> {t('Current Order', currentLanguage.code, 'ui')}
         </h2>
-        <Badge variant="secondary" className="font-black h-6">{cart.length} Items</Badge>
+        <Badge variant="secondary" className="font-black h-6">{cart.length} {t('Items', currentLanguage.code, 'ui')}</Badge>
       </div>
 
       <ScrollArea className="flex-1 p-4 sm:p-6">
@@ -197,7 +194,7 @@ function POSDashboard({ onBack }: { onBack: () => void }) {
           {cart.length === 0 && (
             <div className="h-64 flex flex-col items-center justify-center text-center space-y-2 opacity-30">
               <ShoppingCart className="w-12 h-12" />
-              <p className="text-xs sm:text-sm font-bold">New order ready for transaction</p>
+              <p className="text-xs sm:text-sm font-bold">{t('New order ready for transaction', currentLanguage.code, 'ui')}</p>
             </div>
           )}
         </div>

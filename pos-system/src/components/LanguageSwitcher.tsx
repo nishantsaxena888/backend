@@ -6,7 +6,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LANGUAGES } from "../mock/data";
+import { LANGUAGES, t } from "../mock/data";
 import { useLanguage } from "./language-provider";
 
 export function LanguageSwitcher() {
@@ -27,21 +27,21 @@ export function LanguageSwitcher() {
             </DropdownMenuTrigger>
             <DropdownMenuContent
                 align="end"
-                className="w-48 p-1.5 rounded-[20px] shadow-2xl border-2 bg-popover/80 backdrop-blur-2xl animate-in fade-in zoom-in-95 duration-200"
+                className="w-52 p-2 rounded-[24px] shadow-2xl border-2 bg-popover/80 backdrop-blur-2xl animate-in fade-in zoom-in-95 duration-200"
             >
                 <div className="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
-                    Select Language
+                    {t('Select Language', currentLanguage.code, 'ui')}
                 </div>
                 {LANGUAGES.map((lang) => (
                     <DropdownMenuItem
                         key={lang.code}
                         onClick={() => setLanguage(lang)}
-                        className={`flex items-center justify-between px-3 py-2 rounded-lg cursor-pointer transition-all ${currentLanguage.code === lang.code
+                        className={`flex items-center justify-between px-4 py-2.5 rounded-2xl cursor-pointer ${currentLanguage.code === lang.code
                             ? 'bg-primary text-primary-foreground font-bold'
-                            : 'hover:bg-primary/5 hover:translate-x-1'
+                            : 'hover:bg-primary/5 transition-colors'
                             }`}
                     >
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-4">
                             <span className="text-xl leading-none">{lang.flag}</span>
                             <span className="text-sm font-medium">{lang.name}</span>
                         </div>

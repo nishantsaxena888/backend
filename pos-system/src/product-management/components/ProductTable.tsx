@@ -30,6 +30,8 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
+import { t } from "@/mock/data";
+import { useLanguage } from "@/components/language-provider";
 
 interface ProductTableProps {
     products: Product[];
@@ -39,6 +41,7 @@ interface ProductTableProps {
 }
 
 export function ProductTable({ products, onEdit, onDelete, onDeleteBulk }: ProductTableProps) {
+    const { currentLanguage } = useLanguage();
     const [search, setSearch] = React.useState("");
     const [selectedIds, setSelectedIds] = React.useState<string[]>([]);
     const [currentPage, setCurrentPage] = React.useState(1);
@@ -77,7 +80,7 @@ export function ProductTable({ products, onEdit, onDelete, onDeleteBulk }: Produ
                 <div className="relative w-full sm:w-96">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
-                        placeholder="Search products by name or SKU..."
+                        placeholder={t('Search products by name or SKU...', currentLanguage.code, 'ui')}
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         className="pl-10 rounded-xl border-2 h-11 shadow-sm"
@@ -95,12 +98,12 @@ export function ProductTable({ products, onEdit, onDelete, onDeleteBulk }: Produ
                             }}
                         >
                             <Trash2 className="w-4 h-4 mr-2" />
-                            Delete ({selectedIds.length})
+                            {t('Delete', currentLanguage.code, 'ui')} ({selectedIds.length})
                         </Button>
                     )}
                     <Button variant="outline" className="rounded-xl border-2 h-11">
                         <Filter className="w-4 h-4 mr-2" />
-                        Filters
+                        {t('Filters', currentLanguage.code, 'ui')}
                     </Button>
                 </div>
             </div>
@@ -117,13 +120,13 @@ export function ProductTable({ products, onEdit, onDelete, onDeleteBulk }: Produ
                                         className="rounded-lg border-2"
                                     />
                                 </TableHead>
-                                <TableHead className="font-black uppercase text-[10px] tracking-[0.2em] text-muted-foreground w-16">Info</TableHead>
-                                <TableHead className="font-black uppercase text-[10px] tracking-[0.2em] text-muted-foreground min-w-[200px]">Product Details</TableHead>
-                                <TableHead className="font-black uppercase text-[10px] tracking-[0.2em] text-muted-foreground hidden lg:table-cell">Identity/SKU</TableHead>
-                                <TableHead className="font-black uppercase text-[10px] tracking-[0.2em] text-muted-foreground hidden md:table-cell">Category</TableHead>
-                                <TableHead className="font-black uppercase text-[10px] tracking-[0.2em] text-muted-foreground">Price</TableHead>
-                                <TableHead className="font-black uppercase text-[10px] tracking-[0.2em] text-muted-foreground hidden lg:table-cell">Stock Level</TableHead>
-                                <TableHead className="font-black uppercase text-[10px] tracking-[0.2em] text-muted-foreground hidden sm:table-cell">Status</TableHead>
+                                <TableHead className="font-black uppercase text-[10px] tracking-[0.2em] text-muted-foreground w-16">{t('Info', currentLanguage.code, 'ui')}</TableHead>
+                                <TableHead className="font-black uppercase text-[10px] tracking-[0.2em] text-muted-foreground min-w-[200px]">{t('Product Details', currentLanguage.code, 'ui')}</TableHead>
+                                <TableHead className="font-black uppercase text-[10px] tracking-[0.2em] text-muted-foreground hidden lg:table-cell">{t('Identity/SKU', currentLanguage.code, 'ui')}</TableHead>
+                                <TableHead className="font-black uppercase text-[10px] tracking-[0.2em] text-muted-foreground hidden md:table-cell">{t('Category', currentLanguage.code, 'ui')}</TableHead>
+                                <TableHead className="font-black uppercase text-[10px] tracking-[0.2em] text-muted-foreground">{t('Price', currentLanguage.code, 'ui')}</TableHead>
+                                <TableHead className="font-black uppercase text-[10px] tracking-[0.2em] text-muted-foreground hidden lg:table-cell">{t('Stock Level', currentLanguage.code, 'ui')}</TableHead>
+                                <TableHead className="font-black uppercase text-[10px] tracking-[0.2em] text-muted-foreground hidden sm:table-cell">{t('Status', currentLanguage.code, 'ui')}</TableHead>
                                 <TableHead className="w-12 px-6"></TableHead>
                             </TableRow>
                         </TableHeader>
@@ -188,7 +191,7 @@ export function ProductTable({ products, onEdit, onDelete, onDeleteBulk }: Produ
                                                     "text-[10px] font-black uppercase tracking-widest",
                                                     product.stockQuantity <= product.lowStockThreshold ? "text-destructive" : "text-muted-foreground"
                                                 )}>
-                                                    {product.stockQuantity <= product.lowStockThreshold ? "Critical" : "Healthy"}
+                                                    {product.stockQuantity <= product.lowStockThreshold ? t('Critical', currentLanguage.code, 'ui') : t('Healthy', currentLanguage.code, 'ui')}
                                                 </span>
                                                 <span className="text-xs font-black tabular-nums">{product.stockQuantity}</span>
                                             </div>
@@ -222,15 +225,15 @@ export function ProductTable({ products, onEdit, onDelete, onDeleteBulk }: Produ
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end" className="w-56 rounded-[24px] border-2 shadow-2xl p-2 animate-in zoom-in-95 duration-200">
                                                 <div className="px-3 py-2 border-b mb-1">
-                                                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Quick Actions</p>
+                                                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('Quick Actions', currentLanguage.code, 'ui')}</p>
                                                 </div>
                                                 <DropdownMenuItem onClick={() => onEdit(product)} className="rounded-xl cursor-pointer py-2.5 hover:bg-primary/10 hover:text-primary font-bold">
                                                     <Edit className="w-4 h-4 mr-3" />
-                                                    Edit Product Details
+                                                    {t('Edit Product Details', currentLanguage.code, 'ui')}
                                                 </DropdownMenuItem>
                                                 <DropdownMenuItem className="rounded-xl cursor-pointer py-2.5 hover:bg-primary/10 hover:text-primary font-bold">
                                                     <Eye className="w-4 h-4 mr-3" />
-                                                    Live Preview
+                                                    {t('Live Preview', currentLanguage.code, 'ui')}
                                                 </DropdownMenuItem>
                                                 <Separator className="my-1.5" />
                                                 <DropdownMenuItem
@@ -238,7 +241,7 @@ export function ProductTable({ products, onEdit, onDelete, onDeleteBulk }: Produ
                                                     className="rounded-xl cursor-pointer py-2.5 text-destructive focus:text-destructive focus:bg-destructive/5 font-bold"
                                                 >
                                                     <Trash2 className="w-4 h-4 mr-3" />
-                                                    Permanent Delete
+                                                    {t('Permanent Delete', currentLanguage.code, 'ui')}
                                                 </DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
@@ -253,7 +256,7 @@ export function ProductTable({ products, onEdit, onDelete, onDeleteBulk }: Produ
             {/* Pagination */}
             <div className="flex items-center justify-between px-2 py-4">
                 <p className="text-sm text-muted-foreground">
-                    Showing <b>{(currentPage - 1) * itemsPerPage + 1}</b> to <b>{Math.min(currentPage * itemsPerPage, filteredProducts.length)}</b> of <b>{filteredProducts.length}</b> products
+                    {t('Showing', currentLanguage.code, 'ui')} <b>{(currentPage - 1) * itemsPerPage + 1}</b> {t('to', currentLanguage.code, 'ui')} <b>{Math.min(currentPage * itemsPerPage, filteredProducts.length)}</b> {t('of', currentLanguage.code, 'ui')} <b>{filteredProducts.length}</b> {t('products', currentLanguage.code, 'ui')}
                 </p>
                 <div className="flex items-center gap-2">
                     <Button
