@@ -151,7 +151,9 @@ export function ProductTable({ products, onEdit, onDelete, onDeleteBulk }: Produ
                                     </TableCell>
                                     <TableCell className="py-4">
                                         <div className="flex flex-col">
-                                            <span className="font-black text-sm tracking-tight text-foreground group-hover:text-primary transition-colors duration-300">{product.name}</span>
+                                            <span className="font-black text-sm tracking-tight text-foreground group-hover:text-primary transition-colors duration-300">
+                                                {t(product.name, currentLanguage.code, 'products')}
+                                            </span>
                                             <span className="text-[10px] font-bold text-muted-foreground/60 lg:hidden">ID: {product.sku}</span>
                                         </div>
                                     </TableCell>
@@ -164,7 +166,7 @@ export function ProductTable({ products, onEdit, onDelete, onDeleteBulk }: Produ
                                         <div className="flex flex-wrap gap-1">
                                             {product.categories.slice(0, 1).map(cat => (
                                                 <Badge key={cat} variant="outline" className="text-[9px] font-black uppercase tracking-tighter bg-primary/5 text-primary border-none transition-all">
-                                                    {cat}
+                                                    {t(cat, currentLanguage.code, 'categories')}
                                                 </Badge>
                                             ))}
                                             {product.categories.length > 1 && (
@@ -213,7 +215,7 @@ export function ProductTable({ products, onEdit, onDelete, onDeleteBulk }: Produ
                                             )}
                                             variant="outline"
                                         >
-                                            {product.status}
+                                            {t(product.status, currentLanguage.code, 'ui')}
                                         </Badge>
                                     </TableCell>
                                     <TableCell className="px-6 py-4">

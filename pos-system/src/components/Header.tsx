@@ -19,20 +19,24 @@ import {
 import { User, Settings, LogOut } from "lucide-react";
 import type { POSTheme } from "../types";
 import { useLanguage } from "./language-provider";
+import { useAuth } from "./auth-context";
 import { CONFIGS, t } from "../mock/data";
 
 interface HeaderProps {
     theme: POSTheme;
     onBack: () => void;
+    onProfile?: () => void;
+    onSettings?: () => void;
     cartCount: number;
     wishlistCount: number;
     CartContent: React.ComponentType<{ isMobile?: boolean }>;
     WishlistContent: React.ComponentType<{ isMobile?: boolean }>;
 }
 
-export function Header({ theme, onBack, cartCount, wishlistCount, CartContent, WishlistContent }: HeaderProps) {
+export function Header({ theme, onBack, onProfile, onSettings, cartCount, wishlistCount, CartContent, WishlistContent }: HeaderProps) {
     const config = CONFIGS[theme];
     const { currentLanguage } = useLanguage();
+    const { logout } = useAuth();
     const translatedName = t(theme, currentLanguage.code);
 
     return (
@@ -67,16 +71,25 @@ export function Header({ theme, onBack, cartCount, wishlistCount, CartContent, W
                             </div>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-60 p-2 rounded-[24px] shadow-2xl border-2 bg-popover/80 backdrop-blur-2xl animate-in fade-in zoom-in-95 duration-200">
-                            <DropdownMenuItem className="flex items-center gap-4 px-4 py-2.5 rounded-2xl cursor-pointer hover:bg-primary/5 transition-colors">
+                            <DropdownMenuItem
+                                className="flex items-center gap-4 px-4 py-2.5 rounded-2xl cursor-pointer hover:bg-primary/5 transition-colors"
+                                onClick={onProfile}
+                            >
                                 <User className="w-5 h-5" />
                                 <span className="font-bold text-sm tracking-tight">{t('My Profile', currentLanguage.code, 'ui')}</span>
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="flex items-center gap-4 px-4 py-2.5 rounded-2xl cursor-pointer hover:bg-primary/5 transition-colors">
+                            <DropdownMenuItem
+                                className="flex items-center gap-4 px-4 py-2.5 rounded-2xl cursor-pointer hover:bg-primary/5 transition-colors"
+                                onClick={onSettings}
+                            >
                                 <Settings className="w-5 h-5" />
                                 <span className="font-bold text-sm tracking-tight">{t('Settings', currentLanguage.code, 'ui')}</span>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator className="my-2 bg-muted/50" />
-                            <DropdownMenuItem className="flex items-center gap-4 px-4 py-2.5 rounded-2xl cursor-pointer hover:bg-destructive/10 transition-colors text-destructive">
+                            <DropdownMenuItem
+                                className="flex items-center gap-4 px-4 py-2.5 rounded-2xl cursor-pointer hover:bg-destructive/10 transition-colors text-destructive"
+                                onClick={logout}
+                            >
                                 <LogOut className="w-5 h-5" />
                                 <span className="font-bold text-sm tracking-tight">{t('Logout', currentLanguage.code, 'ui')}</span>
                             </DropdownMenuItem>

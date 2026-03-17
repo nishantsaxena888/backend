@@ -70,7 +70,7 @@ export function ProductDetails({
                                     {t(product.name, currentLanguage.code, 'products')}
                                 </h1>
                                 <p className="text-sm sm:text-base text-muted-foreground font-bold tracking-widest uppercase">
-                                    SKU: {product.sku}
+                                    {t('SKU', currentLanguage.code, 'ui')}: {product.sku}
                                 </p>
                             </div>
 
