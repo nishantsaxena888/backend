@@ -299,8 +299,26 @@ export const TRANSLATIONS: Record<string, any> = {
             'Managing the inventory and operations for Inventure POS System.': 'Gestion de l\'inventaire et des opérations pour Inventure POS System.',
             '4.5GB of 10GB used': '4,5 Go sur 10 Go utilisés',
             'Grid': 'Grille',
-            'List': 'Liste'
+            'List': 'Liste',
+            'Items Selected': 'Articles sélectionnés',
+            'Proceed to Checkout': 'Passer à la caisse',
+            'Cart is empty': 'Le panier est vide',
+            'unit': 'unité',
+            'LIVE': 'EN DIRECT',
+            'No specific settings available for this section yet.': 'Aucun paramètre spécifique disponible pour cette section pour le moment.',
+            'Update Profile Photo': 'Mettre à jour la photo de profil',
+            'Choose a new photo or remove the current one.': 'Choisissez une nouvelle photo ou supprimez l\'actuelle.',
+            'Upload New Photo': 'Télécharger une nouvelle photo',
+            'Select from your device': 'Sélectionner depuis votre appareil',
+            'Remove Current Photo': 'Supprimer la photo actuelle',
+            'Restore default avatar': 'Restaurer l\'avatar par défaut',
+            'Current Password': 'Mot de passe actuel',
+            'New Password': 'Nouveau mot de passe',
+            'Confirm New Password': 'Confirmer le nouveau mot de passe',
+            'Update Password': 'Mettre à jour le mot de passe',
+            'Enter your details below to update your password.': 'Entrez vos coordonnées ci-dessous pour mettre à jour votre mot de passe.'
         }
+
     },
     de: {
         warehouse: "Industrielager",
@@ -589,7 +607,25 @@ export const TRANSLATIONS: Record<string, any> = {
             'Managing the inventory and operations for Inventure POS System.': 'Verwaltung des Inventars und des Betriebs für das Inventure POS-System.',
             '4.5GB of 10GB used': '4,5 GB von 10 GB verwendet',
             'Grid': 'Raster',
-            'List': 'Liste'
+            'List': 'Liste',
+            'Items Selected': 'Artikel ausgewählt',
+            'Proceed to Checkout': 'Zur Kasse gehen',
+            'Cart is empty': 'Warenkorb ist leer',
+            'unit': 'Einheit',
+            'LIVE': 'LIVE',
+            'No specific settings available for this section yet.': 'Für diesen Bereich sind noch keine spezifischen Einstellungen verfügbar.',
+            'Update Profile Photo': 'Profilfoto aktualisieren',
+            'Choose a new photo or remove the current one.': 'Wählen Sie ein neues Foto aus oder entfernen Sie das aktuelle.',
+            'Upload New Photo': 'Neues Foto hochladen',
+            'Select from your device': 'Vom Gerät auswählen',
+            'Remove Current Photo': 'Aktuelles Foto entfernen',
+            'Restore default avatar': 'Standard-Avatar wiederherstellen',
+            'Current Password': 'Aktuelles Passwort',
+            'New Password': 'Neues Passwort',
+            'Confirm New Password': 'Neues Passwort bestätigen',
+            'Update Password': 'Passwort aktualisieren',
+            'Enter your details below to update your password.': 'Geben Sie unten Ihre Daten ein, um Ihr Passwort zu aktualisieren.'
+
         }
     },
     jp: {
@@ -880,7 +916,25 @@ export const TRANSLATIONS: Record<string, any> = {
             'Managing the inventory and operations for Inventure POS System.': 'Inventure POSシステムの在庫と運用を管理しています。',
             '4.5GB of 10GB used': '10GB中4.5GBを使用',
             'Grid': 'グリッド',
-            'List': 'リスト'
+            'List': 'リスト',
+            'Items Selected': '選択されたアイテム',
+            'Proceed to Checkout': 'チェックアウトに進む',
+            'Cart is empty': 'カートは空です',
+            'unit': '単位',
+            'LIVE': 'ライブ',
+            'No specific settings available for this section yet.': 'このセクションにはまだ特定の設定はありません。',
+            'Update Profile Photo': 'プロフィール写真を更新',
+            'Choose a new photo or remove the current one.': '新しい写真を選択するか、現在の写真を削除します。',
+            'Upload New Photo': '新しい写真をアップロード',
+            'Select from your device': 'デバイスから選択',
+            'Remove Current Photo': '現在の写真を削除',
+            'Restore default avatar': 'デフォルトのアバターに戻す',
+            'Current Password': '現在のパスワード',
+            'New Password': '新しいパスワード',
+            'Confirm New Password': '新しいパスワードを再入力',
+            'Update Password': 'パスワードを更新',
+            'Enter your details below to update your password.': 'パスワードを更新するには、以下に詳細を入力してください。'
+
         }
     },
     es: {
@@ -1170,7 +1224,25 @@ export const TRANSLATIONS: Record<string, any> = {
             'Managing the inventory and operations for Inventure POS System.': 'Gestionando el inventario y las operaciones de Inventure POS System.',
             '4.5GB of 10GB used': '4.5GB de 10GB usados',
             'Grid': 'Cuadrícula',
-            'List': 'Lista'
+            'List': 'Lista',
+            'Items Selected': 'Artículos seleccionados',
+            'Proceed to Checkout': 'Proceder al pago',
+            'Cart is empty': 'El carrito está vacío',
+            'unit': 'unidad',
+            'LIVE': 'EN VIVO',
+            'No specific settings available for this section yet.': 'Aún no hay configuraciones específicas disponibles para esta sección.',
+            'Update Profile Photo': 'Actualizar foto de perfil',
+            'Choose a new photo or remove the current one.': 'Elija una nueva foto o elimine la actual.',
+            'Upload New Photo': 'Subir nueva foto',
+            'Select from your device': 'Seleccionar de su dispositivo',
+            'Remove Current Photo': 'Eliminar foto actual',
+            'Restore default avatar': 'Restaurar avatar predeterminado',
+            'Current Password': 'Contraseña actual',
+            'New Password': 'Nueva contraseña',
+            'Confirm New Password': 'Confirmar nueva contraseña',
+            'Update Password': 'Actualizar contraseña',
+            'Enter your details below to update your password.': 'Ingrese sus datos a continuación para actualizar su contraseña.'
+
         }
     },
     hi: {
@@ -1460,8 +1532,26 @@ export const TRANSLATIONS: Record<string, any> = {
             'Managing the inventory and operations for Inventure POS System.': 'इन्वेंचर पीओएस सिस्टम के लिए इन्वेंट्री और संचालन का प्रबंधन।',
             '4.5GB of 10GB used': '10GB में से 4.5GB उपयोग किया गया',
             'Grid': 'ग्रिड',
-            'List': 'सूची'
+            'List': 'सूची',
+            'Items Selected': 'चयनित आइटम',
+            'Proceed to Checkout': 'चेकआउट के लिए आगे बढ़ें',
+            'Cart is empty': 'कार्ट खाली है',
+            'unit': 'इकाई',
+            'LIVE': 'लाइव',
+            'No specific settings available for this section yet.': 'इस अनुभाग के लिए अभी कोई विशेष सेटिंग्स उपलब्ध नहीं हैं।',
+            'Update Profile Photo': 'प्रोफ़ाइल फ़ोटो अपडेट करें',
+            'Choose a new photo or remove the current one.': 'एक नई फ़ोटो चुनें या वर्तमान को हटा दें।',
+            'Upload New Photo': 'नई फ़ोटो अपलोड करें',
+            'Select from your device': 'अपने डिवाइस से चुनें',
+            'Remove Current Photo': 'वर्तमान फ़ोटो हटाएं',
+            'Restore default avatar': 'डिफ़ॉルト अवतार पुनर्स्थापित करें',
+            'Current Password': 'वर्तमान पासवर्ड',
+            'New Password': 'नया पासवर्ड',
+            'Confirm New Password': 'नए पासवर्ड की पुष्टि करें',
+            'Update Password': 'पासवर्ड अपडेट करें',
+            'Enter your details below to update your password.': 'अपना पासवर्ड अपडेट करने के लिए नीचे अपना विवरण दर्ज करें।'
         }
+
     },
     ar: {
         warehouse: "مستودع صناعي",
@@ -1750,7 +1840,25 @@ export const TRANSLATIONS: Record<string, any> = {
             'Managing the inventory and operations for Inventure POS System.': 'إدارة المخزون والعمليات لنظام Inventure POS.',
             '4.5GB of 10GB used': 'تم استخدام 4.5 جيجابايت من 10 جيجابايت',
             'Grid': 'شبكة',
-            'List': 'قائمة'
+            'List': 'قائمة',
+            'Items Selected': 'الأصناف المختارة',
+            'Proceed to Checkout': 'المتابعة إلى الدفع',
+            'Cart is empty': 'السلة فارغة',
+            'unit': 'وحدة',
+            'LIVE': 'مباشر',
+            'No specific settings available for this section yet.': 'لا توجد إعدادات محددة متاحة لهذا القسم بعد.',
+            'Update Profile Photo': 'تحديث صورة الملف الشخصي',
+            'Choose a new photo or remove the current one.': 'اختر صورة جديدة أو قم بإزالة الصورة الحالية.',
+            'Upload New Photo': 'تحميل صورة جديدة',
+            'Select from your device': 'اختر من جهازك',
+            'Remove Current Photo': 'إزالة الصورة الحالية',
+            'Restore default avatar': 'استعادة الصورة الرمزية الافتراضية',
+            'Current Password': 'كلمة المرور الحالية',
+            'New Password': 'كلمة مرور جديدة',
+            'Confirm New Password': 'تأكيد كلمة المرور الجديدة',
+            'Update Password': 'تحديث كلمة المرور',
+            'Enter your details below to update your password.': 'أدخل بياناتك أدناه لتحديث كلمة المرور الخاصة بك.'
+
         }
     },
     zh: {
@@ -2040,7 +2148,25 @@ export const TRANSLATIONS: Record<string, any> = {
             'Managing the inventory and operations for Inventure POS System.': '负责 Inventure POS 系统的库存和运营。',
             '4.5GB of 10GB used': '已使用 10GB 中的 4.5GB',
             'Grid': '网格',
-            'List': '列表'
+            'List': '列表',
+            'Items Selected': '已选项目',
+            'Proceed to Checkout': '去结账',
+            'Cart is empty': '购物车是空的',
+            'unit': '单位',
+            'LIVE': '实时',
+            'No specific settings available for this section yet.': '此部分尚无特定设置。',
+            'Update Profile Photo': '更新个人资料照片',
+            'Choose a new photo or remove the current one.': '选择新照片或删除当前照片。',
+            'Upload New Photo': '上传新照片',
+            'Select from your device': '从您的设备中选择',
+            'Remove Current Photo': '删除当前照片',
+            'Restore default avatar': '恢复默认头像',
+            'Current Password': '当前密码',
+            'New Password': '新密码',
+            'Confirm New Password': '确认新密码',
+            'Update Password': '更新密码',
+            'Enter your details below to update your password.': '在下方输入您的详细信息以更新密码。'
+
         }
     },
 };

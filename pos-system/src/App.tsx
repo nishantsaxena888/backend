@@ -25,6 +25,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+import { CartSidebar } from '@/components/CartSidebar'
 // Sheet imports removed as they are now in Header.tsx
 import {
   ShoppingCart,
@@ -67,7 +68,7 @@ function HomePage() {
             {translatedName.split(' ')[0]} <span className="text-primary">POS</span>
           </h1>
           <p className="text-base sm:text-lg text-muted-foreground font-bold tracking-tight">
-            {t('The next generation of intelligent commerce for', currentLanguage.code, 'ui')} {translatedName.split(' ')[0]}s.
+            {t('The next generation of intelligent commerce for', currentLanguage.code, 'ui')} {currentLanguage.code === 'en' ? `${translatedName.split(' ')[0]}s` : translatedName}.
           </p>
         </div>
       </div>
@@ -143,7 +144,7 @@ function POSDashboard() {
   }
 
   return (
-    <>
+    <div className="flex flex-1 overflow-hidden h-full">
       <div className="flex-1 flex flex-col p-4 sm:p-6 space-y-4 sm:space-y-6 overflow-hidden relative">
         {selectedProduct ? (
           <ProductDetails
@@ -152,7 +153,7 @@ function POSDashboard() {
             onAddToCart={addToCart}
             cartQuantity={cart.find((c) => c.id === selectedProduct.id)?.quantity || 0}
             isWishlisted={wishlist.includes(selectedProduct.id)}
-            onToggleWishlist={(productId) => toggleWishlist(productId)}
+            onToggleWishlist={(_, productId) => toggleWishlist(productId)}
           />
         ) : (
           <>
@@ -334,8 +335,13 @@ function POSDashboard() {
         )}
       </div>
 
-      <aside className="hidden sm:flex shrink-0">
-        {/* Cart content is now in MainLayout side drawer, but we could keep a mini view here if desired */}
+      <aside className="hidden lg:flex shrink-0">
+        <CartSidebar 
+          onCheckout={() => setIsCheckoutOpen(true)}
+          subtotal={subtotal}
+          tax={tax}
+          total={total}
+        />
       </aside>
 
       <CheckoutDialog
@@ -344,8 +350,13 @@ function POSDashboard() {
         total={total}
         onComplete={handleCheckoutComplete}
       />
-    </>
+    </div>
   )
+}
+
+function AdminPage() {
+  const navigate = useNavigate()
+  return <AdminDashboard onBack={() => navigate('/')} />
 }
 
 export default function App() {
@@ -363,7 +374,7 @@ export default function App() {
                 <Route path="/my-profile" element={<div className="flex-1 p-4 sm:p-8 overflow-auto"><div className="max-w-7xl mx-auto w-full"><ProfilePage /></div></div>} />
                 <Route path="/settings" element={<div className="flex-1 p-4 sm:p-8 overflow-auto"><div className="max-w-7xl mx-auto w-full"><SettingsPage /></div></div>} />
               </Route>
-              <Route path="/admin" element={<ProtectedRoute><AdminDashboard onBack={() => { }} /></ProtectedRoute>} />
+              <Route path="/admin" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
               {/* Redirect any other route to home */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

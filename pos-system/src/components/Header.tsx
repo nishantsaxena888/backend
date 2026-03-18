@@ -114,7 +114,7 @@ export function Header({ theme, onBack, onProfile, onSettings, cartCount, wishli
                         </SheetContent>
                     </Sheet>
 
-                    <div className="sm:hidden ml-1">
+                    <div className="lg:hidden ml-1">
                         <Sheet>
                             <SheetTrigger asChild>
                                 <Button variant="outline" size="icon" className="relative rounded-xl border-2">
