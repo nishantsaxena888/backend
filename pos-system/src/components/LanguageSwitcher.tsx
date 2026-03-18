@@ -1,4 +1,4 @@
-import { ChevronDown, Check } from "lucide-react";
+import { ChevronDown, Check, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -9,7 +9,7 @@ import {
 import { LANGUAGES, t } from "../mock/data";
 import { useLanguage } from "./language-provider";
 
-export function LanguageSwitcher() {
+export function LanguageSwitcher({ isSimple }: { isSimple?: boolean }) {
     const { currentLanguage, setLanguage } = useLanguage();
 
     return (
@@ -17,12 +17,12 @@ export function LanguageSwitcher() {
             <DropdownMenuTrigger asChild>
                 <Button
                     variant="outline"
-                    className="flex gap-2 h-10 px-3 rounded-xl border-2 bg-card/50 backdrop-blur-xl hover:bg-accent hover:border-primary transition-all group overflow-hidden"
+                    className={`flex items-center ${isSimple ? 'h-12 w-12 border-none bg-transparent hover:bg-primary/5' : 'gap-1 sm:gap-2 h-8 sm:h-10 px-2 sm:px-3 border-2 bg-card/50 backdrop-blur-xl hover:bg-accent hover:border-primary shrink-0'} rounded-xl transition-all group overflow-hidden`}
                 >
-                    <div className="flex items-center gap-2">
-                        <span className="font-bold text-sm uppercase tracking-wider">{currentLanguage.code}</span>
+                    <div className="flex items-center gap-1 sm:gap-2">
+                        {isSimple ? <Globe className="w-6 h-6 text-primary" /> : <span className="font-bold text-xs sm:text-sm uppercase tracking-wider">{currentLanguage.code}</span>}
                     </div>
-                    <ChevronDown className="w-3 h-3 opacity-30 group-hover:opacity-100 transition-opacity" />
+                    {!isSimple && <ChevronDown className="w-3 h-3 opacity-30 group-hover:opacity-100 transition-opacity hidden sm:block" />}
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent

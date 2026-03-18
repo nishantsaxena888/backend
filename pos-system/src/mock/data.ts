@@ -316,8 +316,24 @@ export const TRANSLATIONS: Record<string, any> = {
             'New Password': 'Nouveau mot de passe',
             'Confirm New Password': 'Confirmer le nouveau mot de passe',
             'Update Password': 'Mettre à jour le mot de passe',
-            'Enter your details below to update your password.': 'Entrez vos coordonnées ci-dessous pour mettre à jour votre mot de passe.'
+            'Enter your details below to update your password.': 'Entrez vos coordonnées ci-dessous pour mettre à jour votre mot de passe.',
+            'Scanner Mode': 'Mode Scanner',
+            'Auto-focus enabled for rapid scanning': 'Autofocus activé pour un balayage rapide',
+            'Scan or Enter ID...': 'Scanner ou entrer l\'ID...',
+            'Product Scanned': 'Produit scanné',
+            'Added to Cart': 'Ajouté au panier',
+            'Scanner Ready': 'Scanner prêt',
+            'Point product at camera or type ID': 'Pointez le produit vers la caméra ou tapez l\'ID',
+            'Close Scanner': 'Fermer le scanner',
+            'Printing...': 'Impression...',
+            'Emailing...': 'Envoi du courriel...',
+            'Receipt Printed!': 'Reçu imprimé !',
+            'Receipt Emailed!': 'Reçu envoyé par courriel !'
         }
+
+
+
+
 
     },
     de: {
@@ -624,9 +640,23 @@ export const TRANSLATIONS: Record<string, any> = {
             'New Password': 'Neues Passwort',
             'Confirm New Password': 'Neues Passwort bestätigen',
             'Update Password': 'Passwort aktualisieren',
-            'Enter your details below to update your password.': 'Geben Sie unten Ihre Daten ein, um Ihr Passwort zu aktualisieren.'
-
+            'Enter your details below to update your password.': 'Geben Sie unten Ihre Daten ein, um Ihr Passwort zu aktualisieren.',
+            'Scanner Mode': 'Scanner-Modus',
+            'Auto-focus enabled for rapid scanning': 'Autofokus für schnelles Scannen aktiviert',
+            'Scan or Enter ID...': 'Scannen oder ID eingeben...',
+            'Product Scanned': 'Produkt gescannt',
+            'Added to Cart': 'In den Warenkorb gelegt',
+            'Scanner Ready': 'Scanner bereit',
+            'Point product at camera or type ID': 'Produkt auf Kamera richten oder ID eingeben',
+            'Close Scanner': 'Scanner schließen',
+            'Printing...': 'Drucken...',
+            'Emailing...': 'E-Mail senden...',
+            'Receipt Printed!': 'Beleg gedruckt!',
+            'Receipt Emailed!': 'Beleg per E-Mail gesendet!'
         }
+
+
+
     },
     jp: {
         warehouse: "産業用倉庫",
@@ -933,9 +963,23 @@ export const TRANSLATIONS: Record<string, any> = {
             'New Password': '新しいパスワード',
             'Confirm New Password': '新しいパスワードを再入力',
             'Update Password': 'パスワードを更新',
-            'Enter your details below to update your password.': 'パスワードを更新するには、以下に詳細を入力してください。'
-
+            'Enter your details below to update your password.': 'パスワードを更新するには、以下に詳細を入力してください。',
+            'Scanner Mode': 'スキャナーモード',
+            'Auto-focus enabled for rapid scanning': '高速スキャンのためのオートフォーカスが有効',
+            'Scan or Enter ID...': 'スキャンまたはID入力...',
+            'Product Scanned': '製品をスキャンしました',
+            'Added to Cart': 'カートに追加されました',
+            'Scanner Ready': 'スキャナーの準備完了',
+            'Point product at camera or type ID': '製品をカメラに向けるかIDを入力してください',
+            'Close Scanner': 'スキャナーを閉じる',
+            'Printing...': '印刷中...',
+            'Emailing...': 'メール送信中...',
+            'Receipt Printed!': '領収書が印刷されました！',
+            'Receipt Emailed!': '領収書がメールで送信されました！'
         }
+
+
+
     },
     es: {
         warehouse: "Almacén Industrial",
@@ -1030,6 +1074,7 @@ export const TRANSLATIONS: Record<string, any> = {
             'Inventory': 'Inventario',
             'Open POS Terminal': 'Abrir Terminal POS',
             'Terminal #01 · Active': 'Terminal #01 · Activo',
+
             'Select Language': 'Seleccionar Idioma',
             'The next generation of intelligent commerce for': 'La próxima generación de comercio inteligente para',
             'Experience the premium quality of our': 'Experimente la calidad premium de nuestro',
@@ -1241,9 +1286,23 @@ export const TRANSLATIONS: Record<string, any> = {
             'New Password': 'Nueva contraseña',
             'Confirm New Password': 'Confirmar nueva contraseña',
             'Update Password': 'Actualizar contraseña',
-            'Enter your details below to update your password.': 'Ingrese sus datos a continuación para actualizar su contraseña.'
-
+            'Enter your details below to update your password.': 'Ingrese sus datos a continuación para actualizar su contraseña.',
+            'Scanner Mode': 'Modo Escáner',
+            'Auto-focus enabled for rapid scanning': 'Enfoque automático activado para escaneo rápido',
+            'Scan or Enter ID...': 'Escanear o ingresar ID...',
+            'Product Scanned': 'Producto escaneado',
+            'Added to Cart': 'Añadido al carrito',
+            'Scanner Ready': 'Escáner listo',
+            'Point product at camera or type ID': 'Apunte el producto a la cámara o ingrese ID',
+            'Close Scanner': 'Cerrar escáner',
+            'Printing...': 'Imprimiendo...',
+            'Emailing...': 'Enviando correo...',
+            'Receipt Printed!': '¡Recibo impreso!',
+            'Receipt Emailed!': '¡Recibo enviado por correo!'
         }
+
+
+
     },
     hi: {
         warehouse: "औद्योगिक गोदाम",
@@ -1434,7 +1493,7 @@ export const TRANSLATIONS: Record<string, any> = {
             'EUR (€)': 'EUR (€)',
             'GBP (£)': 'GBP (£)',
             'INR (₹)': 'INR (₹)',
-            'AED (د.إ)': 'AED (د.इ)',
+            'AED (د.إ)': 'AED (द.इ)',
             'Electronics': 'इलेक्ट्रॉनिक्स',
             'Audio': 'ऑडियो',
             'Wearables': 'वियरेबल्स',
@@ -1544,13 +1603,27 @@ export const TRANSLATIONS: Record<string, any> = {
             'Upload New Photo': 'नई फ़ोटो अपलोड करें',
             'Select from your device': 'अपने डिवाइस से चुनें',
             'Remove Current Photo': 'वर्तमान फ़ोटो हटाएं',
-            'Restore default avatar': 'डिफ़ॉルト अवतार पुनर्स्थापित करें',
+            'Restore default avatar': 'डिफ़ॉल्ट अवतार पुनर्स्थापित करें',
             'Current Password': 'वर्तमान पासवर्ड',
             'New Password': 'नया पासवर्ड',
             'Confirm New Password': 'नए पासवर्ड की पुष्टि करें',
             'Update Password': 'पासवर्ड अपडेट करें',
-            'Enter your details below to update your password.': 'अपना पासवर्ड अपडेट करने के लिए नीचे अपना विवरण दर्ज करें।'
+            'Enter your details below to update your password.': 'अपना पासवर्ड अपडेट करने के लिए नीचे अपना विवरण दर्ज करें।',
+            'Scanner Mode': 'स्कैनर मोड',
+            'Auto-focus enabled for rapid scanning': 'तेजी से स्कैनिंग के लिए ऑटो-फोकस सक्षम',
+            'Scan or Enter ID...': 'स्कैन करें या आईडी दर्ज करें...',
+            'Product Scanned': 'उत्पाद स्कैन किया गया',
+            'Added to Cart': 'कार्ट में जोड़ा गया',
+            'Scanner Ready': 'स्कैनर तैयार है',
+            'Point product at camera or type ID': 'कैमरे की ओर उत्पाद दिखाएं या आईडी टाइप करें',
+            'Close Scanner': 'स्कैनर बंद करें',
+            'Printing...': 'प्रिंट हो रहा है...',
+            'Emailing...': 'ईमेल भेजा जा रहा है...',
+            'Receipt Printed!': 'रसीद प्रिंट हो गई!',
+            'Receipt Emailed!': 'रसीद ईमेल कर दी गई!'
         }
+
+
 
     },
     ar: {
@@ -1646,6 +1719,7 @@ export const TRANSLATIONS: Record<string, any> = {
             'Inventory': 'المخزون',
             'Open POS Terminal': 'فتح محطة POS',
             'Terminal #01 · Active': 'محطة #01 · نشط',
+
             'Select Language': 'اختر اللغة',
             'The next generation of intelligent commerce for': 'الجيل القادم من التجارة الذكية لـ',
             'Experience the premium quality of our': 'جرب الجودة العالية لمنتجاتنا',
@@ -1857,9 +1931,23 @@ export const TRANSLATIONS: Record<string, any> = {
             'New Password': 'كلمة مرور جديدة',
             'Confirm New Password': 'تأكيد كلمة المرور الجديدة',
             'Update Password': 'تحديث كلمة المرور',
-            'Enter your details below to update your password.': 'أدخل بياناتك أدناه لتحديث كلمة المرور الخاصة بك.'
-
+            'Enter your details below to update your password.': 'أدخل بياناتك أدناه لتحديث كلمة المرور الخاصة بك.',
+            'Scanner Mode': 'وضع الماسح الضوئي',
+            'Auto-focus enabled for rapid scanning': 'تم تمكين التركيز التلقائي للمسح السريع',
+            'Scan or Enter ID...': 'مسح أو إدخال المعرف...',
+            'Product Scanned': 'تم مسح المنتج ضوئيا',
+            'Added to Cart': 'تمت الإضافة إلى السلة',
+            'Scanner Ready': 'الماسح الضوئي جاهز',
+            'Point product at camera or type ID': 'وجه المنتج نحو الكاميرا أو اكتب المعرف',
+            'Close Scanner': 'إغلاق الماسح الضوئي',
+            'Printing...': 'جاري الطباعة...',
+            'Emailing...': 'جاري الإرسال...',
+            'Receipt Printed!': 'تمت طباعة الإيصال!',
+            'Receipt Emailed!': 'تم إرسال الإيصال بالبريد!'
         }
+
+
+
     },
     zh: {
         warehouse: "工业仓库",
@@ -2165,9 +2253,23 @@ export const TRANSLATIONS: Record<string, any> = {
             'New Password': '新密码',
             'Confirm New Password': '确认新密码',
             'Update Password': '更新密码',
-            'Enter your details below to update your password.': '在下方输入您的详细信息以更新密码。'
-
+            'Enter your details below to update your password.': '在下方输入您的详细信息以更新密码。',
+            'Scanner Mode': '扫描模式',
+            'Auto-focus enabled for rapid scanning': '已启用自动对焦以进行快速扫描',
+            'Scan or Enter ID...': '扫描或输入 ID...',
+            'Product Scanned': '产品已扫描',
+            'Added to Cart': '已加入购物车',
+            'Scanner Ready': '扫描器就绪',
+            'Point product at camera or type ID': '将产品对准摄像头或输入 ID',
+            'Close Scanner': '关闭扫描器',
+            'Printing...': '正在打印...',
+            'Emailing...': '正在发送邮件...',
+            'Receipt Printed!': '收据已打印！',
+            'Receipt Emailed!': '收据已发送邮件！'
         }
+
+
+
     },
 };
 

@@ -13,7 +13,7 @@ interface CartSidebarProps {
 }
 
 export function CartSidebar({ onCheckout, subtotal, tax, total }: CartSidebarProps) {
-    const { cart, updateCartQuantity, clearCart } = usePOSStore();
+    const { cart, updateCartQuantity, removeFromCart, clearCart } = usePOSStore();
     const { currentLanguage } = useLanguage();
 
     return (
@@ -38,12 +38,12 @@ export function CartSidebar({ onCheckout, subtotal, tax, total }: CartSidebarPro
             <ScrollArea className="flex-1 p-4">
                 <div className="space-y-3">
                     {cart.map((item) => (
-                        <div key={item.id} className="p-3 rounded-2xl bg-card border-2 hover:border-primary/30 transition-all group">
+                        <div key={item.id} className="p-3 rounded-2xl bg-card border-2 hover:border-primary/30 transition-all group relative">
                             <div className="flex gap-3">
                                 <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center text-2xl shrink-0">
                                     {item.image}
                                 </div>
-                                <div className="flex-1 min-w-0">
+                                <div className="flex-1 min-w-0 pr-6">
                                     <h4 className="font-black text-xs line-clamp-1">{t(item.name, currentLanguage.code, 'products')}</h4>
                                     <p className="text-[10px] font-bold text-muted-foreground">${item.price} / {t('unit', currentLanguage.code, 'ui')}</p>
                                     <div className="flex items-center justify-between mt-2">
@@ -60,8 +60,18 @@ export function CartSidebar({ onCheckout, subtotal, tax, total }: CartSidebarPro
                                     </div>
                                 </div>
                             </div>
+                            <Button 
+                                variant="ghost" 
+                                size="icon" 
+                                className="absolute top-2 right-2 h-7 w-7 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-all"
+                                onClick={() => removeFromCart(item.id)}
+                            >
+                                <Trash2 className="w-3.5 h-3.5" />
+                            </Button>
                         </div>
                     ))}
+
+
                     {cart.length === 0 && (
                         <div className="h-64 flex flex-col items-center justify-center text-muted-foreground/30 space-y-4">
                             <ShoppingCart className="w-12 h-12" />

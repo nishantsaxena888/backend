@@ -25,7 +25,9 @@ interface POSStoreState {
     addTransaction: (transaction: Omit<Transaction, 'id' | 'timestamp'>) => void;
     addToCart: (product: Product, quantity?: number) => void;
     updateCartQuantity: (id: string, delta: number) => void;
+    removeFromCart: (id: string) => void;
     clearCart: () => void;
+
     toggleWishlist: (productId: string) => void;
 }
 
@@ -121,7 +123,12 @@ export function POSStoreProvider({ children }: { children: ReactNode }) {
         }).filter(item => item.quantity > 0))
     }
 
+    const removeFromCart = (id: string) => {
+        setCart(prev => prev.filter(item => item.id !== id))
+    }
+
     const clearCart = () => setCart([])
+
 
     const toggleWishlist = (productId: string) => {
         setWishlist(prev => prev.includes(productId) ? prev.filter(id => id !== productId) : [...prev, productId])
@@ -137,7 +144,9 @@ export function POSStoreProvider({ children }: { children: ReactNode }) {
             addTransaction,
             addToCart,
             updateCartQuantity,
+            removeFromCart,
             clearCart,
+
             toggleWishlist
         }}>
             {children}

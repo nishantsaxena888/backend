@@ -11,6 +11,7 @@ import { t } from '@/mock/data';
 import { useLanguage } from '@/components/language-provider';
 import { ThemeSwitcher } from "./ThemeSwitcher";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { BottomNav } from "./BottomNav";
 import { Separator } from "@/components/ui/separator";
 import {
     DropdownMenu,
@@ -29,31 +30,33 @@ export function AdminDashboard({ onBack }: { onBack: () => void }) {
 
     return (
         <div className="min-h-screen bg-background text-foreground flex flex-col animate-in fade-in duration-500">
-            <header className="border-b bg-card px-4 sm:px-6 py-4 flex items-center justify-between shadow-sm sticky top-0 z-50">
-                <div className="flex items-center gap-4">
-                    <Button variant="ghost" size="icon" className="rounded-xl" onClick={currentView === 'dashboard' ? onBack : () => setCurrentView('dashboard')}>
-                        <ArrowLeft className="w-5 h-5" />
+            <header className="border-b bg-card px-2 sm:px-6 py-2 sm:py-4 flex items-center justify-between shadow-sm sticky top-0 z-50 gap-1 sm:gap-2">
+                <div className="flex items-center gap-1 sm:gap-4 min-w-0">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-10 sm:w-10 rounded-xl shrink-0" onClick={currentView === 'dashboard' ? onBack : () => setCurrentView('dashboard')}>
+                        <ArrowLeft className="w-4 h-4 sm:w-5 h-5" />
                     </Button>
-                    <div className="flex flex-col">
-                        <h1 className="text-xl sm:text-2xl font-black tracking-tighter leading-none">{t('Admin Console', currentLanguage.code, 'ui')}</h1>
-                        <p className="hidden xs:block text-[10px] font-bold text-primary uppercase tracking-widest mt-1">{t('Mode: Management', currentLanguage.code, 'ui')}</p>
+                    <div className="flex flex-col min-w-0">
+                        <h1 className="text-sm sm:text-2xl font-black tracking-tighter leading-none truncate">{t('Admin Console', currentLanguage.code, 'ui')}</h1>
+                        <p className="hidden md:block text-[8px] sm:text-[10px] font-bold text-primary uppercase tracking-widest mt-1 truncate">{t('Mode: Management', currentLanguage.code, 'ui')}</p>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-2 sm:gap-6">
-                    <ThemeSwitcher />
-                    <LanguageSwitcher />
+                <div className="flex items-center gap-1.5 sm:gap-6 shrink-0">
+                    <div className="hidden sm:flex items-center gap-1 sm:gap-4">
+                        <ThemeSwitcher />
+                        <LanguageSwitcher />
+                    </div>
 
-                    <div className="hidden lg:flex items-center gap-3">
-                        <Separator orientation="vertical" className="h-8" />
+                    <div className="flex items-center gap-1.5 sm:gap-3">
+                        <Separator orientation="vertical" className="h-6 sm:h-8 hidden xs:block" />
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
-                                    <div className="text-right">
+                                <div className="flex items-center gap-1.5 sm:gap-3 cursor-pointer hover:opacity-80 transition-opacity">
+                                    <div className="text-right hidden sm:block">
                                         <p className="text-sm font-black">{t('Manager Access', currentLanguage.code, 'ui')}</p>
                                         <p className="text-[10px] uppercase font-black text-primary">{t('Admin', currentLanguage.code, 'ui')}</p>
                                     </div>
-                                    <div className="w-10 h-10 rounded-full bg-muted border-2 border-border flex items-center justify-center font-black shadow-inner">AD</div>
+                                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-muted border-2 border-border flex items-center justify-center font-black shadow-inner text-xs sm:text-sm shrink-0">AD</div>
                                 </div>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-60 p-2 rounded-[24px] shadow-2xl border-2 bg-popover/80 backdrop-blur-2xl animate-in fade-in zoom-in-95 duration-200">
@@ -82,7 +85,7 @@ export function AdminDashboard({ onBack }: { onBack: () => void }) {
                 </div>
             </header>
 
-            <main className="flex-1 p-4 sm:p-8 max-w-7xl mx-auto w-full overflow-auto">
+            <main className="flex-1 p-4 sm:p-8 max-w-7xl mx-auto w-full overflow-auto pb-20 sm:pb-8">
                 {currentView === 'dashboard' ? (
                     <Tabs defaultValue="inventory">
                         <TabsList className="mb-8 w-full justify-start overflow-x-auto no-scrollbar border-b rounded-none bg-transparent h-auto p-0 gap-6">
@@ -135,6 +138,10 @@ export function AdminDashboard({ onBack }: { onBack: () => void }) {
                     <SettingsPage />
                 )}
             </main>
+            <BottomNav
+                hideCart
+                hideWishlist
+            />
         </div>
     );
 }

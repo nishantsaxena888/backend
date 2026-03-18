@@ -1,10 +1,10 @@
-import React from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { useNavigate, Outlet } from 'react-router-dom';
 import { Header } from './Header';
+import { BottomNav } from './BottomNav';
 import { usePOSTheme } from './theme-provider';
 import { useLanguage } from './language-provider';
 import { usePOSStore } from '@/context/store-context';
-import { CONFIGS, t } from '@/mock/data';
+import { t } from '@/mock/data';
 import { ShoppingCart, Heart, Plus, Minus, Trash2, ChevronRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from './core/Button';
@@ -14,7 +14,7 @@ import { Separator } from '@/components/ui/separator';
 export function MainLayout() {
     const { theme } = usePOSTheme();
     const { currentLanguage } = useLanguage();
-    const { cart, wishlist, inventory, updateCartQuantity, clearCart, addToCart, toggleWishlist } = usePOSStore();
+    const { cart, wishlist, inventory, updateCartQuantity, clearCart, addToCart, toggleWishlist, removeFromCart } = usePOSStore();
     const navigate = useNavigate();
     const products = inventory[theme] || [];
 
@@ -34,11 +34,11 @@ export function MainLayout() {
             <ScrollArea className="flex-1 p-4 sm:p-6">
                 <div className="space-y-4">
                     {cart.map(item => (
-                        <div key={item.id} className="flex gap-3 sm:gap-4 items-center">
+                        <div key={item.id} className="flex gap-3 sm:gap-4 items-center group relative">
                             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-muted rounded-lg flex items-center justify-center text-lg sm:text-xl">
                                 {item.image}
                             </div>
-                            <div className="flex-1 min-w-0">
+                            <div className="flex-1 min-w-0 pr-8">
                                 <p className="text-xs sm:text-sm font-black line-clamp-1 leading-none">{item.name}</p>
                                 <p className="text-[10px] sm:text-xs text-muted-foreground font-bold">${item.price} {t('each', currentLanguage.code, 'ui')}</p>
                             </div>
@@ -52,8 +52,18 @@ export function MainLayout() {
                                 </Button>
                             </div>
                             <p className="text-xs sm:text-sm font-black w-14 sm:w-16 text-right">${(item.price * item.quantity).toFixed(2)}</p>
+                            <Button 
+                                size="icon" 
+                                variant="ghost" 
+                                className="h-7 w-7 text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-all absolute right-0 -top-1" 
+                                onClick={() => removeFromCart(item.id)}
+                            >
+                                <Trash2 className="w-3.5 h-3.5" />
+                            </Button>
                         </div>
                     ))}
+
+
                     {cart.length === 0 && (
                         <div className="h-64 flex flex-col items-center justify-center text-center space-y-2 opacity-30">
                             <ShoppingCart className="w-12 h-12" />
@@ -152,9 +162,15 @@ export function MainLayout() {
                 CartContent={CartContent}
                 WishlistContent={WishlistContent}
             />
-            <main className="flex-1 flex flex-col overflow-hidden">
+            <main className="flex-1 flex flex-col overflow-hidden pb-20 sm:pb-0">
                 <Outlet context={{ total, subtotal, tax }} />
             </main>
+            <BottomNav
+                cartCount={cart.length}
+                wishlistCount={wishlist.length}
+                CartContent={CartContent}
+                WishlistContent={WishlistContent}
+            />
         </div>
     );
 }

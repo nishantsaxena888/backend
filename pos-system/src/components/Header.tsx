@@ -40,34 +40,36 @@ export function Header({ theme, onBack, onProfile, onSettings, cartCount, wishli
     const translatedName = t(theme, currentLanguage.code);
 
     return (
-        <header className="flex items-center justify-between px-3 sm:px-6 py-2 sm:py-4 border-b bg-card shadow-sm z-10 shrink-0 gap-2">
-            <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-                <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl hover:bg-muted shrink-0" onClick={onBack}>
-                    <ArrowLeft className="w-5 h-5" />
+        <header className="flex items-center justify-between px-2 sm:px-6 py-1.5 sm:py-4 border-b bg-card shadow-sm z-10 shrink-0 gap-1 sm:gap-2">
+            <div className="flex items-center gap-1 sm:gap-4 min-w-0 flex-1">
+                <Button variant="ghost" size="icon" className="h-7 w-7 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl hover:bg-muted shrink-0" onClick={onBack}>
+                    <ArrowLeft className="w-3.5 h-3.5 sm:w-5 h-5" />
                 </Button>
-                <div className="w-9 h-9 sm:w-12 sm:h-12 bg-primary rounded-xl flex items-center justify-center text-primary-foreground text-lg sm:text-2xl shadow-lg ring-4 ring-primary/10 shrink-0">
+                <div className="w-7 h-7 sm:w-12 sm:h-12 bg-primary rounded-md sm:rounded-xl flex items-center justify-center text-primary-foreground text-[10px] sm:text-2xl shadow-lg ring-1 sm:ring-4 ring-primary/10 shrink-0">
                     {config.logo}
                 </div>
-                <div className="min-w-0 flex flex-col justify-center">
-                    <h1 className="text-sm sm:text-xl font-black tracking-tight leading-none truncate">{translatedName}</h1>
-                    <p className="hidden xs:block text-[8px] sm:text-xs font-bold text-muted-foreground uppercase tracking-widest mt-0.5 sm:mt-1 truncate">{t('Terminal #01 · Active', currentLanguage.code, 'ui')}</p>
+                <div className="min-w-0 flex flex-col justify-center ml-0.5 sm:ml-0 flex-1">
+                    <h1 className="text-[10px] sm:text-xl font-black tracking-tighter leading-none truncate max-w-[80px] sm:max-w-none">{translatedName}</h1>
+                    <p className="hidden md:block text-[8px] sm:text-xs font-bold text-muted-foreground uppercase tracking-widest mt-0.5 sm:mt-1 truncate">{t('Terminal #01 · Active', currentLanguage.code, 'ui')}</p>
                 </div>
             </div>
 
-            <div className="flex items-center gap-2 sm:gap-6 shrink-0">
-                <ThemeSwitcher />
-                <LanguageSwitcher />
+            <div className="flex items-center gap-1 sm:gap-6 shrink-0">
+                <div className="hidden sm:flex items-center gap-1 sm:gap-4">
+                    <ThemeSwitcher />
+                    <LanguageSwitcher />
+                </div>
 
-                <div className="hidden lg:flex items-center gap-3">
-                    <Separator orientation="vertical" className="h-8" />
+                <div className="flex items-center gap-1.5 sm:gap-3">
+                    <Separator orientation="vertical" className="h-6 sm:h-8 hidden xs:block" />
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
-                                <div className="text-right">
+                            <div className="flex items-center gap-1.5 sm:gap-3 cursor-pointer hover:opacity-80 transition-opacity">
+                                <div className="text-right hidden sm:block">
                                     <p className="text-sm font-black">{t('Manager Access', currentLanguage.code, 'ui')}</p>
                                     <p className="text-[10px] uppercase font-black text-primary">{t('Admin', currentLanguage.code, 'ui')}</p>
                                 </div>
-                                <div className="w-10 h-10 rounded-full bg-muted border-2 border-border flex items-center justify-center font-black shadow-inner">AD</div>
+                                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-muted border-2 border-border flex items-center justify-center font-black shadow-inner text-xs sm:text-sm shrink-0">AD</div>
                             </div>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-60 p-2 rounded-[24px] shadow-2xl border-2 bg-popover/80 backdrop-blur-2xl animate-in fade-in zoom-in-95 duration-200">
@@ -97,7 +99,7 @@ export function Header({ theme, onBack, onProfile, onSettings, cartCount, wishli
                     </DropdownMenu>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="hidden sm:flex items-center gap-2">
                     <Sheet>
                         <SheetTrigger asChild>
                             <Button variant="outline" size="icon" className="relative rounded-xl border-2">

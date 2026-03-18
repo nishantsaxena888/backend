@@ -14,7 +14,7 @@ import {
 import { t } from "@/mock/data";
 import { useLanguage } from "@/components/language-provider";
 
-export function ThemeSwitcher() {
+export function ThemeSwitcher({ isSimple }: { isSimple?: boolean }) {
     const { theme, setTheme } = usePOSTheme();
     const { currentLanguage } = useLanguage();
 
@@ -37,13 +37,17 @@ export function ThemeSwitcher() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="flex items-center gap-3 h-10 px-4 rounded-xl border-2 bg-card/50 backdrop-blur-xl hover:bg-accent hover:border-primary transition-all group overflow-hidden">
-                    <Palette className="w-4 h-4 text-primary group-hover:rotate-12 transition-transform shrink-0" />
-                    <div className="flex items-center gap-2 font-bold text-xs sm:text-sm tracking-tight hidden md:flex">
-                        <span className="text-base leading-none shrink-0">{activeTheme.label.split(' ')[0]}</span>
-                        <span className="truncate">{activeTheme.label.split(' ').slice(1).join(' ')}</span>
-                    </div>
-                    <ChevronDown className="w-3 h-3 opacity-30 group-hover:opacity-100 transition-opacity shrink-0" />
+                <Button variant="outline" className={`flex items-center ${isSimple ? 'h-12 w-12 border-none bg-transparent hover:bg-primary/5' : 'gap-1.5 sm:gap-3 h-8 sm:h-10 px-2 sm:px-4 border-2 bg-card/50 backdrop-blur-xl hover:bg-accent hover:border-primary shrink-0'} rounded-xl transition-all group overflow-hidden`}>
+                    <Palette className={`${isSimple ? 'w-6 h-6' : 'w-4 h-4'} text-primary group-hover:rotate-12 transition-transform shrink-0`} />
+                    {!isSimple && (
+                        <>
+                            <div className="hidden md:flex items-center gap-2 font-bold text-xs sm:text-sm tracking-tight">
+                                <span className="text-base leading-none shrink-0">{activeTheme.label.split(' ')[0]}</span>
+                                <span className="truncate">{activeTheme.label.split(' ').slice(1).join(' ')}</span>
+                            </div>
+                            <ChevronDown className="w-3 h-3 opacity-30 group-hover:opacity-100 transition-opacity shrink-0 hidden sm:block" />
+                        </>
+                    )}
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-64 p-2 rounded-[24px] shadow-2xl border-2 bg-popover/80 backdrop-blur-2xl animate-in fade-in zoom-in-95 duration-200">

@@ -109,7 +109,8 @@ export function ProductTable({ products, onEdit, onDelete, onDeleteBulk }: Produ
             </div>
 
             <div className="rounded-[32px] border-2 bg-card shadow-xl shadow-primary/5 overflow-hidden">
-                <div className="overflow-x-auto no-scrollbar">
+                {/* Desktop/Tablet Table View */}
+                <div className="hidden md:block overflow-x-auto no-scrollbar">
                     <Table>
                         <TableHeader className="bg-muted/10 border-b-2">
                             <TableRow className="hover:bg-transparent border-none">
@@ -252,6 +253,95 @@ export function ProductTable({ products, onEdit, onDelete, onDeleteBulk }: Produ
                             ))}
                         </TableBody>
                     </Table>
+                </div>
+
+                {/* Mobile Card View */}
+                <div className="md:hidden divide-y-2">
+                    {paginatedProducts.map((product) => (
+                        <div key={product.id} className="p-4 space-y-4 bg-card hover:bg-muted/30 transition-colors">
+                            <div className="flex items-center gap-4">
+                                <Checkbox
+                                    checked={selectedIds.includes(product.id!)}
+                                    onCheckedChange={() => toggleSelect(product.id!)}
+                                    className="rounded-lg border-2 h-6 w-6"
+                                />
+                                <div className="w-16 h-16 rounded-2xl border-2 border-background shadow-md overflow-hidden shrink-0 bg-muted flex items-center justify-center">
+                                    {product.mainImage ? (
+                                        <img src={product.mainImage} alt={product.name} className="w-full h-full object-cover" />
+                                    ) : (
+                                        <Eye className="w-6 h-6 opacity-20" />
+                                    )}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <h3 className="font-black text-sm tracking-tight text-foreground line-clamp-1">
+                                        {t(product.name, currentLanguage.code, 'products')}
+                                    </h3>
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <Badge variant="outline" className="text-[9px] font-mono tracking-widest bg-muted/30 border-none px-2 py-0.5">
+                                            {product.sku}
+                                        </Badge>
+                                        <Badge
+                                            className={cn(
+                                                "rounded-full px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.1em] border-none",
+                                                product.status === "publish" ? "bg-emerald-500/10 text-emerald-600" : "bg-amber-500/10 text-amber-600"
+                                            )}
+                                        >
+                                            {t(product.status, currentLanguage.code, 'ui')}
+                                        </Badge>
+                                    </div>
+                                </div>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl">
+                                            <MoreVertical className="h-5 w-5" />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end" className="w-56 rounded-[24px] border-2 shadow-2xl p-2 animate-in zoom-in-95 duration-200">
+                                        <DropdownMenuItem onClick={() => onEdit(product)} className="rounded-xl cursor-pointer py-2.5 font-bold">
+                                            <Edit className="w-4 h-4 mr-3" />
+                                            {t('Edit', currentLanguage.code, 'ui')}
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem
+                                            onClick={() => onDelete(product.id!)}
+                                            className="rounded-xl cursor-pointer py-2.5 text-destructive font-bold"
+                                        >
+                                            <Trash2 className="w-4 h-4 mr-3" />
+                                            {t('Delete', currentLanguage.code, 'ui')}
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </div>
+                            <div className="flex items-center justify-between pt-2 border-t border-dashed">
+                                <div className="space-y-1">
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('Price', currentLanguage.code, 'ui')}</p>
+                                    <div className="flex items-baseline gap-2">
+                                        <span className="font-black text-lg text-primary tracking-tighter tabular-nums">
+                                            {product.currency === "USD" ? "$" : product.currency}{product.regularPrice.toFixed(2)}
+                                        </span>
+                                        {product.salePrice && (
+                                            <span className="text-xs text-muted-foreground line-through tabular-nums">
+                                                {product.currency === "USD" ? "$" : product.currency}{product.salePrice.toFixed(2)}
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="text-right space-y-1">
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('Stock', currentLanguage.code, 'ui')}</p>
+                                    <div className="flex items-center gap-2 justify-end">
+                                        <span className="text-sm font-black tabular-nums">{product.stockQuantity}</span>
+                                        <div className="h-1.5 w-12 bg-muted rounded-full overflow-hidden">
+                                            <div
+                                                className={cn(
+                                                    "h-full rounded-full",
+                                                    product.stockQuantity <= product.lowStockThreshold ? "bg-destructive w-1/4" : "bg-primary w-2/3"
+                                                )}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
 
