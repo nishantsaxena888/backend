@@ -7,13 +7,14 @@ interface SocialButtonProps {
     onClick?: () => void;
     className?: string;
     isLoading?: boolean;
+    short?: boolean;
 }
 
 /**
  * Premium Google Login Button 
  * Features a subtle multi-color hover effect and branding-safe styling.
  */
-export function GoogleLoginButton({ onClick, className, isLoading }: SocialButtonProps) {
+export function GoogleLoginButton({ onClick, className, isLoading, short }: SocialButtonProps) {
     const { t } = useLanguage();
     return (
         <Button
@@ -32,7 +33,7 @@ export function GoogleLoginButton({ onClick, className, isLoading }: SocialButto
                 <Chrome className="w-5 h-5 text-primary" />
                 <div className="absolute inset-0 bg-primary/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
-            <span>{t('auth.continue_google')}</span>
+            <span>{short ? t('auth.google') : t('auth.continue_google')}</span>
         </Button>
     );
 }
@@ -41,7 +42,7 @@ export function GoogleLoginButton({ onClick, className, isLoading }: SocialButto
  * Premium Facebook Login Button
  * Uses the official brand color with a high-end gradient overlay.
  */
-export function FacebookLoginButton({ onClick, className, isLoading }: SocialButtonProps) {
+export function FacebookLoginButton({ onClick, className, isLoading, short }: SocialButtonProps) {
     const { t } = useLanguage();
     return (
         <Button
@@ -59,7 +60,7 @@ export function FacebookLoginButton({ onClick, className, isLoading }: SocialBut
             <div className="w-5 h-5 flex items-center justify-center">
                 <Facebook className="w-5 h-5 fill-current" />
             </div>
-            <span>{t('auth.continue_facebook')}</span>
+            <span>{short ? t('auth.facebook') : t('auth.continue_facebook')}</span>
         </Button>
     );
 }

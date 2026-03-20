@@ -15,7 +15,9 @@ export function NavBar({ config, selectedCategory = 'All Products', onCategoryCh
         ? config.categories
         : (config.translations?.[language]?.categories ?? config.categories);
 
-    const categories = ['All Products', ...clientCategories];
+    const categories = clientCategories.includes('All Products') 
+        ? clientCategories 
+        : ['All Products', ...clientCategories];
 
     return (
         <nav className="bg-background border-b border-border relative sm:sticky sm:top-[113px] z-40 w-full max-w-full">
@@ -25,10 +27,11 @@ export function NavBar({ config, selectedCategory = 'All Products', onCategoryCh
                     {categories.map((cat, idx) => (
                         <button
                             key={cat + idx}
-                            onClick={() => onCategoryChange?.(cat === 'All Products' ? 'All Products' : config.categories[idx - 1])}
+                            onClick={() => onCategoryChange?.(cat)}
+/* (cat === 'All Products' ? 'All Products' : config.categories[idx - 1]) was removed */
                             className={[
                                 'flex items-center gap-2 px-4 py-2 rounded-lg whitespace-nowrap transition-all text-sm font-medium shrink-0',
-                                (selectedCategory === cat || (cat === 'All Products' && selectedCategory === 'All Products') || (idx > 0 && selectedCategory === config.categories[idx - 1]))
+                                selectedCategory === cat
                                     ? 'bg-primary text-primary-foreground shadow-sm'
                                     : 'bg-muted/50 text-foreground hover:bg-accent hover:text-accent-foreground',
                             ].join(' ')}

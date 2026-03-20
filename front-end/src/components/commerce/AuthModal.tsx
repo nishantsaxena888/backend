@@ -1,18 +1,16 @@
 import { useState } from 'react';
-import { X, Mail, Lock, User, Eye, EyeOff, Zap, ShieldCheck } from 'lucide-react';
+import { Mail, Lock, User, Eye, EyeOff, Zap } from 'lucide-react';
 import type { ClientConfig } from '@/mock/types';
 import {
     Dialog,
     DialogContent,
     DialogTitle,
-    DialogDescription
 } from "@/components/ui/dialog";
 import { GoogleLoginButton, FacebookLoginButton } from './SocialAuth';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { useLanguage } from '@/components/language-provider';
 
@@ -24,7 +22,7 @@ interface AuthModalProps {
     initialTab?: 'login' | 'register';
 }
 
-export function AuthModal({ isOpen, onClose, config, onAuthSuccess, initialTab = 'login' }: AuthModalProps) {
+export function AuthModal({ isOpen, onClose, config: _, onAuthSuccess, initialTab = 'login' }: AuthModalProps) {
     const { t } = useLanguage();
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -57,31 +55,8 @@ export function AuthModal({ isOpen, onClose, config, onAuthSuccess, initialTab =
             <DialogContent className="sm:max-w-[440px] p-0 flex flex-col max-h-[95vh] overflow-hidden border-none shadow-2xl bg-background rounded-3xl outline-none">
                 <div className="flex-1 overflow-y-auto custom-scrollbar">
                     <div className="relative">
-                        {/* Header Branding */}
-                        <div className="bg-primary p-6 sm:p-8 text-primary-foreground relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
-                            <div className="relative z-10 flex flex-col items-center text-center gap-3">
-                                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-3xl sm:text-4xl shadow-xl border border-white/20">
-                                    {config.logoIcon}
-                                </div>
-                                <div>
-                                    <DialogTitle className="text-xl sm:text-2xl font-black tracking-tight">{config.name}</DialogTitle>
-                                    <DialogDescription className="text-primary-foreground/80 text-[10px] sm:text-xs font-bold uppercase tracking-widest mt-1">
-                                        {t('auth.title')}
-                                    </DialogDescription>
-                                </div>
-                            </div>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={onClose}
-                                className="absolute top-4 right-4 text-primary-foreground hover:bg-white/20 rounded-full h-8 w-8"
-                            >
-                                <X className="w-4 h-4" />
-                            </Button>
-                        </div>
-
-                        <div className="p-6 sm:p-8">
+                        <div className="p-5 sm:p-7">
+                            <DialogTitle className="sr-only">Authentication</DialogTitle>
                             <Tabs defaultValue={initialTab} className="w-full">
                                 <TabsList className="grid w-full grid-cols-2 p-1 bg-muted/50 rounded-xl mb-6 sm:mb-8">
                                     <TabsTrigger value="login" className="rounded-lg font-bold">{t('auth.sign_in')}</TabsTrigger>
@@ -115,7 +90,6 @@ export function AuthModal({ isOpen, onClose, config, onAuthSuccess, initialTab =
                                                 <Input
                                                     type={showPassword ? "text" : "password"}
                                                     required
-                                                    placeholder="••••••••"
                                                     className="h-12 pl-11 pr-11 rounded-xl bg-muted/30 border-none focus-visible:ring-2 focus-visible:ring-primary"
                                                     value={formData.password}
                                                     onChange={e => setFormData({ ...formData, password: e.target.value })}
@@ -165,7 +139,6 @@ export function AuthModal({ isOpen, onClose, config, onAuthSuccess, initialTab =
                                                 <Input
                                                     type={showPassword ? "text" : "password"}
                                                     required
-                                                    placeholder="Min. 8 characters"
                                                     className="h-12 pl-11 pr-11 rounded-xl bg-muted/30 border-none focus-visible:ring-2 focus-visible:ring-primary"
                                                     value={formData.password}
                                                     onChange={e => setFormData({ ...formData, password: e.target.value })}
@@ -187,30 +160,27 @@ export function AuthModal({ isOpen, onClose, config, onAuthSuccess, initialTab =
                                     </Button>
                                 </form>
 
-                                <div className="relative my-8">
+                                <div className="relative my-4 sm:my-6">
                                     <div className="absolute inset-0 flex items-center"><Separator /></div>
                                     <div className="relative flex justify-center text-[10px] uppercase font-bold px-4 bg-background text-muted-foreground tracking-widest">
-                                        {t('auth.or_continue')}
+                                        {t('auth.or')}
                                     </div>
                                 </div>
 
-                                <div className="space-y-3">
+                                <div className="flex flex-row gap-3">
                                     <GoogleLoginButton
+                                        short
+                                        className="flex-1"
                                         isLoading={isLoading}
                                         onClick={() => handleAuth({ preventDefault: () => { } } as React.FormEvent)}
                                     />
                                     <FacebookLoginButton
+                                        short
+                                        className="flex-1"
                                         isLoading={isLoading}
                                         onClick={() => handleAuth({ preventDefault: () => { } } as React.FormEvent)}
                                     />
                                 </div>
-
-                                <Alert className="mt-8 bg-primary/5 border-primary/10 rounded-2xl animate-in fade-in slide-in-from-bottom-2">
-                                    <ShieldCheck className="h-4 w-4 text-primary" />
-                                    <AlertDescription className="text-[10px] font-bold text-primary leading-tight">
-                                        {t('auth.demo_mode')}
-                                    </AlertDescription>
-                                </Alert>
                             </Tabs>
                         </div>
                     </div>

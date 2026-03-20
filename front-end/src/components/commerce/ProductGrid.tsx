@@ -10,35 +10,34 @@ interface ProductGridProps {
     onAddToCart: (id: string) => void;
     onChangeQty: (id: string, delta: number) => void;
     onToggleWishlist: (id: string) => void;
+    onProductSelect: (product: Product) => void;
     viewMode?: 'grid' | 'list';
 }
 
 export function ProductGrid({
     products,
-    config,
     cartItems,
     wishlist,
     onAddToCart,
     onChangeQty,
     onToggleWishlist,
+    onProductSelect,
     viewMode = 'grid'
 }: ProductGridProps) {
     if (viewMode === 'list') {
         return (
             <div className="flex flex-col gap-6">
                 {products.map(product => {
-                    const inCart = cartItems.find(i => i.id === product.id);
-                    const inWishlist = wishlist.includes(product.id);
                     return (
                         <ProductListRow
                             key={product.id}
                             product={product}
-                            config={config}
-                            inCart={inCart}
-                            inWishlist={inWishlist}
+                            inCart={cartItems.find(item => item.id === product.id)}
+                            inWishlist={wishlist.includes(product.id)}
                             onAddToCart={onAddToCart}
                             onChangeQty={onChangeQty}
                             onToggleWishlist={onToggleWishlist}
+                            onProductSelect={onProductSelect}
                         />
                     );
                 })}
@@ -49,18 +48,16 @@ export function ProductGrid({
     return (
         <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-8">
             {products.map(product => {
-                const inCart = cartItems.find(i => i.id === product.id);
-                const inWishlist = wishlist.includes(product.id);
                 return (
                     <ProductCard
                         key={product.id}
                         product={product}
-                        config={config}
-                        inCart={inCart}
-                        inWishlist={inWishlist}
+                        inCart={cartItems.find(item => item.id === product.id)}
+                        inWishlist={wishlist.includes(product.id)}
                         onAddToCart={onAddToCart}
                         onChangeQty={onChangeQty}
                         onToggleWishlist={onToggleWishlist}
+                        onProductSelect={onProductSelect}
                     />
                 );
             })}

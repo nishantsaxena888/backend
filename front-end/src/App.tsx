@@ -13,6 +13,14 @@ import { AppliedFiltersBar } from "@/components/commerce/AppliedFiltersBar"
 import { HeroSection } from "@/components/layout/HeroSection"
 import { ProductGrid } from "@/components/commerce/ProductGrid"
 import { Footer } from "@/components/layout/Footer"
+import { PrivacyView } from "@/components/commerce/PrivacyView"
+import { TermsView } from "@/components/commerce/TermsView"
+import { HelpView } from "@/components/commerce/HelpView"
+import { ProductDetailsView } from "./components/commerce/ProductDetailsView"
+import { WishlistView } from "./components/commerce/WishlistView"
+import { SettingsView } from "./components/commerce/SettingsView"
+import { ComingSoonView } from "./components/commerce/ComingSoonView"
+import { useRef } from "react"
 
 // ── ui imports ───────────────────────────────────────────────────────────────
 import { Button } from "@/components/ui/button"
@@ -74,6 +82,7 @@ function HomePage() {
   const [isLoading, setIsLoading] = useState(true)
 
   const [selectedCategory, setSelectedCategory] = useState("All Products")
+  const [searchQuery, setSearchQuery] = useState("")
   const [cartItems, setCartItems] = useState<{ id: string; qty: number }[]>([])
   const [wishlist, setWishlist] = useState<string[]>([])
   const [priceRange, setPriceRange] = useState([0, 5000])
@@ -81,9 +90,14 @@ function HomePage() {
   const [authModalOpen, setAuthModalOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
   const [checkoutOpen, setCheckoutOpen] = useState(false)
-  const [currentView, setCurrentView] = useState<'home' | 'profile'>('home')
+  const [currentView, setCurrentView] = useState<'home' | 'profile' | 'privacy' | 'terms' | 'help' | 'product-details' | 'wishlist' | 'settings' | 'coming-soon'>('home')
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const [comingSoonTitle, setComingSoonTitle] = useState<string>('')
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
   const [ageVerified, setAgeVerified] = useState<boolean>(false)
+  const productsRef = useRef<HTMLDivElement>(null)
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const [sortBy, setSortBy] = useState<'newest' | 'price-low' | 'price-high' | 'rating'>('newest')
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
@@ -150,10 +164,45 @@ function HomePage() {
     setWishlist(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id])
   }
 
+  function handleCategorySelect(category: string) {
+    setSelectedCategory(category)
+    setSearchQuery("") // Clear text search when category is selected
+    setCurrentView('home')
+  }
+
+  function handleProductSelect(product: Product) {
+    setSelectedProduct(product)
+    
+    // Calculate related products (same category, excludes current)
+    const related = allProducts
+      .filter(p => p.category === product.category && p.id !== product.id)
+      .slice(0, 4)
+    setRelatedProducts(related)
+    
+    setCurrentView('product-details')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  function handleSearch(query: string) {
+    setSearchQuery(query)
+    setSelectedCategory("All Products") // Reset category when doing text search? Or keep it?
+    // Let's reset it for now to avoid conflicts, or merge filters.
+    // Usually, search is global.
+    setCurrentView('home')
+  }
+
   const filtered = allProducts.filter(p => {
     const matchCat = selectedCategory === "All Products" || p.category === selectedCategory
     const matchPrice = p.price >= priceRange[0] && p.price <= priceRange[1]
-    return matchCat && matchPrice
+    const matchSearch = !searchQuery ||
+      l(p, 'name').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.category.toLowerCase().includes(searchQuery.toLowerCase())
+    return matchCat && matchPrice && matchSearch
+  }).sort((a, b) => {
+    if (sortBy === 'price-low') return a.price - b.price
+    if (sortBy === 'price-high') return b.price - a.price
+    if (sortBy === 'rating') return b.rating - a.rating
+    return 0 // newest = original order in this mock
   })
 
   const sidebarCategories = [...new Set(allProducts.map(p => p.category))]
@@ -185,17 +234,21 @@ function HomePage() {
           config={config}
           cartCount={cartCount}
           onCartClick={() => setCartOpen(true)}
-          onCategorySelect={(c) => { setSelectedCategory(c); setCurrentView('home'); }}
+          onCategorySelect={handleCategorySelect}
+          onSearch={handleSearch}
+          selectedCategory={selectedCategory}
           user={user}
           onSignInClick={() => setAuthModalOpen(true)}
           onSignOut={handleSignOut}
           onProfileClick={() => setCurrentView('profile')}
+          wishlistCount={wishlist.length}
+          onWishlistClick={() => setCurrentView('wishlist')}
           deliveryCity="New York"
         />
 
         {/* ── CART SHEET ───────────────── */}
         <Sheet open={cartOpen} onOpenChange={setCartOpen}>
-          <SheetContent className="flex flex-col border-none shadow-2xl rounded-l-[40px] w-full sm:max-w-md p-8">
+          <SheetContent className="flex flex-col border-none shadow-2xl w-full sm:max-w-md p-8">
             <SheetHeader className="space-y-1">
               <SheetTitle className="text-3xl font-black tracking-tight flex items-center gap-3">
                 <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
@@ -279,11 +332,15 @@ function HomePage() {
 
         {currentView === 'home' ? (
           <>
-            <HeroSection config={config} />
+            <HeroSection 
+              config={config} 
+              onCtaClick={() => productsRef.current?.scrollIntoView({ behavior: 'smooth' })}
+              onExploreClick={() => productsRef.current?.scrollIntoView({ behavior: 'smooth' })}
+            />
             <NavBar
               config={config}
               selectedCategory={selectedCategory}
-              onCategoryChange={setSelectedCategory}
+              onCategoryChange={handleCategorySelect}
             />
             <AppliedFiltersBar
               priceRange={priceRange as [number, number]}
@@ -291,11 +348,16 @@ function HomePage() {
               productCount={filtered.length}
               onClearAll={() => {
                 setSelectedCategory("All Products");
+                setSearchQuery("");
                 setPriceRange(config.id.includes('luxury') ? [0, 15000] : config.type === 'liquor' ? [0, 200] : [0, 50]);
               }}
-              onRemoveCategory={() => setSelectedCategory("All Products")}
+              onRemoveCategory={() => { setSelectedCategory("All Products"); setSearchQuery(""); }}
               onRemovePrice={() => setPriceRange(config.id.includes('luxury') ? [0, 15000] : config.type === 'liquor' ? [0, 200] : [0, 50])}
+              sortBy={sortBy}
+              onSortChange={setSortBy}
             />
+            
+            <div ref={productsRef} className="scroll-mt-32" />
 
             <main className="max-w-7xl mx-auto px-4 py-6 md:py-12">
               <div className="flex flex-col md:flex-row gap-12">
@@ -306,7 +368,7 @@ function HomePage() {
                     </h3>
                     <div className="flex flex-col gap-1">
                       <button
-                        onClick={() => setSelectedCategory("All Products")}
+                        onClick={() => handleCategorySelect("All Products")}
                         className={`text-left px-4 py-3 rounded-2xl text-sm font-bold transition-all ${selectedCategory === "All Products" ? "bg-primary text-primary-foreground shadow-xl shadow-primary/20 translate-x-1" : "hover:bg-muted text-muted-foreground hover:text-foreground"}`}
                       >
                         {t('product.all_products')}
@@ -314,7 +376,7 @@ function HomePage() {
                       {sidebarCategories.map(cat => (
                         <button
                           key={cat}
-                          onClick={() => setSelectedCategory(cat)}
+                          onClick={() => handleCategorySelect(cat)}
                           className={`text-left px-4 py-3 rounded-2xl text-sm font-bold transition-all ${selectedCategory === cat ? "bg-primary text-primary-foreground shadow-xl shadow-primary/20 translate-x-1" : "hover:bg-muted text-muted-foreground hover:text-foreground"}`}
                         >
                           {t(cat)}
@@ -348,7 +410,7 @@ function HomePage() {
                   <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                     <div>
                       <h2 className="text-3xl sm:text-5xl font-black tracking-tighter leading-none break-words">
-                        {selectedCategory === "All Products" ? t('product.all_products') : selectedCategory}
+                        {searchQuery ? searchQuery : (selectedCategory === "All Products" ? t('product.all_products') : selectedCategory)}
                       </h2>
                       <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest mt-3 flex items-center gap-2">
                         <Package className="w-3 h-3" /> {filtered.length} {t('product.curated_for')} {config.name}
@@ -374,6 +436,7 @@ function HomePage() {
                       onAddToCart={addToCart}
                       onChangeQty={changeQty}
                       onToggleWishlist={toggleWishlist}
+                      onProductSelect={handleProductSelect}
                       viewMode={viewMode}
                     />
                   ) : (
@@ -389,14 +452,55 @@ function HomePage() {
               </div>
             </main>
           </>
-        ) : (
+        ) : currentView === 'privacy' ? (
+          <PrivacyView config={config} onClose={() => setCurrentView('home')} />
+        ) : currentView === 'terms' ? (
+          <TermsView config={config} onClose={() => setCurrentView('home')} />
+        ) : currentView === 'help' ? (
+          <HelpView config={config} onClose={() => setCurrentView('home')} />
+        ) : currentView === 'product-details' && selectedProduct ? (
+          <ProductDetailsView 
+            product={selectedProduct} 
+            config={config} 
+            relatedProducts={relatedProducts}
+            onAddToCart={addToCart}
+            onToggleWishlist={toggleWishlist}
+            onProductSelect={handleProductSelect}
+            cartItems={cartItems}
+            onChangeQty={changeQty}
+            inWishlist={wishlist.includes(selectedProduct.id)}
+            onClose={() => setCurrentView('home')} 
+          />
+        ) : currentView === 'wishlist' ? (
+          <WishlistView 
+            wishlist={allProducts.filter(p => wishlist.includes(p.id))}
+            config={config}
+            cartItems={cartItems}
+            onAddToCart={addToCart}
+            onChangeQty={changeQty}
+            onToggleWishlist={toggleWishlist}
+            onProductSelect={handleProductSelect}
+            onClose={() => setCurrentView('home')}
+          />
+        ) : currentView === 'profile' ? (
           <ProfileView
             user={user}
             config={config}
             onSignOut={handleSignOut}
-            onClose={() => setCurrentView('home')}
+            onClose={() => { setCurrentView('home'); window.scrollTo(0, 0); }}
+            onWishlistClick={() => { setCurrentView('wishlist'); window.scrollTo(0, 0); }}
+            onContactSupport={() => { setCurrentView('help'); window.scrollTo(0, 0); }}
+            onPrivacyClick={() => { setCurrentView('privacy'); window.scrollTo(0, 0); }}
+            onOrdersClick={() => { setComingSoonTitle('Order History'); setCurrentView('coming-soon'); window.scrollTo(0, 0); }}
+            onAddressesClick={() => { setComingSoonTitle('Saved Addresses'); setCurrentView('coming-soon'); window.scrollTo(0, 0); }}
+            onPaymentClick={() => { setComingSoonTitle('Payment Methods'); setCurrentView('coming-soon'); window.scrollTo(0, 0); }}
+            onEditProfile={() => { setCurrentView('settings'); window.scrollTo(0, 0); }}
           />
-        )}
+        ) : currentView === 'settings' ? (
+          <SettingsView user={user} onClose={() => setCurrentView('profile')} />
+        ) : currentView === 'coming-soon' ? (
+          <ComingSoonView title={comingSoonTitle} onClose={() => setCurrentView('profile')} />
+        ) : null}
 
         {/* ── MODALS ───────────── */}
         {!ageVerified && config.type === 'liquor' && (
@@ -423,8 +527,11 @@ function HomePage() {
 
         <Footer
           config={config}
-          onCategorySelect={(c) => { setSelectedCategory(c); setCurrentView('home'); }}
-          onViewChange={(v) => setCurrentView(v)}
+          onCategorySelect={handleCategorySelect}
+          onViewChange={(v) => {
+            setCurrentView(v);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
         />
       </div>
     </TooltipProvider>

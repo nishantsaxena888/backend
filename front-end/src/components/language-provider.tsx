@@ -30,8 +30,11 @@ const translations = {
         'auth.password': 'Password',
         'auth.forgot': 'Forgot?',
         'auth.full_name': 'Full Name',
-        'auth.submit': 'Join the Experience',
-        'auth.or': 'or continue with email',
+        'auth.submit': 'Sign In',
+        'auth.or': 'OR SIGN IN WITH',
+        'auth.or_continue': 'or continue with email',
+        'auth.google': 'Google',
+        'auth.facebook': 'Facebook',
         'auth.continue_google': 'Continue with Google',
         'auth.continue_facebook': 'Continue with Facebook',
         'auth.demo_mode': 'Demo Mode: Any credentials will authorize you and store your session locally.',
@@ -89,6 +92,9 @@ const translations = {
         'product.clear_filters': 'Clear all filters',
         'product.sort_by': 'Sort by',
         'product.newest': 'Newest',
+        'product.price_low': 'Price: Low to High',
+        'product.price_high': 'Price: High to Low',
+        'product.rating': 'Best Rating',
         'product.add_to_cart': 'Add to Cart',
         'product.quick_view': 'Quick View',
         'product.in_stock': 'In Stock',
@@ -109,6 +115,7 @@ const translations = {
         'product.view_list': 'List',
 
         // Profile
+        'profile.title': 'My Profile',
         'profile.vip': 'VIP Member',
         'profile.edit': 'Edit Profile',
         'profile.sign_out': 'Sign Out',
@@ -126,6 +133,13 @@ const translations = {
         'profile.no_orders_msg': "You haven't placed any orders with",
         'profile.no_orders_cta': "yet. Start exploring our categories to find amazing deals!",
         'profile.return_to_shop': 'Return to Shop',
+        
+        // Wishlist
+        'wishlist.title': 'My Wishlist',
+        'wishlist.empty': 'Your wishlist is empty',
+        'wishlist.empty_msg': "Save items you love to your wishlist and they'll show up here so you can find them easily later.",
+        'wishlist.continue_shopping': 'Continue Shopping',
+        'wishlist.items_saved': 'items saved in your wishlist',
 
         // Age Verification
         'age.title': 'Age Verification',
@@ -210,8 +224,11 @@ const translations = {
         'auth.password': 'Contraseña',
         'auth.forgot': '¿Olvidó?',
         'auth.full_name': 'Nombre Completo',
-        'auth.submit': 'Únete a la Experiencia',
-        'auth.or': 'o continuar con correo electrónico',
+        'auth.submit': 'Iniciar Sesión',
+        'auth.or': 'O INICIAR SESIÓN CON',
+        'auth.or_continue': 'o continuar con correo electrónico',
+        'auth.google': 'Google',
+        'auth.facebook': 'Facebook',
         'auth.continue_google': 'Continuar con Google',
         'auth.continue_facebook': 'Continuar con Facebook',
         'auth.demo_mode': 'Modo de demostración: cualquier credencial lo autorizará y almacenará su sesión localmente.',
@@ -269,6 +286,9 @@ const translations = {
         'product.clear_filters': 'Borrar todos los filtros',
         'product.sort_by': 'Ordenar por',
         'product.newest': 'Más recientes',
+        'product.price_low': 'Precio: Menor a Mayor',
+        'product.price_high': 'Precio: Mayor a Menor',
+        'product.rating': 'Mejor Calificación',
         'product.add_to_cart': 'Añadir al carrito',
         'product.quick_view': 'Vista rápida',
         'product.in_stock': 'En Stock',
@@ -289,6 +309,7 @@ const translations = {
         'product.view_list': 'Lista',
 
         // Profile
+        'profile.title': 'Mi Perfil',
         'profile.vip': 'Miembro VIP',
         'profile.edit': 'Editar Perfil',
         'profile.sign_out': 'Cerrar Sesión',
@@ -306,6 +327,13 @@ const translations = {
         'profile.no_orders_msg': 'Aún no has realizado ningún pedido con',
         'profile.no_orders_cta': '¡Empieza a explorar nuestras categorías para encontrar ofertas increíbles!',
         'profile.return_to_shop': 'Volver a la Tienda',
+        
+        // Wishlist
+        'wishlist.title': 'Mi Lista de Deseos',
+        'wishlist.empty': 'Tu lista de deseos está vacía',
+        'wishlist.empty_msg': 'Guarda los artículos que te gustan en tu lista de deseos y aparecerán aquí para que puedas encontrarlos fácilmente más tarde.',
+        'wishlist.continue_shopping': 'Continuar Comprando',
+        'wishlist.items_saved': 'artículos guardados en tu lista de deseos',
 
         // Age Verification
         'age.title': 'Verificación de Edad',

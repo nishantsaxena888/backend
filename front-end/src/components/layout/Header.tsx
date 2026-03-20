@@ -1,5 +1,5 @@
-import { Search, ShoppingCart, MapPin, User, Phone, Clock, X, LogOut, Zap, Palette, Languages } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { Search, ShoppingCart, MapPin, User, Phone, Clock, X, LogOut, Zap, Palette, Languages, Heart } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -17,6 +17,10 @@ interface HeaderProps {
     onSignOut?: () => void;
     onProfileClick?: () => void;
     deliveryCity?: string;
+    selectedCategory?: string;
+    onSearch?: (query: string) => void;
+    wishlistCount: number;
+    onWishlistClick: () => void;
 }
 
 const THEMES = [
@@ -40,13 +44,28 @@ export function Header({
     onSignOut,
     onProfileClick,
     deliveryCity,
+    selectedCategory,
+    onSearch,
+    wishlistCount,
+    onWishlistClick,
 }: HeaderProps) {
     const { theme, setTheme } = useTheme();
     const { language, setLanguage, t } = useLanguage();
     const [searchQuery, setSearchQuery] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [showAccountMenu, setShowAccountMenu] = useState(false);
+    const accountMenuRef = useRef<HTMLDivElement>(null);
     const [recentSearches, setRecentSearches] = useState<string[]>([]);
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (accountMenuRef.current && !accountMenuRef.current.contains(event.target as Node)) {
+                setShowAccountMenu(false);
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     useEffect(() => {
         const saved = localStorage.getItem('recentSearches');
@@ -56,21 +75,32 @@ export function Header({
         }
     }, []);
 
+    // Sync search bar with selected category from parent
+    useEffect(() => {
+        if (selectedCategory && selectedCategory !== 'All Products') {
+            setSearchQuery(t(selectedCategory));
+        } else if (selectedCategory === 'All Products') {
+            setSearchQuery('');
+        }
+    }, [selectedCategory, t]);
+
     const filteredCategories = searchQuery
         ? config.categories.filter(c =>
             c.toLowerCase().includes(searchQuery.toLowerCase())
         )
         : [];
 
-    function selectSearch(query: string, isCategory = false) {
-        if (!query.trim()) {
+    function selectSearch(query: string, isCategory = false, categoryKey?: string) {
+        if (!query.trim() && !isCategory) {
             setShowSuggestions(false);
             return;
         }
-        setSearchQuery(query);
+        const displayQuery = isCategory && categoryKey ? t(categoryKey) : query;
+        setSearchQuery(displayQuery);
         setShowSuggestions(false);
-        if (isCategory) onCategorySelect?.(query);
-        const updated = [query, ...recentSearches.filter(s => s && s.trim() !== '' && s !== query)].slice(0, 5);
+        if (isCategory) onCategorySelect?.(categoryKey || query);
+        else onSearch?.(displayQuery);
+        const updated = [displayQuery, ...recentSearches.filter(s => s && s.trim() !== '' && s !== displayQuery)].slice(0, 5);
         setRecentSearches(updated);
         localStorage.setItem('recentSearches', JSON.stringify(updated));
     }
@@ -178,9 +208,11 @@ export function Header({
                                         <Palette className="h-4 w-4 xl:mr-2 text-primary shrink-0" />
                                         <span className="hidden xl:inline"><SelectValue /></span>
                                     </SelectTrigger>
-                                    <SelectContent>
+                                    <SelectContent align="end" sideOffset={8} className="z-[110] min-w-[200px] rounded-2xl border-border/50 shadow-2xl p-2">
                                         {THEMES.map(t => (
-                                            <SelectItem key={t.value} value={t.value} className="text-xs">{t.label}</SelectItem>
+                                            <SelectItem key={t.value} value={t.value} className="text-xs font-bold rounded-xl py-2.5 px-4 mb-1 last:mb-0 transition-colors">
+                                                {t.label}
+                                            </SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
@@ -196,7 +228,7 @@ export function Header({
                             </div>
 
                             {/* Account */}
-                            <div className="relative">
+                            <div className="relative" ref={accountMenuRef}>
                                 {user ? (
                                     <button
                                         className="flex items-center gap-2 p-2 sm:px-3 sm:py-2 hover:bg-accent hover:text-accent-foreground rounded-xl transition-all"
@@ -255,7 +287,20 @@ export function Header({
                                     </div>
                                 )}
                             </div>
-
+                            
+                            {/* Wishlist Button */}
+                            <button
+                                onClick={onWishlistClick}
+                                className="relative p-2 sm:p-2.5 hover:bg-accent hover:text-accent-foreground rounded-xl transition-all group"
+                            >
+                                <Heart className={`w-5 h-5 transition-all ${wishlistCount > 0 ? 'text-primary fill-primary' : 'text-muted-foreground group-hover:text-primary'}`} />
+                                {wishlistCount > 0 && (
+                                    <Badge className="absolute -top-1 -right-1 h-4 min-w-4 flex items-center justify-center p-0 text-[8px] font-black bg-primary text-primary-foreground border-2 border-background rounded-full">
+                                        {wishlistCount}
+                                    </Badge>
+                                )}
+                            </button>
+                            
                             {/* Cart Button */}
                             <button
                                 onClick={onCartClick}
@@ -307,7 +352,7 @@ export function Header({
                     <div className="p-2">
                         <div className="px-4 py-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">{t('header.suggested_categories')}</div>
                         {filteredCategories.map(c => (
-                            <button key={c} onClick={() => selectSearch(c, true)}
+                            <button key={c} onMouseDown={(e) => { e.preventDefault(); selectSearch(c, true, c); }}
                                 className="w-full px-4 py-3 text-left text-foreground hover:bg-primary/5 rounded-xl transition-all flex items-center gap-4 group">
                                 <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all">
                                     <Search className="w-4 h-4" />
@@ -326,7 +371,7 @@ export function Header({
                         </div>
                         {recentSearches.map(term => (
                             <div key={term} className="flex items-center group">
-                                <button onClick={() => selectSearch(term)}
+                                <button onMouseDown={(e) => { e.preventDefault(); selectSearch(term); }}
                                     className="flex-1 px-4 py-3 text-left text-foreground hover:bg-primary/5 rounded-xl transition-all flex items-center gap-4">
                                     <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center text-muted-foreground group-hover:bg-primary/20 group-hover:text-primary transition-all">
                                         <Clock className="w-4 h-4" />
@@ -347,7 +392,7 @@ export function Header({
                         <div className="px-2 py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 mb-2">{t('header.categories')}</div>
                         <div className="grid grid-cols-2 gap-2">
                             {config.categories.slice(0, 4).map(c => (
-                                <button key={c} onClick={() => selectSearch(c, true)}
+                                <button key={c} onMouseDown={(e) => { e.preventDefault(); selectSearch(c, true, c); }}
                                     className="flex flex-col gap-2 p-4 rounded-2xl bg-background border border-border hover:border-primary hover:shadow-lg hover:shadow-primary/5 transition-all text-left group">
                                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all">
                                         <Zap className="w-5 h-5" />

@@ -8,7 +8,7 @@ import type { ClientConfig } from "@/mock/types";
 interface FooterProps {
     config: ClientConfig;
     onCategorySelect?: (category: string) => void;
-    onViewChange?: (view: 'home' | 'profile') => void;
+    onViewChange?: (view: 'home' | 'profile' | 'privacy' | 'terms' | 'help') => void;
 }
 
 export function Footer({ config, onCategorySelect, onViewChange }: FooterProps) {
@@ -68,7 +68,10 @@ export function Footer({ config, onCategorySelect, onViewChange }: FooterProps) 
                                 </button>
                             </li>
                             <li>
-                                <button className="text-sm font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-2 group mx-auto md:mx-0">
+                                <button 
+                                    onClick={() => onViewChange?.('help')}
+                                    className="text-sm font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-2 group mx-auto md:mx-0"
+                                >
                                     <span className="w-1.5 h-1.5 rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
                                     {t('footer.help')}
                                 </button>
@@ -121,12 +124,22 @@ export function Footer({ config, onCategorySelect, onViewChange }: FooterProps) 
                 <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                     <div className="flex items-center gap-8">
                         <p>© 2026 INVENTURE INC.</p>
-                        <button className="hover:text-primary transition-colors">{t('footer.privacy')}</button>
-                        <button className="hover:text-primary transition-colors">{t('footer.terms')}</button>
+                        <button 
+                            onClick={() => onViewChange?.('privacy')}
+                            className="hover:text-primary transition-colors"
+                        >
+                            {t('footer.privacy')}
+                        </button>
+                        <button 
+                            onClick={() => onViewChange?.('terms')}
+                            className="hover:text-primary transition-colors"
+                        >
+                            {t('footer.terms')}
+                        </button>
                     </div>
-                    <div className="flex items-center gap-4 bg-muted/50 px-4 py-2 rounded-full border border-border/10">
-                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                        <p className="font-bold">POWERED BY SRP MOCK API</p>
+                    <div className="flex items-center gap-4 text-muted-foreground/30">
+                        <div className="w-2 h-2 rounded-full bg-border" />
+                        <p className="font-bold">Secure Marketplace</p>
                     </div>
                 </div>
             </div>

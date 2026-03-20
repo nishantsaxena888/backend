@@ -3,7 +3,6 @@ import { Heart, Plus, Minus, Star, ShoppingCart, ImageOff } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { ProductDetail } from "./ProductDetail";
 import type { Product, ClientConfig } from "@/mock/types";
 import { useLanguage } from "@/components/language-provider";
 
@@ -15,17 +14,18 @@ interface ProductListRowProps {
     onAddToCart: (id: string) => void;
     onChangeQty: (id: string, delta: number) => void;
     onToggleWishlist: (id: string) => void;
+    onProductSelect: (product: Product) => void;
 }
 
 export function ProductListRow({
     product,
-    config,
     inCart,
     inWishlist,
     onAddToCart,
     onChangeQty,
-    onToggleWishlist
-}: ProductListRowProps) {
+    onToggleWishlist,
+    onProductSelect
+}: Omit<ProductListRowProps, 'config'>) {
     const { t, l } = useLanguage();
     const [imageError, setImageError] = useState(false);
 
@@ -89,16 +89,13 @@ export function ProductListRow({
 
                 {/* Actions Row */}
                 <div className="flex flex-wrap items-center gap-3 mt-4 md:mt-2">
-                    <ProductDetail
-                        product={product}
-                        config={config}
-                        onAddToCart={onAddToCart}
-                        trigger={
-                            <Button variant="outline" className="h-10 rounded-xl font-bold text-xs border-2 hover:bg-primary/5 px-4 uppercase tracking-widest">
-                                {t('product.details')}
-                            </Button>
-                        }
-                    />
+                    <Button 
+                        variant="outline" 
+                        className="h-10 rounded-xl font-bold text-xs border-2 hover:bg-primary/5 px-4 uppercase tracking-widest"
+                        onClick={() => onProductSelect(product)}
+                    >
+                        {t('product.details')}
+                    </Button>
 
                     {inCart ? (
                         <div className="flex items-center gap-1 border-2 border-primary/20 rounded-xl px-1 h-10 bg-primary/5">

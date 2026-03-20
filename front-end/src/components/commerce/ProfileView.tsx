@@ -12,16 +12,35 @@ interface ProfileViewProps {
     config: ClientConfig;
     onSignOut: () => void;
     onClose: () => void;
+    onEditProfile?: () => void;
+    onWishlistClick?: () => void;
+    onOrdersClick?: () => void;
+    onAddressesClick?: () => void;
+    onPaymentClick?: () => void;
+    onPrivacyClick?: () => void;
+    onContactSupport?: () => void;
 }
 
-export function ProfileView({ user, config, onSignOut, onClose }: ProfileViewProps) {
+export function ProfileView({ 
+    user, 
+    config, 
+    onSignOut, 
+    onClose,
+    onEditProfile,
+    onWishlistClick,
+    onOrdersClick,
+    onAddressesClick,
+    onPaymentClick,
+    onPrivacyClick,
+    onContactSupport
+}: ProfileViewProps) {
     const { t } = useLanguage();
     if (!user) return null;
 
     const initials = user.name.split(' ').map(n => n[0]).join('').toUpperCase();
 
     return (
-        <div className="max-w-4xl mx-auto px-4 py-12 md:py-24 space-y-8 animate-in fade-in duration-500">
+        <div className="max-w-7xl mx-auto px-4 py-12 md:py-24 space-y-8 animate-in fade-in duration-500">
 
             {/* Profile Header Card */}
             <div className="relative overflow-hidden rounded-[40px] bg-primary p-8 md:p-12 text-primary-foreground shadow-2xl">
@@ -45,7 +64,7 @@ export function ProfileView({ user, config, onSignOut, onClose }: ProfileViewPro
                             </div>
                         </div>
                         <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
-                            <Button variant="outline" className="bg-white/10 border-white/20 hover:bg-white/20 text-white rounded-xl font-bold h-10 px-6">
+                            <Button variant="outline" className="bg-white/10 border-white/20 hover:bg-white/20 text-white rounded-xl font-bold h-10 px-6" onClick={onEditProfile}>
                                 <Settings className="w-4 h-4 mr-2" /> {t('profile.edit')}
                             </Button>
                             <Button variant="ghost" className="text-white hover:bg-white/10 rounded-xl font-bold h-10 px-4" onClick={onSignOut}>
@@ -63,15 +82,16 @@ export function ProfileView({ user, config, onSignOut, onClose }: ProfileViewPro
                     <Card className="rounded-[32px] border-none shadow-xl overflow-hidden">
                         <CardContent className="p-4 space-y-1">
                             {[
-                                { icon: Package, label: t('profile.orders'), color: 'text-blue-500' },
-                                { icon: Heart, label: t('profile.wishlist'), color: 'text-red-500' },
-                                { icon: MapPin, label: t('profile.addresses'), color: 'text-green-500' },
-                                { icon: CreditCard, label: t('profile.payment'), color: 'text-purple-500' },
-                                { icon: ShieldCheck, label: t('profile.privacy'), color: 'text-orange-500' },
+                                { icon: Package, label: t('profile.orders'), color: 'text-blue-500', onClick: onOrdersClick },
+                                { icon: Heart, label: t('profile.wishlist'), color: 'text-red-500', onClick: onWishlistClick },
+                                { icon: MapPin, label: t('profile.addresses'), color: 'text-green-500', onClick: onAddressesClick },
+                                { icon: CreditCard, label: t('profile.payment'), color: 'text-purple-500', onClick: onPaymentClick },
+                                { icon: ShieldCheck, label: t('profile.privacy'), color: 'text-orange-500', onClick: onPrivacyClick },
                             ].map((item, i) => (
                                 <button
                                     key={i}
-                                    className="w-full flex items-center gap-4 p-4 hover:bg-muted rounded-2xl transition-all group font-bold text-sm"
+                                    className="w-full flex items-center gap-4 p-4 hover:bg-muted rounded-2xl transition-all group font-bold text-sm cursor-pointer"
+                                    onClick={item.onClick}
                                 >
                                     <item.icon className={`w-5 h-5 ${item.color}`} />
                                     <span className="flex-1 text-left">{item.label}</span>
@@ -92,7 +112,7 @@ export function ProfileView({ user, config, onSignOut, onClose }: ProfileViewPro
                                     {t('profile.priority_support')}
                                 </p>
                             </div>
-                            <Button className="w-full rounded-xl font-black h-12 shadow-lg shadow-primary/20">{t('profile.contact_support')}</Button>
+                            <Button className="w-full rounded-xl font-black h-12 shadow-lg shadow-primary/20" onClick={onContactSupport}>{t('profile.contact_support')}</Button>
                         </CardContent>
                     </Card>
                 </div>

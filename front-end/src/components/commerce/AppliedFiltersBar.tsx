@@ -1,7 +1,13 @@
-import { X, Tag, SlidersHorizontal } from 'lucide-react';
+import { X, Tag, SlidersHorizontal, ChevronDown, Check } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from '@/components/language-provider';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface AppliedFiltersBarProps {
     priceRange: [number, number];
@@ -10,6 +16,8 @@ interface AppliedFiltersBarProps {
     onClearAll: () => void;
     onRemoveCategory: () => void;
     onRemovePrice: () => void;
+    sortBy: 'newest' | 'price-low' | 'price-high' | 'rating';
+    onSortChange: (sort: 'newest' | 'price-low' | 'price-high' | 'rating') => void;
 }
 
 export function AppliedFiltersBar({
@@ -19,6 +27,8 @@ export function AppliedFiltersBar({
     onClearAll,
     onRemoveCategory,
     onRemovePrice,
+    sortBy,
+    onSortChange,
 }: AppliedFiltersBarProps) {
     const { t } = useLanguage();
     const isDefaultPrice = priceRange[0] === 0 && (priceRange[1] === 50 || priceRange[1] === 200 || priceRange[1] === 5000 || priceRange[1] === 15000);
@@ -76,11 +86,40 @@ export function AppliedFiltersBar({
                         )}
                     </div>
 
-                    {/* Accessibility/Sort Placeholder */}
+                    {/* Sort Dropdown */}
                     <div className="hidden lg:flex items-center gap-4">
-                        <Button variant="outline" size="sm" className="rounded-full gap-2 border-border/50 text-xs font-bold">
-                            <SlidersHorizontal className="w-3 h-3" /> {t('product.sort_by')}: {t('product.newest')}
-                        </Button>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline" size="sm" className="rounded-full gap-2 border-border/50 text-xs font-black px-6 h-10 hover:bg-muted transition-all active:scale-95 shadow-sm">
+                                    <SlidersHorizontal className="w-3.5 h-3.5 text-primary" />
+                                    <span className="text-muted-foreground font-bold">{t('product.sort_by')}:</span>
+                                    <span className="text-foreground font-black uppercase tracking-tight">
+                                        {sortBy === 'newest' ? t('product.newest') :
+                                         sortBy === 'price-low' ? t('product.price_low') :
+                                         sortBy === 'price-high' ? t('product.price_high') :
+                                         t('product.rating')}
+                                    </span>
+                                    <ChevronDown className="w-3.5 h-3.5 text-muted-foreground/50 transition-transform duration-300 group-data-[state=open]:rotate-180" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-56 rounded-3xl p-2 shadow-2xl border-border/50 bg-background/95 backdrop-blur-xl animate-in zoom-in-95 duration-200">
+                                {[
+                                    { value: 'newest', label: t('product.newest') },
+                                    { value: 'price-low', label: t('product.price_low') },
+                                    { value: 'price-high', label: t('product.price_high') },
+                                    { value: 'rating', label: t('product.rating') }
+                                ].map((option) => (
+                                    <DropdownMenuItem
+                                        key={option.value}
+                                        onClick={() => onSortChange(option.value as any)}
+                                        className={`flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-bold transition-all cursor-pointer mb-1 last:mb-0 ${sortBy === option.value ? 'bg-primary/10 text-primary' : 'hover:bg-muted'}`}
+                                    >
+                                        {option.label}
+                                        {sortBy === option.value && <Check className="w-4 h-4" />}
+                                    </DropdownMenuItem>
+                                ))}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
                 </div>
             </div>

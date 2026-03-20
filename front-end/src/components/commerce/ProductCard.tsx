@@ -4,7 +4,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { ProductDetail } from "@/components/commerce/ProductDetail";
 import type { Product, ClientConfig } from "@/mock/types";
 import { useLanguage } from "@/components/language-provider";
 
@@ -16,17 +15,18 @@ interface ProductCardProps {
     onAddToCart: (id: string) => void;
     onChangeQty: (id: string, delta: number) => void;
     onToggleWishlist: (id: string) => void;
+    onProductSelect: (product: Product) => void;
 }
 
 export function ProductCard({
     product,
-    config,
     inCart,
     inWishlist,
     onAddToCart,
     onChangeQty,
-    onToggleWishlist
-}: ProductCardProps) {
+    onToggleWishlist,
+    onProductSelect
+}: Omit<ProductCardProps, 'config'>) {
     const { t } = useLanguage();
     const [imageError, setImageError] = useState(false);
 
@@ -91,16 +91,13 @@ export function ProductCard({
             </CardHeader>
 
             <CardFooter className="pt-2 md:pt-4 pb-4 md:pb-6 px-4 md:px-6 gap-2">
-                <ProductDetail
-                    product={product}
-                    config={config}
-                    onAddToCart={onAddToCart}
-                    trigger={
-                        <Button variant="outline" className="flex-1 min-w-0 h-10 md:h-12 rounded-xl md:rounded-2xl font-black text-[9px] sm:text-[10px] uppercase tracking-widest border-2 hover:bg-primary/5 px-2">
-                            <span className="truncate">{t('product.details')}</span>
-                        </Button>
-                    }
-                />
+                <Button 
+                    variant="outline" 
+                    className="flex-1 min-w-0 h-10 md:h-12 rounded-xl md:rounded-2xl font-black text-[9px] sm:text-[10px] uppercase tracking-widest border-2 hover:bg-primary/5 px-2"
+                    onClick={() => onProductSelect(product)}
+                >
+                    <span className="truncate">{t('product.details')}</span>
+                </Button>
                 {inCart ? (
                     <div className="flex items-center gap-1 border-2 border-primary/20 rounded-xl md:rounded-2xl px-1 h-10 md:h-12 bg-primary/5">
                         <Button variant="ghost" size="icon" className="h-7 w-7 md:h-8 md:w-8 text-primary hover:bg-primary hover:text-primary-foreground rounded-lg"

@@ -5,9 +5,11 @@ import { useLanguage } from "@/components/language-provider";
 
 interface HeroSectionProps {
     config: ClientConfig;
+    onCtaClick?: () => void;
+    onExploreClick?: () => void;
 }
 
-export function HeroSection({ config }: HeroSectionProps) {
+export function HeroSection({ config, onCtaClick, onExploreClick }: HeroSectionProps) {
     const { t, l } = useLanguage();
     return (
         <div className="relative py-10 md:py-24 px-4 md:px-8 overflow-hidden rounded-[32px] md:rounded-[60px] mx-2 md:mx-4 my-4 md:my-8 bg-primary/5 border border-primary/10">
@@ -28,10 +30,19 @@ export function HeroSection({ config }: HeroSectionProps) {
                         {l(config, 'hero.subheadline')}
                     </p>
                     <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start pt-4">
-                        <Button size="lg" className="w-full sm:w-auto rounded-2xl px-10 h-14 md:h-16 text-base md:text-lg font-black shadow-2xl shadow-primary/25 hover:scale-105 transition-all">
+                        <Button 
+                            size="lg" 
+                            className="w-full sm:w-auto rounded-2xl px-10 h-14 md:h-16 text-base md:text-lg font-black shadow-2xl shadow-primary/25 hover:scale-105 transition-all"
+                            onClick={onCtaClick}
+                        >
                             {l(config, 'hero.cta')}
                         </Button>
-                        <Button size="lg" variant="outline" className="w-full sm:w-auto rounded-2xl px-10 h-14 md:h-16 text-base md:text-lg font-black border-2 hover:bg-muted">
+                        <Button 
+                            size="lg" 
+                            variant="outline" 
+                            className="w-full sm:w-auto rounded-2xl px-10 h-14 md:h-16 text-base md:text-lg font-black border-2 hover:bg-muted"
+                            onClick={onExploreClick}
+                        >
                             {t('hero.explore')}
                         </Button>
                     </div>
