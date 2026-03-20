@@ -1,10 +1,11 @@
-import { Search, ShoppingCart, MapPin, User, Phone, Clock, X, LogOut, Zap, Palette, Languages, Heart } from 'lucide-react';
+import { Search, ShoppingCart, MapPin, User, Phone, Clock, X, LogOut, Zap, Palette, Heart } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTheme } from '@/components/theme-provider';
 import { useLanguage } from '@/components/language-provider';
+import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
 import type { ClientConfig } from '@/mock/types';
 
 interface HeaderProps {
@@ -50,7 +51,7 @@ export function Header({
     onWishlistClick,
 }: HeaderProps) {
     const { theme, setTheme } = useTheme();
-    const { language, setLanguage, t } = useLanguage();
+    const { t } = useLanguage();
     const [searchQuery, setSearchQuery] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [showAccountMenu, setShowAccountMenu] = useState(false);
@@ -129,25 +130,6 @@ export function Header({
                             <span className="truncate">{config.topBarMessage}</span>
                         </div>
                         <div className="flex items-center gap-4 sm:gap-8 shrink-0">
-                            {/* Language Selector */}
-                            <div className="flex items-center gap-2">
-                                <Languages className="w-3.5 h-3.5" />
-                                <div className="flex gap-2">
-                                    <button
-                                        onClick={() => setLanguage('en')}
-                                        className={`transition-all ${language === 'en' ? 'text-primary-foreground opacity-100 scale-110 underline decoration-2 underline-offset-4' : 'opacity-60 hover:opacity-100'}`}
-                                    >
-                                        EN
-                                    </button>
-                                    <span className="opacity-30">|</span>
-                                    <button
-                                        onClick={() => setLanguage('es')}
-                                        className={`transition-all ${language === 'es' ? 'text-primary-foreground opacity-100 scale-110 underline decoration-2 underline-offset-4' : 'opacity-60 hover:opacity-100'}`}
-                                    >
-                                        ES
-                                    </button>
-                                </div>
-                            </div>
 
                             <div className="hidden md:flex items-center gap-6">
                                 <div className="flex items-center gap-2">
@@ -217,6 +199,8 @@ export function Header({
                                     </SelectContent>
                                 </Select>
                             </div>
+
+                            <LanguageSwitcher />
 
                             {/* Delivery - Hidden on Mobile */}
                             <div className="hidden md:flex items-center gap-2 px-3 py-2 hover:bg-accent hover:text-accent-foreground rounded-xl transition-colors cursor-pointer border border-transparent hover:border-border">

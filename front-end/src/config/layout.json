@@ -1,0 +1,74 @@
+{
+  "pages": {
+    "home": [
+      {
+        "id": "hero-section",
+        "type": "HeroSection",
+        "props": {}
+      },
+      {
+        "id": "navbar-section",
+        "type": "NavBar",
+        "props": {}
+      },
+      {
+        "id": "filters-section",
+        "type": "AppliedFiltersBar",
+        "props": {}
+      },
+      {
+        "id": "products-anchor",
+        "type": "div",
+        "className": "scroll-mt-32"
+      },
+      {
+        "id": "main-container",
+        "type": "main",
+        "className": "max-w-7xl mx-auto px-4 py-6 md:py-12",
+        "children": [
+          {
+            "id": "content-flex",
+            "type": "div",
+            "className": "flex flex-col md:flex-row gap-12",
+            "children": [
+              {
+                "id": "sidebar",
+                "type": "aside",
+                "className": "hidden md:block w-64 space-y-10 shrink-0",
+                "children": [
+                  {
+                    "id": "category-filter",
+                    "type": "CategoryFilter",
+                    "props": {}
+                  },
+                  {
+                    "id": "price-filter",
+                    "type": "PriceFilter",
+                    "props": {}
+                  }
+                ]
+              },
+              {
+                "id": "products-area",
+                "type": "div",
+                "className": "flex-1 space-y-12",
+                "children": [
+                  {
+                    "id": "products-header",
+                    "type": "ProductsHeader",
+                    "props": {}
+                  },
+                  {
+                    "id": "product-grid",
+                    "type": "ProductGrid",
+                    "props": {}
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

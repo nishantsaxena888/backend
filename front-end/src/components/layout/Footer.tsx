@@ -12,7 +12,8 @@ interface FooterProps {
 }
 
 export function Footer({ config, onCategorySelect, onViewChange }: FooterProps) {
-    const { t } = useLanguage();
+    const { t, l } = useLanguage();
+    const currentYear = new Date().getFullYear();
 
     return (
         <footer className="bg-muted/10 border-t pt-20 pb-10">
@@ -24,10 +25,10 @@ export function Footer({ config, onCategorySelect, onViewChange }: FooterProps) 
                             <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-3xl shadow-xl shadow-primary/20 shrink-0">
                                 {config.logoIcon}
                             </div>
-                            <h2 className="text-2xl font-black tracking-tighter text-foreground">{config.name}</h2>
+                            <h2 className="text-2xl font-black tracking-tighter text-foreground">{l(config, 'name')}</h2>
                         </div>
                         <p className="text-muted-foreground text-sm font-medium leading-relaxed max-w-xs">
-                            {config.tagline}
+                            {l(config, 'tagline')}
                         </p>
                         <div className="flex items-center gap-4">
                             <button className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300">
@@ -68,7 +69,7 @@ export function Footer({ config, onCategorySelect, onViewChange }: FooterProps) 
                                 </button>
                             </li>
                             <li>
-                                <button 
+                                <button
                                     onClick={() => onViewChange?.('help')}
                                     className="text-sm font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-2 group mx-auto md:mx-0"
                                 >
@@ -90,7 +91,7 @@ export function Footer({ config, onCategorySelect, onViewChange }: FooterProps) 
                                         className="text-sm font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-2 group mx-auto md:mx-0"
                                     >
                                         <span className="w-1.5 h-1.5 rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
-                                        {cat}
+                                        {t(cat) || cat}
                                     </button>
                                 </li>
                             ))}
@@ -123,24 +124,21 @@ export function Footer({ config, onCategorySelect, onViewChange }: FooterProps) 
 
                 <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                     <div className="flex items-center gap-8">
-                        <p>© 2026 INVENTURE INC.</p>
-                        <button 
+                        <p>© {currentYear} {l(config, 'name').toUpperCase()} INC.</p>
+                        <button
                             onClick={() => onViewChange?.('privacy')}
                             className="hover:text-primary transition-colors"
                         >
                             {t('footer.privacy')}
                         </button>
-                        <button 
+                        <button
                             onClick={() => onViewChange?.('terms')}
                             className="hover:text-primary transition-colors"
                         >
                             {t('footer.terms')}
                         </button>
                     </div>
-                    <div className="flex items-center gap-4 text-muted-foreground/30">
-                        <div className="w-2 h-2 rounded-full bg-border" />
-                        <p className="font-bold">Secure Marketplace</p>
-                    </div>
+
                 </div>
             </div>
         </footer>

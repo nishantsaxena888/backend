@@ -17,4 +17,17 @@ export const config: ClientConfig = {
     hours: 'Mon–Sat: 6 AM – 8 PM',
     topBarMessage: 'Wholesale Pricing for Retailers & Distributors',
     freeDeliveryThreshold: 30,
+    translations: {
+        es: {
+            name: 'FreshMart',
+            tagline: 'Venta al por mayor',
+            topBarMessage: 'Precios de Mayoreo para Minoristas y Distribuidores',
+            hero: {
+                headline: 'Grocies Frescos, Entrega Rápida',
+                subheadline: 'Calidad de la granja a la mesa a precios de mayorista. Ordene antes de las 2 p. m. para entrega el mismo día.',
+                cta: 'Comprar Productos Frescos',
+                badge: '🚚 Entrega gratuita en pedidos superiores a $30',
+            }
+        }
+    }
 };

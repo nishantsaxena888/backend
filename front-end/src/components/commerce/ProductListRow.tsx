@@ -53,7 +53,7 @@ export function ProductListRow({
 
                 {product.badge && (
                     <Badge className="absolute top-2 left-2 text-[8px] md:text-[9px] font-black uppercase tracking-widest px-2 border-none">
-                        {product.badge}
+                        {l(product, 'badge')}
                     </Badge>
                 )}
             </div>
@@ -64,7 +64,7 @@ export function ProductListRow({
                     <div className="flex justify-between items-start gap-4">
                         <div className="space-y-1">
                             <Badge variant="secondary" className="text-[8px] md:text-[9px] uppercase font-bold tracking-widest px-2 py-0 h-4">
-                                {product.category}
+                                {t(product.category) || product.category}
                             </Badge>
                             <h3 className="text-lg md:text-xl font-bold tracking-tight leading-tight group-hover:text-primary transition-colors">
                                 {l(product, 'name')}

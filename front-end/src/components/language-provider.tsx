@@ -1,11 +1,23 @@
 import React, { createContext, useContext, useState } from 'react';
 
-type Language = 'en' | 'es';
+export type LanguageCode = 'en' | 'es';
+
+export interface Language {
+    code: LanguageCode;
+    name: string;
+    flag: string;
+}
+
+export const LANGUAGES: Language[] = [
+    { code: 'en', name: 'English', flag: '🇺🇸' },
+    { code: 'es', name: 'Español', flag: '🇪🇸' },
+];
 
 interface LanguageContextType {
     language: Language;
     setLanguage: (lang: Language) => void;
     t: (key: string) => string;
+    l: (obj: any, field: string) => any;
 }
 
 const translations = {
@@ -202,6 +214,22 @@ const translations = {
 
         // Hero
         'hero.explore': 'Explore Collection',
+
+        // Store Specific - Emerald Grocery
+        'store.name': 'FreshMart',
+        'store.tagline': 'Wholesale',
+        'store.topbar': 'Wholesale Pricing for Retailers & Distributors',
+
+        // Categories
+        'All Products': 'All Products',
+        'Fresh Produce': 'Fresh Produce',
+        'Dairy & Eggs': 'Dairy & Eggs',
+        'Meat & Seafood': 'Meat & Seafood',
+        'Bakery': 'Bakery',
+        'Beverages': 'Beverages',
+        'Pantry': 'Pantry',
+        'Frozen Foods': 'Frozen Foods',
+        'Snacks': 'Snacks',
     },
     es: {
         // Header
@@ -396,6 +424,22 @@ const translations = {
 
         // Hero
         'hero.explore': 'Explorar Colección',
+
+        // Store Specific - Emerald Grocery
+        'store.name': 'FreshMart',
+        'store.tagline': 'Venta al por mayor',
+        'store.topbar': 'Precios de Mayoreo para Minoristas y Distribuidores',
+
+        // Categories
+        'All Products': 'Todos los productos',
+        'Fresh Produce': 'Frutas y Verduras',
+        'Dairy & Eggs': 'Lácteos y Huevos',
+        'Meat & Seafood': 'Carnes y Mariscos',
+        'Bakery': 'Panadería',
+        'Beverages': 'Bebidas',
+        'Pantry': 'Despensa',
+        'Frozen Foods': 'Congelados',
+        'Snacks': 'Snacks',
     }
 };
 
@@ -409,18 +453,18 @@ interface LanguageContextType {
 }
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [language, setLanguageState] = useState<Language>(() => {
-        const saved = localStorage.getItem('language');
-        return (saved as Language) || 'en';
+    const [currentLanguage, setCurrentLanguage] = useState<Language>(() => {
+        const savedCode = localStorage.getItem('language') as LanguageCode;
+        return LANGUAGES.find(l => l.code === savedCode) || LANGUAGES[0];
     });
 
     const setLanguage = (lang: Language) => {
-        setLanguageState(lang);
-        localStorage.setItem('language', lang);
+        setCurrentLanguage(lang);
+        localStorage.setItem('language', lang.code);
     };
 
     const t = (key: string): string => {
-        return translations[language][key as keyof typeof translations['en']] || key;
+        return (translations[currentLanguage.code as keyof typeof translations] as any)[key] || key;
     };
 
     /** Helper to get localized value from an object with optional translations field */
@@ -435,7 +479,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         };
 
         // 1. Try to get localized value
-        const localized = obj.translations?.[language];
+        const localized = obj.translations?.[currentLanguage.code];
         const localizedValue = localized ? getNestedValue(localized, parts) : undefined;
 
         if (localizedValue !== undefined) return localizedValue;
@@ -447,7 +491,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     };
 
     return (
-        <LanguageContext.Provider value={{ language, setLanguage, t, l }}>
+        <LanguageContext.Provider value={{ language: currentLanguage, setLanguage, t, l }}>
             {children}
         </LanguageContext.Provider>
     );

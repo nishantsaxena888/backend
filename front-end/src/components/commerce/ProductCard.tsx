@@ -27,7 +27,7 @@ export function ProductCard({
     onToggleWishlist,
     onProductSelect
 }: Omit<ProductCardProps, 'config'>) {
-    const { t } = useLanguage();
+    const { t, l } = useLanguage();
     const [imageError, setImageError] = useState(false);
 
     return (
@@ -41,7 +41,7 @@ export function ProductCard({
                 ) : product.image.startsWith('http') ? (
                     <img
                         src={product.image}
-                        alt={product.name}
+                        alt={l(product, 'name')}
                         onError={() => setImageError(true)}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
@@ -53,7 +53,7 @@ export function ProductCard({
 
                 {product.badge && (
                     <Badge className="absolute top-4 left-4 h-7 text-[10px] font-black uppercase tracking-widest px-4 border-none shadow-lg">
-                        {product.badge}
+                        {l(product, 'badge')}
                     </Badge>
                 )}
 
@@ -76,7 +76,7 @@ export function ProductCard({
             <CardHeader className="pb-2 pt-4 md:pt-6 px-4 md:px-6 flex-1 space-y-2">
                 <div className="flex flex-col gap-1">
                     <CardTitle className="text-base md:text-lg font-bold tracking-tight leading-tight group-hover:text-primary transition-colors line-clamp-2">
-                        {product.name}
+                        {l(product, 'name')}
                     </CardTitle>
                     <span className="text-xl md:text-2xl font-black text-primary tracking-tighter">${product.price}</span>
                 </div>

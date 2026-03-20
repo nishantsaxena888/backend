@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Header } from "@/components/layout/Header"
-import { NavBar } from "@/components/layout/Navbar"
 import { useTheme } from "@/components/theme-provider"
 import { getClientConfig, getProducts } from "@/mock/api"
 import type { ClientConfig, Product } from "@/mock/types"
@@ -9,27 +8,24 @@ import { Checkout } from "@/components/commerce/Checkout"
 import { AuthModal } from "@/components/commerce/AuthModal"
 import { AgeVerification } from "@/components/commerce/AgeVerification"
 import { ProfileView } from "@/components/commerce/ProfileView"
-import { AppliedFiltersBar } from "@/components/commerce/AppliedFiltersBar"
-import { HeroSection } from "@/components/layout/HeroSection"
-import { ProductGrid } from "@/components/commerce/ProductGrid"
-import { Footer } from "@/components/layout/Footer"
 import { PrivacyView } from "@/components/commerce/PrivacyView"
 import { TermsView } from "@/components/commerce/TermsView"
 import { HelpView } from "@/components/commerce/HelpView"
+import { Footer } from "@/components/layout/Footer"
 import { ProductDetailsView } from "./components/commerce/ProductDetailsView"
 import { WishlistView } from "./components/commerce/WishlistView"
 import { SettingsView } from "./components/commerce/SettingsView"
 import { ComingSoonView } from "./components/commerce/ComingSoonView"
 import { useRef } from "react"
+import { DynamicRenderer } from "@/components/dynamic/DynamicRenderer"
+import layout from "@/config/layout.json"
 
 // ── ui imports ───────────────────────────────────────────────────────────────
 import { Button } from "@/components/ui/button"
-import { Slider } from "@/components/ui/slider"
 import { Progress } from "@/components/ui/progress"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { TooltipProvider } from "@/components/ui/tooltip"
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { LanguageProvider, useLanguage } from "@/components/language-provider"
 
@@ -40,7 +36,6 @@ import {
   Plus,
   Minus,
   X,
-  Filter,
   ImageOff
 } from "lucide-react"
 
@@ -205,7 +200,6 @@ function HomePage() {
     return 0 // newest = original order in this mock
   })
 
-  const sidebarCategories = [...new Set(allProducts.map(p => p.category))]
 
   const handleSignOut = () => {
     localStorage.removeItem('user');
@@ -331,127 +325,41 @@ function HomePage() {
         </Sheet>
 
         {currentView === 'home' ? (
-          <>
-            <HeroSection 
-              config={config} 
-              onCtaClick={() => productsRef.current?.scrollIntoView({ behavior: 'smooth' })}
-              onExploreClick={() => productsRef.current?.scrollIntoView({ behavior: 'smooth' })}
-            />
-            <NavBar
-              config={config}
-              selectedCategory={selectedCategory}
-              onCategoryChange={handleCategorySelect}
-            />
-            <AppliedFiltersBar
-              priceRange={priceRange as [number, number]}
-              selectedCategory={selectedCategory}
-              productCount={filtered.length}
-              onClearAll={() => {
-                setSelectedCategory("All Products");
-                setSearchQuery("");
-                setPriceRange(config.id.includes('luxury') ? [0, 15000] : config.type === 'liquor' ? [0, 200] : [0, 50]);
-              }}
-              onRemoveCategory={() => { setSelectedCategory("All Products"); setSearchQuery(""); }}
-              onRemovePrice={() => setPriceRange(config.id.includes('luxury') ? [0, 15000] : config.type === 'liquor' ? [0, 200] : [0, 50])}
-              sortBy={sortBy}
-              onSortChange={setSortBy}
-            />
-            
-            <div ref={productsRef} className="scroll-mt-32" />
-
-            <main className="max-w-7xl mx-auto px-4 py-6 md:py-12">
-              <div className="flex flex-col md:flex-row gap-12">
-                <aside className="hidden md:block w-64 space-y-10 shrink-0">
-                  <div className="space-y-6">
-                    <h3 className="text-sm font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
-                      <Filter className="w-3 h-3" /> {t('header.categories')}
-                    </h3>
-                    <div className="flex flex-col gap-1">
-                      <button
-                        onClick={() => handleCategorySelect("All Products")}
-                        className={`text-left px-4 py-3 rounded-2xl text-sm font-bold transition-all ${selectedCategory === "All Products" ? "bg-primary text-primary-foreground shadow-xl shadow-primary/20 translate-x-1" : "hover:bg-muted text-muted-foreground hover:text-foreground"}`}
-                      >
-                        {t('product.all_products')}
-                      </button>
-                      {sidebarCategories.map(cat => (
-                        <button
-                          key={cat}
-                          onClick={() => handleCategorySelect(cat)}
-                          className={`text-left px-4 py-3 rounded-2xl text-sm font-bold transition-all ${selectedCategory === cat ? "bg-primary text-primary-foreground shadow-xl shadow-primary/20 translate-x-1" : "hover:bg-muted text-muted-foreground hover:text-foreground"}`}
-                        >
-                          {t(cat)}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="space-y-6">
-                    <div className="flex justify-between items-center px-1">
-                      <h3 className="text-sm font-black uppercase tracking-[0.2em] text-muted-foreground">{t('product.price')}</h3>
-                      <span className="text-[10px] font-black text-primary bg-primary/10 px-3 py-1 rounded-full uppercase">USD</span>
-                    </div>
-                    <div className="px-2">
-                      <Slider
-                        value={priceRange}
-                        onValueChange={setPriceRange}
-                        max={config.id.includes('luxury') ? 15000 : config.type === 'liquor' ? 200 : 50}
-                        step={1}
-                        className="py-4"
-                      />
-                      <div className="flex justify-between mt-2 text-[10px] font-black text-muted-foreground tracking-widest">
-                        <span>{t('product.min')} ${priceRange[0]}</span>
-                        <span>{t('product.max')} ${priceRange[1]}</span>
-                      </div>
-                    </div>
-                  </div>
-                </aside>
-
-                <div className="flex-1 space-y-12">
-                  <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                    <div>
-                      <h2 className="text-3xl sm:text-5xl font-black tracking-tighter leading-none break-words">
-                        {searchQuery ? searchQuery : (selectedCategory === "All Products" ? t('product.all_products') : selectedCategory)}
-                      </h2>
-                      <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest mt-3 flex items-center gap-2">
-                        <Package className="w-3 h-3" /> {filtered.length} {t('product.curated_for')} {config.name}
-                      </p>
-                    </div>
-                    <ToggleGroup
-                      type="single"
-                      value={viewMode}
-                      onValueChange={(v) => v && setViewMode(v as 'grid' | 'list')}
-                      className="bg-muted/50 p-1 rounded-xl border border-border/50 shrink-0 self-start md:self-auto"
-                    >
-                      <ToggleGroupItem value="grid" className="rounded-lg h-10 px-4 font-bold text-[10px] uppercase data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">{t('product.view_grid')}</ToggleGroupItem>
-                      <ToggleGroupItem value="list" className="rounded-lg h-10 px-4 font-bold text-[10px] uppercase data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">{t('product.view_list')}</ToggleGroupItem>
-                    </ToggleGroup>
-                  </div>
-
-                  {filtered.length > 0 ? (
-                    <ProductGrid
-                      products={filtered}
-                      config={config}
-                      cartItems={cartItems}
-                      wishlist={wishlist}
-                      onAddToCart={addToCart}
-                      onChangeQty={changeQty}
-                      onToggleWishlist={toggleWishlist}
-                      onProductSelect={handleProductSelect}
-                      viewMode={viewMode}
-                    />
-                  ) : (
-                    <div className="py-32 text-center space-y-6 bg-muted/20 rounded-[60px] border-4 border-dotted border-border/50">
-                      <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mx-auto text-5xl grayscale opacity-50">🔎</div>
-                      <div className="space-y-2 max-w-xs mx-auto">
-                        <h4 className="text-2xl font-black tracking-tight">{t('product.no_matches')}</h4>
-                        <p className="text-sm font-medium text-muted-foreground">{t('product.widen_search')}</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </main>
-          </>
+          <DynamicRenderer 
+            sections={layout.pages.home} 
+            context={{
+                config,
+                allProducts,
+                selectedCategory,
+                searchQuery,
+                cartItems,
+                wishlist,
+                priceRange,
+                viewMode,
+                sortBy,
+                filtered,
+                products: filtered,
+                onAddToCart: addToCart,
+                onChangeQty: changeQty,
+                onToggleWishlist: toggleWishlist,
+                onCategorySelect: handleCategorySelect,
+                onProductSelect: handleProductSelect,
+                onSortChange: setSortBy,
+                onPriceRangeChange: setPriceRange,
+                onViewModeChange: setViewMode,
+                onRemoveCategory: () => { setSelectedCategory("All Products"); setSearchQuery(""); },
+                onRemovePrice: () => setPriceRange(config.id.includes('luxury') ? [0, 15000] : config.type === 'liquor' ? [0, 200] : [0, 50]),
+                onCtaClick: () => productsRef.current?.scrollIntoView({ behavior: 'smooth' }),
+                onExploreClick: () => productsRef.current?.scrollIntoView({ behavior: 'smooth' }),
+                onClearAll: () => {
+                    setSelectedCategory("All Products");
+                    setSearchQuery("");
+                    setPriceRange(config.id.includes('luxury') ? [0, 15000] : config.type === 'liquor' ? [0, 200] : [0, 50]);
+                },
+                productCount: filtered.length,
+                productsRef: productsRef
+            }} 
+          />
         ) : currentView === 'privacy' ? (
           <PrivacyView config={config} onClose={() => setCurrentView('home')} />
         ) : currentView === 'terms' ? (
@@ -528,7 +436,7 @@ function HomePage() {
         <Footer
           config={config}
           onCategorySelect={handleCategorySelect}
-          onViewChange={(v) => {
+          onViewChange={(v: any) => {
             setCurrentView(v);
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}

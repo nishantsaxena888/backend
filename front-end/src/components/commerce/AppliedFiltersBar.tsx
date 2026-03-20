@@ -95,9 +95,9 @@ export function AppliedFiltersBar({
                                     <span className="text-muted-foreground font-bold">{t('product.sort_by')}:</span>
                                     <span className="text-foreground font-black uppercase tracking-tight">
                                         {sortBy === 'newest' ? t('product.newest') :
-                                         sortBy === 'price-low' ? t('product.price_low') :
-                                         sortBy === 'price-high' ? t('product.price_high') :
-                                         t('product.rating')}
+                                            sortBy === 'price-low' ? t('product.price_low') :
+                                                sortBy === 'price-high' ? t('product.price_high') :
+                                                    t('product.rating')}
                                     </span>
                                     <ChevronDown className="w-3.5 h-3.5 text-muted-foreground/50 transition-transform duration-300 group-data-[state=open]:rotate-180" />
                                 </Button>
