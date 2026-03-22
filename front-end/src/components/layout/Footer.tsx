@@ -18,9 +18,9 @@ export function Footer({ config, onCategorySelect, onViewChange }: FooterProps) 
     return (
         <footer className="bg-muted/10 border-t pt-20 pb-10">
             <div className="max-w-7xl mx-auto px-4 md:px-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-20">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12 lg:gap-8 mb-20">
                     {/* Brand Section */}
-                    <div className="space-y-6 flex flex-col items-center md:items-start text-center md:text-left">
+                    <div className="col-span-2 md:col-span-1 space-y-6 flex flex-col items-center md:items-start text-center md:text-left">
                         <div className="flex items-center gap-3">
                             <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-3xl shadow-xl shadow-primary/20 shrink-0">
                                 {config.logoIcon}
@@ -99,7 +99,7 @@ export function Footer({ config, onCategorySelect, onViewChange }: FooterProps) 
                     </div>
 
                     {/* Newsletter Section */}
-                    <div className="space-y-6 text-center md:text-left">
+                    <div className="col-span-2 md:col-span-1 space-y-6 text-center md:text-left">
                         <h4 className="text-xs font-black uppercase tracking-widest text-foreground">{t('footer.newsletter')}</h4>
                         <p className="text-muted-foreground text-sm font-medium leading-relaxed">
                             {t('footer.subscribe_msg')}
@@ -122,23 +122,23 @@ export function Footer({ config, onCategorySelect, onViewChange }: FooterProps) 
 
                 <Separator className="bg-border/30 mb-8" />
 
-                <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                    <div className="flex items-center gap-8">
-                        <p>© {currentYear} {l(config, 'name').toUpperCase()} INC.</p>
+                <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground text-center md:text-left">
+                    <p>© {currentYear} {l(config, 'name').toUpperCase()} INC.</p>
+                    
+                    <div className="flex items-center gap-6 md:gap-8">
                         <button
                             onClick={() => onViewChange?.('privacy')}
-                            className="hover:text-primary transition-colors"
+                            className="hover:text-primary transition-colors whitespace-nowrap"
                         >
                             {t('footer.privacy')}
                         </button>
                         <button
                             onClick={() => onViewChange?.('terms')}
-                            className="hover:text-primary transition-colors"
+                            className="hover:text-primary transition-colors whitespace-nowrap"
                         >
                             {t('footer.terms')}
                         </button>
                     </div>
-
                 </div>
             </div>
         </footer>

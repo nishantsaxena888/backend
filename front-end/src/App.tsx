@@ -152,7 +152,8 @@ function HomePage() {
   }
   function changeQty(id: string, delta: number) {
     setCartItems(prev =>
-      prev.map(i => i.id === id ? { ...i, qty: Math.max(1, i.qty + delta) } : i)
+      prev.map(i => i.id === id ? { ...i, qty: i.qty + delta } : i)
+          .filter(i => i.qty > 0)
     )
   }
   function toggleWishlist(id: string) {
@@ -242,7 +243,7 @@ function HomePage() {
 
         {/* ── CART SHEET ───────────────── */}
         <Sheet open={cartOpen} onOpenChange={setCartOpen}>
-          <SheetContent className="flex flex-col border-none shadow-2xl w-full sm:max-w-md p-8">
+          <SheetContent className="flex flex-col border-none shadow-2xl w-full sm:max-w-md p-4 sm:p-8">
             <SheetHeader className="space-y-1">
               <SheetTitle className="text-3xl font-black tracking-tight flex items-center gap-3">
                 <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
@@ -269,18 +270,29 @@ function HomePage() {
                     const p = allProducts.find(p => p.id === ci.id)!
                     if (!p) return null
                     return (
-                      <div key={ci.id} className="flex items-center gap-4 group bg-muted/30 hover:bg-muted/50 p-4 rounded-3xl transition-all">
+                      <div key={ci.id} className="flex items-start gap-3 sm:gap-4 group bg-muted/30 hover:bg-muted/50 p-3 sm:p-4 rounded-3xl transition-all">
                         <CartItemImage p={p} l={l} />
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-black truncate leading-tight mb-1">{l(p, 'name')}</p>
-                          <p className="text-xs font-bold text-primary">${p.price}</p>
+                          <div className="flex justify-between items-start mb-2">
+                            <p className="text-xs sm:text-sm font-black truncate leading-tight pr-2">{l(p, 'name')}</p>
+                            <Button 
+                              size="icon" 
+                              variant="ghost" 
+                              className="h-6 w-6 rounded-full bg-destructive/10 text-destructive hover:bg-destructive hover:text-white transition-all shrink-0" 
+                              onClick={() => removeFromCart(ci.id)}
+                            >
+                              <X className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <p className="text-xs sm:text-sm font-black text-primary">${p.price}</p>
+                            <div className="flex items-center gap-1 bg-background rounded-xl p-0.5 sm:p-1 shadow-sm border border-border/50 shrink-0">
+                              <Button size="icon" variant="ghost" className="h-7 w-7 sm:h-8 sm:w-8 hover:bg-muted" onClick={() => changeQty(ci.id, -1)}><Minus className="h-2.5 w-2.5 sm:h-3 sm:w-3" /></Button>
+                              <span className="w-4 text-center text-[10px] sm:text-xs font-black">{ci.qty}</span>
+                              <Button size="icon" variant="ghost" className="h-7 w-7 sm:h-8 sm:w-8 hover:bg-muted" onClick={() => changeQty(ci.id, 1)}><Plus className="h-2.5 w-2.5 sm:h-3 sm:w-3" /></Button>
+                            </div>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-1 sm:gap-2 bg-background rounded-xl p-1 shadow-sm border border-border/50">
-                          <Button size="icon" variant="ghost" className="h-8 w-8 hover:bg-muted" onClick={() => changeQty(ci.id, -1)}><Minus className="h-3 w-3" /></Button>
-                          <span className="w-4 text-center text-xs font-black">{ci.qty}</span>
-                          <Button size="icon" variant="ghost" className="h-8 w-8 hover:bg-muted" onClick={() => changeQty(ci.id, 1)}><Plus className="h-3 w-3" /></Button>
-                        </div>
-                        <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-destructive transition-colors" onClick={() => removeFromCart(ci.id)}><X className="h-4 w-4" /></Button>
                       </div>
                     )
                   })}
