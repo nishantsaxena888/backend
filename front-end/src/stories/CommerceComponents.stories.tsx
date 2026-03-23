@@ -65,6 +65,8 @@ export const SiteHeader: Story = {
             onSignOut={() => { }}
             onProfileClick={() => { }}
             deliveryCity="New York"
+            wishlistCount={0}
+            onWishlistClick={() => { }}
         />
     )
 }
@@ -98,6 +100,8 @@ export const Filters: Story = {
                 onClearAll={() => { }}
                 onRemoveCategory={() => { }}
                 onRemovePrice={() => { }}
+                sortBy="newest"
+                onSortChange={() => { }}
             />
         </div>
     )
@@ -128,6 +132,7 @@ export const Products: Story = {
                     onAddToCart={() => { }}
                     onChangeQty={() => { }}
                     onToggleWishlist={() => { }}
+                    onProductSelect={() => { }}
                 />
             </div>
         )

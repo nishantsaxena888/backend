@@ -1,5 +1,4 @@
 import type { ClientConfig } from "@/mock/types";
-import { useLanguage } from "@/components/language-provider";
 
 interface NavBarProps {
     config: ClientConfig;
@@ -7,17 +6,9 @@ interface NavBarProps {
     onCategoryChange?: (category: string) => void;
 }
 
-export function NavBar({ config, selectedCategory = 'All Products', onCategoryChange }: NavBarProps) {
-    const { t, language } = useLanguage();
+export function NavBar(_props: NavBarProps) {
 
-    // Get localized categories or fall back to English
-    const clientCategories = language.code === 'en'
-        ? config.categories
-        : (config.translations?.[language.code]?.categories ?? config.categories);
 
-    const categories = clientCategories.includes('All Products')
-        ? clientCategories
-        : ['All Products', ...clientCategories];
 
     return (
         <nav className="bg-background border-b border-border relative sm:sticky sm:top-[113px] z-40 w-full max-w-full">
