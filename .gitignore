@@ -1,0 +1,82 @@
+# ====================================================================
+# SSIS to MuleSoft Migration Project .gitignore
+# ====================================================================
+
+# --- OS Temporary Files ---
+Thumbs.db
+db.properties
+Desktop.ini
+.DS_Store
+*.tmp
+*.bak
+*.log
+
+# --- Visual Studio Code ---
+.vscode/
+*.code-workspace
+.history/
+
+# --- MuleSoft & Anypoint Studio (Eclipse) ---
+.mule/
+target/
+.metadata/
+.recommenders/
+bin/
+*.jar
+*.class
+# Note: Keep pom.xml and Mule XML configurations, but ignore local tool configurations
+.settings/
+.classpath
+.project
+.studio/
+
+# --- Node / React / Frontend ---
+node_modules/
+jspm_packages/
+web_modules/
+.npm/
+dist/
+build/
+out/
+.next/
+.nuxt/
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-selfcheck.json
+pip-log.txt
+.poetry/
+.pytest_cache/
+.mypy_cache/
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+
+# --- Local Databases & Gitea Test Configs ---
+gitea.db
+gitea-repositories/
+log/
+lfs/
+*.dump
