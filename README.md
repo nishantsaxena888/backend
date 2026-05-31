@@ -119,7 +119,7 @@ Our migration strategy is broken down into five distinct phases:
 ### Cloning and Importing
 1. Clone this repository to your local machine:
    ```bash
-   git clone https://github.com/nishantsaxena888/inventureai.git
+   git clone https://github.com/nishantsaxena888/backend.git
    ```
 2. Open Anypoint Studio.
 3. Select `File -> Import -> Anypoint Studio -> Packaged mule application (.jar)` or import as a Maven project directly.
